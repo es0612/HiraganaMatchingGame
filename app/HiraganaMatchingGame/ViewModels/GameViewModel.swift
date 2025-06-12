@@ -17,13 +17,16 @@ class GameViewModel {
     
     private let gameLogicService: GameLogicService
     private let audioService: AudioService
+    private let starUnlockService: StarUnlockService
     private var currentQuestions: [GameQuestion] = []
     private var currentQuestionIndex: Int = 0
     
     init(gameLogicService: GameLogicService = GameLogicService(), 
-         audioService: AudioService = AudioService()) {
+         audioService: AudioService = AudioService(),
+         starUnlockService: StarUnlockService = StarUnlockService()) {
         self.gameLogicService = gameLogicService
         self.audioService = audioService
+        self.starUnlockService = starUnlockService
     }
     
     func startNewGame(level: Int) {
@@ -145,7 +148,23 @@ class GameViewModel {
     
     private func completeGame() {
         isGameCompleted = true
-        earnedStars = calculateStars(for: score)
+        let timeTaken = Date().timeIntervalSince(gameStartTime)
+        let accuracy = Double(score) / Double(totalQuestions)
+        
+        // スター獲得計算
+        earnedStars = starUnlockService.calculateStars(
+            correctAnswers: score,
+            totalQuestions: totalQuestions,
+            timeTaken: timeTaken
+        )
+        
+        // レベル完了記録
+        starUnlockService.recordLevelCompletion(
+            level: currentLevel,
+            stars: earnedStars,
+            accuracy: accuracy,
+            time: timeTaken
+        )
         
         // ゲーム完了時の音声停止
         audioService.stopAllAudio()

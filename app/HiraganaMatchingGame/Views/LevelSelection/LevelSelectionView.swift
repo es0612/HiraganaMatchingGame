@@ -6,6 +6,8 @@ struct LevelSelectionView: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass
     
     let onLevelSelected: (Int) -> Void
+    let onCharacterCollectionPressed: () -> Void
+    let onAchievementsPressed: () -> Void
     
     var body: some View {
         GeometryReader { geometry in
@@ -180,7 +182,7 @@ struct LevelSelectionView: View {
     }
     
     private var footerView: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 15) {
             if levelProgressionService.getProgressionStats().completedLevels > 0 {
                 Text("素晴らしい！これまでに\(levelProgressionService.getTotalStars())個のスターを獲得しました！")
                     .font(.subheadline)
@@ -192,17 +194,43 @@ struct LevelSelectionView: View {
                     .foregroundColor(.secondary)
             }
             
-            Button("設定") {
-                // 設定画面を開く
+            HStack(spacing: 15) {
+                Button("コレクション") {
+                    onCharacterCollectionPressed()
+                }
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
+                .background(
+                    RoundedRectangle(cornerRadius: 25)
+                        .fill(Color.green.opacity(0.8))
+                )
+                
+                Button("実績") {
+                    onAchievementsPressed()
+                }
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
+                .background(
+                    RoundedRectangle(cornerRadius: 25)
+                        .fill(Color.purple.opacity(0.8))
+                )
+                
+                Button("設定") {
+                    // 設定画面を開く
+                }
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
+                .background(
+                    RoundedRectangle(cornerRadius: 25)
+                        .fill(Color.gray.opacity(0.6))
+                )
             }
-            .font(.headline)
-            .foregroundColor(.white)
-            .padding(.horizontal, 30)
-            .padding(.vertical, 12)
-            .background(
-                RoundedRectangle(cornerRadius: 25)
-                    .fill(Color.gray.opacity(0.6))
-            )
         }
     }
     
@@ -218,7 +246,15 @@ struct LevelSelectionView: View {
 }
 
 #Preview {
-    LevelSelectionView { level in
-        print("Selected level: \(level)")
-    }
+    LevelSelectionView(
+        onLevelSelected: { level in
+            print("Selected level: \(level)")
+        },
+        onCharacterCollectionPressed: {
+            print("Character collection pressed")
+        },
+        onAchievementsPressed: {
+            print("Achievements pressed")
+        }
+    )
 }

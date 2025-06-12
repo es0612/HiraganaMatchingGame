@@ -12,6 +12,8 @@ import SwiftData
 enum AppScreen {
     case levelSelection
     case game(level: Int)
+    case characterCollection
+    case achievements
 }
 
 struct ContentView: View {
@@ -23,9 +25,17 @@ struct ContentView: View {
         NavigationStack {
             switch currentScreen {
             case .levelSelection:
-                LevelSelectionView { selectedLevel in
-                    currentScreen = .game(level: selectedLevel)
-                }
+                LevelSelectionView(
+                    onLevelSelected: { selectedLevel in
+                        currentScreen = .game(level: selectedLevel)
+                    },
+                    onCharacterCollectionPressed: {
+                        currentScreen = .characterCollection
+                    },
+                    onAchievementsPressed: {
+                        currentScreen = .achievements
+                    }
+                )
                 .onAppear {
                     levelSelectionViewModel.loadProgress(from: modelContext)
                 }
@@ -42,6 +52,16 @@ struct ContentView: View {
                         currentScreen = .levelSelection
                     }
                 )
+                
+            case .characterCollection:
+                CharacterCollectionView {
+                    currentScreen = .levelSelection
+                }
+                
+            case .achievements:
+                AchievementsView {
+                    currentScreen = .levelSelection
+                }
             }
         }
     }
