@@ -140,10 +140,11 @@ struct StarUnlockSystemTests {
         #expect(service.getTotalStars() == 3) // 差分の2スター追加
         
         let levelStats = service.getLevelStatistics(level: 1)
-        #expect(levelStats.bestStars == 3)
-        #expect(levelStats.bestAccuracy == 1.0)
-        #expect(levelStats.bestTime == 30.0)
-        #expect(levelStats.totalAttempts == 2)
+        #expect(levelStats != nil)
+        #expect(levelStats!.bestStars == 3)
+        #expect(levelStats!.bestAccuracy == 1.0)
+        #expect(levelStats!.bestTime == 30.0)
+        #expect(levelStats!.totalAttempts == 2)
     }
     
     @Test("キャラクター解放進捗表示")
