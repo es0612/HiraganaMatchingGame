@@ -10,12 +10,20 @@ class GameViewModel {
     var isGameCompleted: Bool = false
     var currentHiragana: String = ""
     var answerChoices: [HiraganaItem] = []
+    var gameStartTime: Date = Date()
+    var showFeedback: Bool = false
+    var lastAnswerCorrect: Bool = false
+    var earnedStars: Int = 0
     
-    private let hiraganaDataManager = HiraganaDataManager.shared
-    private var currentLevelCharacters: [String] = []
+    private let gameLogicService: GameLogicService
+    private let audioService: AudioService
+    private var currentQuestions: [GameQuestion] = []
+    private var currentQuestionIndex: Int = 0
     
-    init() {
-        
+    init(gameLogicService: GameLogicService = GameLogicService(), 
+         audioService: AudioService = AudioService()) {
+        self.gameLogicService = gameLogicService
+        self.audioService = audioService
     }
     
     func startNewGame(level: Int) {
@@ -23,45 +31,69 @@ class GameViewModel {
         currentQuestion = 1
         score = 0
         isGameCompleted = false
+        showFeedback = false
+        gameStartTime = Date()
+        currentQuestionIndex = 0
         
-        let levelConfig = hiraganaDataManager.getLevelConfiguration()
-        currentLevelCharacters = levelConfig[level] ?? []
+        // GameLogicServiceを使って問題を生成
+        currentQuestions = gameLogicService.generateQuestionsForLevel(level, questionCount: totalQuestions)
         
-        generateNextQuestion()
+        if !currentQuestions.isEmpty {
+            loadCurrentQuestion()
+            
+            // 音声を事前読み込み
+            Task {
+                await audioService.preloadAudioForLevel(level)
+            }
+        }
     }
     
     func selectAnswer(_ imageName: String) {
-        let correctAnswer = getCorrectAnswer()
+        guard currentQuestionIndex < currentQuestions.count else { return }
         
-        if imageName == correctAnswer.imageName {
+        let currentGameQuestion = currentQuestions[currentQuestionIndex]
+        let isCorrect = gameLogicService.isCorrectAnswer(hiragana: currentGameQuestion.hiragana, imageName: imageName)
+        
+        // 正解判定
+        if isCorrect {
             score += 1
+            lastAnswerCorrect = true
+            
+            // 正解時の音声再生
+            Task {
+                await audioService.playAudio(for: currentGameQuestion.hiragana)
+            }
+        } else {
+            lastAnswerCorrect = false
         }
         
+        // フィードバック表示
+        showFeedback = true
+        
+        // 次の問題への進行
         currentQuestion += 1
+        currentQuestionIndex += 1
         
         if currentQuestion > totalQuestions {
-            isGameCompleted = true
+            completeGame()
         } else {
-            generateNextQuestion()
+            // 短い遅延後に次の問題を表示
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                self.showFeedback = false
+                self.loadCurrentQuestion()
+            }
         }
     }
     
     func getCorrectAnswer() -> HiraganaItem {
-        return hiraganaDataManager.getItem(for: currentHiragana) ?? 
-               HiraganaItem(character: "", imageName: "", category: "")
+        guard currentQuestionIndex < currentQuestions.count else {
+            return HiraganaItem(character: "", imageName: "", category: "")
+        }
+        return currentQuestions[currentQuestionIndex].correctAnswer
     }
     
     func calculateStars(for score: Int) -> Int {
-        switch score {
-        case 5:
-            return 3
-        case 4:
-            return 2
-        case 3:
-            return 1
-        default:
-            return 0
-        }
+        return gameLogicService.calculateStars(correctAnswers: score, totalQuestions: totalQuestions)
     }
     
     func resetGame() {
@@ -71,13 +103,52 @@ class GameViewModel {
         isGameCompleted = false
         currentHiragana = ""
         answerChoices = []
+        showFeedback = false
+        earnedStars = 0
+        currentQuestions = []
+        currentQuestionIndex = 0
     }
     
-    private func generateNextQuestion() {
-        guard !currentLevelCharacters.isEmpty else { return }
+    func playHiraganaSound() {
+        guard !currentHiragana.isEmpty else { return }
         
-        currentHiragana = currentLevelCharacters.randomElement() ?? ""
-        answerChoices = hiraganaDataManager.getRandomChoices(for: currentHiragana, count: 3)
+        Task {
+            await audioService.playAudio(for: currentHiragana)
+        }
+    }
+    
+    func getGameStats() -> GameStats {
+        let timeTaken = Date().timeIntervalSince(gameStartTime)
+        return gameLogicService.calculateGameStats(
+            correctAnswers: score,
+            totalQuestions: totalQuestions,
+            timeTaken: timeTaken
+        )
+    }
+    
+    func getHint() -> String {
+        return gameLogicService.generateHint(for: currentHiragana)
+    }
+    
+    func canUnlockNextLevel(withTotalStars totalStars: Int) -> Bool {
+        let nextLevel = currentLevel + 1
+        return gameLogicService.canUnlockLevel(nextLevel, withStars: totalStars)
+    }
+    
+    private func loadCurrentQuestion() {
+        guard currentQuestionIndex < currentQuestions.count else { return }
+        
+        let question = currentQuestions[currentQuestionIndex]
+        currentHiragana = question.hiragana
+        answerChoices = question.choices
+    }
+    
+    private func completeGame() {
+        isGameCompleted = true
+        earnedStars = calculateStars(for: score)
+        
+        // ゲーム完了時の音声停止
+        audioService.stopAllAudio()
     }
     
     func getCurrentProgress() -> Double {
@@ -86,5 +157,21 @@ class GameViewModel {
     
     func getScorePercentage() -> Double {
         return Double(score) / Double(totalQuestions)
+    }
+    
+    func getTimeElapsed() -> TimeInterval {
+        return Date().timeIntervalSince(gameStartTime)
+    }
+    
+    func skipQuestion() {
+        // ヒント機能として、問題をスキップ
+        currentQuestion += 1
+        currentQuestionIndex += 1
+        
+        if currentQuestion > totalQuestions {
+            completeGame()
+        } else {
+            loadCurrentQuestion()
+        }
     }
 }

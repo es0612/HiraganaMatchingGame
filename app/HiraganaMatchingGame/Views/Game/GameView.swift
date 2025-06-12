@@ -20,13 +20,17 @@ struct GameView: View {
                     
                     Spacer()
                     
-                    instructionText
-                    
-                    hiraganaCardView
-                    
-                    Spacer()
-                    
-                    answerChoicesView
+                    if gameViewModel.showFeedback {
+                        feedbackView
+                    } else {
+                        instructionText
+                        
+                        hiraganaCardView
+                        
+                        Spacer()
+                        
+                        answerChoicesView
+                    }
                     
                     Spacer()
                     
@@ -128,7 +132,7 @@ struct GameView: View {
     
     private var soundButton: some View {
         Button(action: {
-            // 音声再生処理
+            gameViewModel.playHiraganaSound()
         }) {
             Image(systemName: "speaker.wave.2.fill")
                 .font(.title2)
@@ -220,9 +224,16 @@ struct GameView: View {
     
     private var nextButton: some View {
         Button(action: {
-            // 次の問題へ進む処理
+            if gameViewModel.isGameCompleted {
+                // ゲーム結果画面への遷移
+                gameViewModel.resetGame()
+                gameViewModel.startNewGame(level: gameViewModel.currentLevel)
+            } else {
+                // ヒント表示
+                print(gameViewModel.getHint())
+            }
         }) {
-            Text("次へ")
+            Text(gameViewModel.isGameCompleted ? "もう一度" : "ヒント")
                 .font(.headline)
                 .foregroundColor(.white)
                 .padding(.horizontal, 20)
@@ -232,6 +243,77 @@ struct GameView: View {
                         .fill(Color.pink.opacity(0.8))
                 )
         }
+    }
+    
+    private var feedbackView: some View {
+        VStack(spacing: 20) {
+            if gameViewModel.lastAnswerCorrect {
+                VStack(spacing: 10) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 60))
+                        .foregroundColor(.green)
+                    
+                    Text("正解！")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .foregroundColor(.green)
+                    
+                    Text("よくできました！")
+                        .font(.headline)
+                        .foregroundColor(.gray)
+                }
+            } else {
+                VStack(spacing: 10) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 60))
+                        .foregroundColor(.red)
+                    
+                    Text("残念...")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .foregroundColor(.red)
+                    
+                    Text("次は頑張ろう！")
+                        .font(.headline)
+                        .foregroundColor(.gray)
+                }
+            }
+            
+            if gameViewModel.isGameCompleted {
+                gameResultView
+            }
+        }
+        .animation(.easeInOut(duration: 0.5), value: gameViewModel.showFeedback)
+    }
+    
+    private var gameResultView: some View {
+        VStack(spacing: 15) {
+            Text("ゲーム終了！")
+                .font(.title2)
+                .fontWeight(.bold)
+            
+            Text("スコア: \(gameViewModel.score)/\(gameViewModel.totalQuestions)")
+                .font(.headline)
+            
+            HStack(spacing: 5) {
+                ForEach(0..<3, id: \.self) { index in
+                    Image(systemName: "star.fill")
+                        .foregroundColor(index < gameViewModel.earnedStars ? .yellow : .gray.opacity(0.3))
+                        .font(.title2)
+                }
+            }
+            
+            let stats = gameViewModel.getGameStats()
+            Text("正解率: \(Int(stats.accuracy * 100))%")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 15)
+                .fill(Color.white.opacity(0.9))
+                .shadow(radius: 5)
+        )
     }
     
     // MARK: - Computed Properties
