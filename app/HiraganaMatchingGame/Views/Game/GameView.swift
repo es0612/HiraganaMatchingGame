@@ -1,9 +1,25 @@
 import SwiftUI
 
 struct GameView: View {
-    @State private var gameViewModel = GameViewModel()
+    let selectedLevel: Int
+    let levelProgressionService: LevelProgressionService
+    let onGameComplete: (Int, Int) -> Void
+    let onBackToLevelSelection: () -> Void
+    
+    @State private var gameViewModel: GameViewModel
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
+    
+    init(selectedLevel: Int = 1, 
+         levelProgressionService: LevelProgressionService = LevelProgressionService(),
+         onGameComplete: @escaping (Int, Int) -> Void = { _, _ in },
+         onBackToLevelSelection: @escaping () -> Void = {}) {
+        self.selectedLevel = selectedLevel
+        self.levelProgressionService = levelProgressionService
+        self.onGameComplete = onGameComplete
+        self.onBackToLevelSelection = onBackToLevelSelection
+        self._gameViewModel = State(initialValue: GameViewModel())
+    }
     
     var body: some View {
         GeometryReader { geometry in
@@ -40,7 +56,7 @@ struct GameView: View {
             }
         }
         .onAppear {
-            gameViewModel.startNewGame(level: 1)
+            gameViewModel.startNewGame(level: selectedLevel)
         }
     }
     
@@ -208,9 +224,9 @@ struct GameView: View {
     
     private var settingsButton: some View {
         Button(action: {
-            // 設定画面を開く
+            onBackToLevelSelection()
         }) {
-            Text("設定")
+            Text("戻る")
                 .font(.headline)
                 .foregroundColor(.white)
                 .padding(.horizontal, 20)
@@ -225,15 +241,14 @@ struct GameView: View {
     private var nextButton: some View {
         Button(action: {
             if gameViewModel.isGameCompleted {
-                // ゲーム結果画面への遷移
-                gameViewModel.resetGame()
-                gameViewModel.startNewGame(level: gameViewModel.currentLevel)
+                // レベル完了をサービスに通知してレベル選択画面に戻る
+                onGameComplete(selectedLevel, gameViewModel.earnedStars)
             } else {
                 // ヒント表示
                 print(gameViewModel.getHint())
             }
         }) {
-            Text(gameViewModel.isGameCompleted ? "もう一度" : "ヒント")
+            Text(gameViewModel.isGameCompleted ? "次のレベル" : "ヒント")
                 .font(.headline)
                 .foregroundColor(.white)
                 .padding(.horizontal, 20)
