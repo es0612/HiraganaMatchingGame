@@ -113,6 +113,7 @@ class StarUnlockService {
     ]
     
     init() {
+        loadFromUserDefaults()
         updateUnlockedCharacters()
     }
     
@@ -133,7 +134,6 @@ class StarUnlockService {
     }
     
     func updateUnlockedCharacters() {
-        let previousCount = unlockedCharacters.count
         var newlyUnlocked: [String] = []
         
         for (groupName, requiredStars) in groupUnlockRequirements.sorted(by: { $0.value < $1.value }) {
@@ -222,6 +222,9 @@ class StarUnlockService {
         
         // 連続記録更新
         updateStreak(stars: stars)
+        
+        // データを保存
+        saveToUserDefaults()
     }
     
     private func updateLevelStatistics(level: Int, stars: Int, accuracy: Double, time: Double) {
@@ -398,5 +401,67 @@ class StarUnlockService {
         currentStreak = 0
         highestStreak = 0
         updateUnlockedCharacters()
+        saveToUserDefaults()
+    }
+    
+    // MARK: - データ永続化
+    
+    private func saveToUserDefaults() {
+        UserDefaults.standard.set(totalStars, forKey: "StarUnlock_TotalStars")
+        UserDefaults.standard.set(Array(unlockedCharacters), forKey: "StarUnlock_UnlockedCharacters")
+        UserDefaults.standard.set(totalTimePlayed, forKey: "StarUnlock_TotalTimePlayed")
+        UserDefaults.standard.set(totalAccuracy, forKey: "StarUnlock_TotalAccuracy")
+        UserDefaults.standard.set(completedLevelsCount, forKey: "StarUnlock_CompletedLevelsCount")
+        UserDefaults.standard.set(currentStreak, forKey: "StarUnlock_CurrentStreak")
+        UserDefaults.standard.set(highestStreak, forKey: "StarUnlock_HighestStreak")
+        
+        // 実績保存
+        let achievementStrings = unlockedAchievements.map { $0.rawValue }
+        UserDefaults.standard.set(achievementStrings, forKey: "StarUnlock_Achievements")
+        
+        // レベル統計保存（簡略化）
+        var levelStarsDict: [String: Int] = [:]
+        for (level, stats) in levelStatistics {
+            levelStarsDict[String(level)] = stats.bestStars
+        }
+        UserDefaults.standard.set(levelStarsDict, forKey: "StarUnlock_LevelStars")
+    }
+    
+    private func loadFromUserDefaults() {
+        totalStars = UserDefaults.standard.integer(forKey: "StarUnlock_TotalStars")
+        
+        if let characters = UserDefaults.standard.array(forKey: "StarUnlock_UnlockedCharacters") as? [String] {
+            unlockedCharacters = Set(characters)
+        } else {
+            unlockedCharacters = ["あ", "い", "う", "え", "お"] // デフォルト
+        }
+        
+        totalTimePlayed = UserDefaults.standard.double(forKey: "StarUnlock_TotalTimePlayed")
+        totalAccuracy = UserDefaults.standard.double(forKey: "StarUnlock_TotalAccuracy")
+        completedLevelsCount = UserDefaults.standard.integer(forKey: "StarUnlock_CompletedLevelsCount")
+        currentStreak = UserDefaults.standard.integer(forKey: "StarUnlock_CurrentStreak")
+        highestStreak = UserDefaults.standard.integer(forKey: "StarUnlock_HighestStreak")
+        
+        // 実績読み込み
+        if let achievementStrings = UserDefaults.standard.array(forKey: "StarUnlock_Achievements") as? [String] {
+            unlockedAchievements = Set(achievementStrings.compactMap { Achievement(rawValue: $0) })
+        }
+        
+        // レベル統計読み込み（簡略化）
+        if let levelStarsDict = UserDefaults.standard.dictionary(forKey: "StarUnlock_LevelStars") as? [String: Int] {
+            for (levelString, stars) in levelStarsDict {
+                if let level = Int(levelString) {
+                    levelStatistics[level] = LevelStatistics(
+                        level: level,
+                        bestStars: stars,
+                        bestAccuracy: 1.0, // 仮の値
+                        bestTime: 30.0, // 仮の値
+                        totalAttempts: 1,
+                        averageStars: Double(stars),
+                        lastPlayed: Date()
+                    )
+                }
+            }
+        }
     }
 }

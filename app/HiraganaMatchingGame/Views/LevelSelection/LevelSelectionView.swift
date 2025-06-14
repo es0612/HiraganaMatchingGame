@@ -8,6 +8,7 @@ struct LevelSelectionView: View {
     let onLevelSelected: (Int) -> Void
     let onCharacterCollectionPressed: () -> Void
     let onAchievementsPressed: () -> Void
+    let onSettingsPressed: () -> Void
     
     var body: some View {
         GeometryReader { geometry in
@@ -27,12 +28,14 @@ struct LevelSelectionView: View {
                     Spacer()
                     
                     levelGridView
+                        .accessibilityIdentifier("レベル選択グリッド")
                     
                     Spacer()
                     
                     footerView
                 }
                 .padding()
+                .accessibilityIdentifier("レベル選択画面")
             }
         }
     }
@@ -220,7 +223,7 @@ struct LevelSelectionView: View {
                 )
                 
                 Button("設定") {
-                    // 設定画面を開く
+                    onSettingsPressed()
                 }
                 .font(.headline)
                 .foregroundColor(.white)
@@ -255,6 +258,9 @@ struct LevelSelectionView: View {
         },
         onAchievementsPressed: {
             print("Achievements pressed")
+        },
+        onSettingsPressed: {
+            print("Settings pressed")
         }
     )
 }

@@ -5,27 +5,41 @@ struct GameView: View {
     let levelProgressionService: LevelProgressionService
     let onGameComplete: (Int, Int) -> Void
     let onBackToLevelSelection: () -> Void
+    let userSettings: UserSettings?
     
     @State private var gameViewModel: GameViewModel
+    @State private var showHint = false
+    @State private var hintText = ""
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     
     init(selectedLevel: Int = 1, 
          levelProgressionService: LevelProgressionService = LevelProgressionService(),
+         userSettings: UserSettings? = nil,
          onGameComplete: @escaping (Int, Int) -> Void = { _, _ in },
          onBackToLevelSelection: @escaping () -> Void = {}) {
         self.selectedLevel = selectedLevel
         self.levelProgressionService = levelProgressionService
+        self.userSettings = userSettings
         self.onGameComplete = onGameComplete
         self.onBackToLevelSelection = onBackToLevelSelection
-        self._gameViewModel = State(initialValue: GameViewModel())
+        
+        if let settings = userSettings {
+            self._gameViewModel = State(initialValue: GameViewModel(userSettings: settings))
+        } else {
+            self._gameViewModel = State(initialValue: GameViewModel())
+        }
     }
     
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 LinearGradient(
-                    colors: [Color.pink.opacity(0.1), Color.orange.opacity(0.1)],
+                    colors: [
+                        Color.pink.opacity(0.08),
+                        Color.orange.opacity(0.06),
+                        Color.blue.opacity(0.04)
+                    ],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
@@ -33,19 +47,28 @@ struct GameView: View {
                 
                 VStack(spacing: 20) {
                     headerView
+                        .accessibilityIdentifier("ゲームヘッダー")
                     
                     Spacer()
                     
                     if gameViewModel.showFeedback {
                         feedbackView
                     } else {
-                        instructionText
-                        
-                        hiraganaCardView
-                        
-                        Spacer()
-                        
-                        answerChoicesView
+                        VStack(spacing: 20) {
+                            instructionText
+                            
+                            hiraganaCardView
+                            
+                            // ヒント表示
+                            if showHint {
+                                hintView
+                            }
+                            
+                            Spacer()
+                            
+                            answerChoicesView
+                        }
+                        .accessibilityIdentifier("ゲームエリア")
                     }
                     
                     Spacer()
@@ -53,6 +76,7 @@ struct GameView: View {
                     bottomControlsView
                 }
                 .padding()
+                .accessibilityIdentifier("ゲーム画面")
             }
         }
         .onAppear {
@@ -77,28 +101,43 @@ struct GameView: View {
     private var levelBadgeView: some View {
         Text("レベル \(gameViewModel.currentLevel)")
             .font(.headline)
+            .fontWeight(.bold)
             .foregroundColor(.white)
             .padding(.horizontal, 20)
-            .padding(.vertical, 10)
+            .padding(.vertical, 12)
             .background(
                 RoundedRectangle(cornerRadius: 25)
-                    .fill(Color.pink.opacity(0.8))
+                    .fill(
+                        LinearGradient(
+                            colors: [Color.pink.opacity(0.9), Color.orange.opacity(0.8)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 2)
             )
     }
     
     private var progressBarView: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(Color.gray.opacity(0.3))
-                    .frame(height: 8)
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.gray.opacity(0.2))
+                    .frame(height: 10)
                 
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(Color.pink.opacity(0.8))
-                    .frame(width: geometry.size.width * gameViewModel.getCurrentProgress(), height: 8)
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(
+                        LinearGradient(
+                            colors: [Color.green.opacity(0.8), Color.blue.opacity(0.6)],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .frame(width: geometry.size.width * gameViewModel.getCurrentProgress(), height: 10)
+                    .animation(.easeInOut(duration: 0.3), value: gameViewModel.getCurrentProgress())
             }
         }
-        .frame(height: 8)
+        .frame(height: 10)
         .frame(maxWidth: 200)
     }
     
@@ -115,32 +154,47 @@ struct GameView: View {
     private var instructionText: some View {
         Text("この文字に合う絵を選んでね！")
             .font(.title2)
-            .foregroundColor(.gray)
+            .fontWeight(.medium)
+            .foregroundColor(.primary.opacity(0.8))
             .multilineTextAlignment(.center)
+            .padding(.horizontal)
     }
     
     private var hiraganaCardView: some View {
         ZStack {
+            // 背景カード
             RoundedRectangle(cornerRadius: 20)
-                .fill(Color.white)
-                .stroke(Color.pink.opacity(0.5), lineWidth: 3)
-                .frame(width: 200, height: 200)
-                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+                .fill(
+                    LinearGradient(
+                        colors: [Color.white, Color.pink.opacity(0.05)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .stroke(
+                    LinearGradient(
+                        colors: [Color.pink.opacity(0.6), Color.orange.opacity(0.4)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 4
+                )
+                .frame(width: 220, height: 220)
+                .shadow(color: .black.opacity(0.15), radius: 8, x: 0, y: 4)
             
+            // ひらがな文字を完全に中央配置
+            Text(gameViewModel.currentHiragana)
+                .font(.system(size: 90, weight: .bold, design: .rounded))
+                .foregroundColor(.black)
+                .frame(width: 220, height: 220)
+            
+            // サウンドボタンを右上に配置
             VStack {
                 HStack {
                     Spacer()
                     soundButton
+                        .offset(x: -15, y: 15)
                 }
-                .padding(.top, 10)
-                .padding(.trailing, 10)
-                
-                Spacer()
-                
-                Text(gameViewModel.currentHiragana)
-                    .font(.system(size: 80, weight: .bold))
-                    .foregroundColor(.black)
-                
                 Spacer()
             }
         }
@@ -151,21 +205,31 @@ struct GameView: View {
             gameViewModel.playHiraganaSound()
         }) {
             Image(systemName: "speaker.wave.2.fill")
-                .font(.title2)
+                .font(.title3)
                 .foregroundColor(.white)
-                .frame(width: 40, height: 40)
+                .frame(width: 36, height: 36)
                 .background(
                     Circle()
-                        .fill(Color.pink.opacity(0.8))
+                        .fill(
+                            LinearGradient(
+                                colors: [Color.pink.opacity(0.9), Color.orange.opacity(0.7)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .shadow(color: .black.opacity(0.2), radius: 3, x: 0, y: 2)
                 )
         }
+        .scaleEffect(1.0)
+        .animation(.easeInOut(duration: 0.1), value: gameViewModel.currentHiragana)
     }
     
     private var answerChoicesView: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 15) {
             Text("正しい絵をタップしてください")
                 .font(.headline)
-                .foregroundColor(.gray)
+                .fontWeight(.medium)
+                .foregroundColor(.primary.opacity(0.7))
             
             if isLandscape {
                 HStack(spacing: 20) {
@@ -187,24 +251,43 @@ struct GameView: View {
         Button(action: {
             gameViewModel.selectAnswer(choice.imageName)
         }) {
-            VStack(spacing: 8) {
+            VStack(spacing: 10) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 15)
-                        .fill(Color.white)
+                    RoundedRectangle(cornerRadius: 18)
+                        .fill(
+                            LinearGradient(
+                                colors: [Color.white, Color.blue.opacity(0.05)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .stroke(
+                            LinearGradient(
+                                colors: [Color.blue.opacity(0.3), Color.purple.opacity(0.2)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 2
+                        )
                         .frame(width: choiceButtonSize, height: choiceButtonSize)
-                        .shadow(color: .black.opacity(0.1), radius: 3, x: 0, y: 1)
+                        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
                     
-                    // 実際のアプリでは画像を表示
+                    // 絵文字を中央に配置
                     Text(getEmojiForImageName(choice.imageName))
-                        .font(.system(size: choiceButtonSize * 0.6))
+                        .font(.system(size: choiceButtonSize * 0.55))
+                        .frame(width: choiceButtonSize, height: choiceButtonSize)
                 }
                 
                 Text(getReadingForCharacter(choice.character))
                     .font(.caption)
+                    .fontWeight(.medium)
                     .foregroundColor(.black)
+                    .multilineTextAlignment(.center)
             }
         }
         .buttonStyle(PlainButtonStyle())
+        .scaleEffect(1.0)
+        .animation(.easeInOut(duration: 0.1), value: gameViewModel.currentHiragana)
     }
     
     private var bottomControlsView: some View {
@@ -245,7 +328,7 @@ struct GameView: View {
                 onGameComplete(selectedLevel, gameViewModel.earnedStars)
             } else {
                 // ヒント表示
-                print(gameViewModel.getHint())
+                showHintAlert()
             }
         }) {
             Text(gameViewModel.isGameCompleted ? "次のレベル" : "ヒント")
@@ -257,6 +340,53 @@ struct GameView: View {
                     RoundedRectangle(cornerRadius: 25)
                         .fill(Color.pink.opacity(0.8))
                 )
+        }
+    }
+    
+    private var hintView: some View {
+        VStack(spacing: 10) {
+            HStack {
+                Image(systemName: "lightbulb.fill")
+                    .foregroundColor(.yellow)
+                    .font(.title2)
+                Text("ヒント")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                Spacer()
+                Button("×") {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        showHint = false
+                    }
+                }
+                .foregroundColor(.gray)
+                .font(.title2)
+            }
+            
+            Text(hintText)
+                .font(.body)
+                .foregroundColor(.primary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+        }
+        .padding()
+        .background(Color.yellow.opacity(0.1))
+        .cornerRadius(15)
+        .shadow(color: .black.opacity(0.1), radius: 3, x: 0, y: 2)
+        .padding(.horizontal)
+        .transition(.opacity.combined(with: .move(edge: .top)))
+    }
+    
+    private func showHintAlert() {
+        hintText = gameViewModel.getHint()
+        withAnimation(.easeInOut(duration: 0.3)) {
+            showHint = true
+        }
+        
+        // 5秒後に自動的にヒントを非表示にする
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            withAnimation(.easeInOut(duration: 0.3)) {
+                showHint = false
+            }
         }
     }
     
@@ -338,40 +468,114 @@ struct GameView: View {
     }
     
     private var choiceButtonSize: CGFloat {
-        isLandscape ? 80 : 100
+        isLandscape ? 90 : 110
     }
     
     // MARK: - Helper Functions
     
     private func getEmojiForImageName(_ imageName: String) -> String {
         switch imageName {
-        case "cat": return "🐱"
+        // あ行
+        case "ant": return "🐜"
         case "dog": return "🐶"
         case "rabbit": return "🐰"
-        case "bear": return "🐻"
-        case "ant": return "🐜"
         case "shrimp": return "🦐"
         case "demon": return "👹"
+        
+        // か行
         case "crab": return "🦀"
         case "giraffe": return "🦒"
+        case "bear": return "🐻"
         case "cake": return "🍰"
         case "top": return "🌀"
+        
+        // さ行
         case "monkey": return "🐵"
         case "deer": return "🦌"
         case "watermelon": return "🍉"
         case "cicada": return "🦗"
         case "sky": return "🌌"
+        
+        // た行
+        case "octopus": return "🐙"
+        case "butterfly": return "🦋"
+        case "crane": return "🕊️"
+        case "hand": return "✋"
+        case "clock": return "⏰"
+        
+        // な行
+        case "eggplant": return "🍆"
+        case "carrot": return "🥕"
+        case "doll": return "🪆"
+        case "cat": return "🐱"
+        case "field": return "🌾"
+        
+        // は行
+        case "flower": return "🌸"
+        case "chick": return "🐤"
+        case "boat": return "⛵"
+        case "snake": return "🐍"
+        case "bone": return "🦴"
+        
+        // ま行
+        case "bean": return "🫘"
+        case "ear": return "👂"
+        case "bug": return "🐛"
+        case "eye": return "👁️"
+        case "peach": return "🍑"
+        
+        // や行
+        case "arrow": return "🏹"
+        case "hot_water": return "♨️"
+        case "night": return "🌙"
+        
+        // ら行
+        case "trumpet": return "🎺"
+        case "apple": return "🍎"
+        case "loop": return "🔄"
+        case "refrigerator": return "🧊"
+        case "candle": return "🕯️"
+        
+        // わ行
+        case "ring": return "💍"
+        case "man": return "👨"
+        case "antenna": return "📡"
+        
         default: return "❓"
         }
     }
     
     private func getReadingForCharacter(_ character: String) -> String {
         let readings: [String: String] = [
+            // あ行
             "あ": "あり", "い": "いぬ", "う": "うさぎ", "え": "えび", "お": "おに",
+            
+            // か行
             "か": "かに", "き": "きりん", "く": "くま", "け": "けーき", "こ": "こま",
+            
+            // さ行
             "さ": "さる", "し": "しか", "す": "すいか", "せ": "せみ", "そ": "そら",
+            
+            // た行
             "た": "たこ", "ち": "ちょう", "つ": "つる", "て": "て", "と": "とけい",
-            "な": "なす", "に": "にんじん", "ぬ": "ぬいぐるみ", "ね": "ねこ", "の": "のはら"
+            
+            // な行
+            "な": "なす", "に": "にんじん", "ぬ": "ぬいぐるみ", "ね": "ねこ", "の": "のはら",
+            
+            // は行
+            "は": "はな", "ひ": "ひよこ", "ふ": "ふね", "へ": "へび", "ほ": "ほね",
+            
+            // ま行
+            "ま": "まめ", "み": "みみ", "む": "むし", "め": "め", "も": "もも",
+            
+            // や行
+            "や": "やじるし", "ゆ": "ゆ", "よ": "よる",
+            
+            // ら行
+            "ら": "らっぱ", "り": "りんご", "る": "るーぷ", "れ": "れいぞうこ", "ろ": "ろうそく",
+            
+            // わ行
+            "わ": "わ", "を": "をとこ", "ん": "あんてな"
         ]
         return readings[character] ?? character
     }

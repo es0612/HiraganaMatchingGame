@@ -1,39 +1,22 @@
 import Foundation
-import SwiftData
+@testable import HiraganaMatchingGame
 
-enum GameSpeed: String, CaseIterable {
-    case slow = "遅い"
-    case normal = "普通"
-    case fast = "速い"
-}
-
-enum GameDifficulty: String, CaseIterable {
-    case easy = "簡単"
-    case normal = "普通"
-    case hard = "難しい"
-}
-
-@Model
-final class UserSettings {
-    var soundEnabled: Bool
-    var musicEnabled: Bool
-    var playtimeLimit: Int
-    var voiceSpeed: Double
+// テスト専用のUserSettings（@Modelなし）
+class TestableUserSettings {
+    var soundEnabled: Bool = true
+    var musicEnabled: Bool = true
+    var playtimeLimit: Int = 0
+    var voiceSpeed: Double = 1.0
+    var soundVolume: Double = 0.8
+    private var gameSpeedRaw: String = GameSpeed.normal.rawValue
+    private var difficultyRaw: String = GameDifficulty.normal.rawValue
+    var autoAdvance: Bool = false
+    var showHints: Bool = true
+    var largeText: Bool = false
+    var reduceAnimations: Bool = false
     
-    // 新しい設定項目
-    var soundVolume: Double
-    private var gameSpeedRaw: String
-    private var difficultyRaw: String
-    var autoAdvance: Bool
-    var showHints: Bool
-    var largeText: Bool
-    var reduceAnimations: Bool
-    
-    // 設定変更通知（@Modelからは除外）
-    @Transient
     var onSettingChanged: ((String) -> Void)?
     
-    // Computed properties for enum access
     var gameSpeed: GameSpeed {
         get { GameSpeed(rawValue: gameSpeedRaw) ?? .normal }
         set { 
@@ -50,38 +33,6 @@ final class UserSettings {
         }
     }
     
-    init() {
-        self.soundEnabled = true
-        self.musicEnabled = true
-        self.playtimeLimit = 0
-        self.voiceSpeed = 1.0
-        
-        // 新しい設定項目の初期値
-        self.soundVolume = 0.8
-        self.gameSpeedRaw = GameSpeed.normal.rawValue
-        self.difficultyRaw = GameDifficulty.normal.rawValue
-        self.autoAdvance = false
-        self.showHints = true
-        self.largeText = false
-        self.reduceAnimations = false
-    }
-    
-    func updateSettings(
-        soundEnabled: Bool,
-        musicEnabled: Bool,
-        playtimeLimit: Int,
-        voiceSpeed: Double
-    ) {
-        self.soundEnabled = soundEnabled
-        self.musicEnabled = musicEnabled
-        self.playtimeLimit = playtimeLimit
-        self.voiceSpeed = max(0.5, min(2.0, voiceSpeed))
-    }
-    
-    func setVoiceSpeed(_ speed: Double) {
-        voiceSpeed = max(0.5, min(2.0, speed))
-    }
-    
     func toggleSound() {
         soundEnabled.toggle()
         onSettingChanged?("soundEnabled")
@@ -92,49 +43,54 @@ final class UserSettings {
         onSettingChanged?("musicEnabled")
     }
     
-    // 音量設定（0.0-1.0の範囲でクランプ）
     func setSoundVolume(_ volume: Double) {
         soundVolume = max(0.0, min(1.0, volume))
         onSettingChanged?("soundVolume")
     }
     
-    // ゲーム速度設定
     func setGameSpeed(_ speed: GameSpeed) {
         gameSpeedRaw = speed.rawValue
         onSettingChanged?("gameSpeed")
     }
     
-    // 難易度設定
     func setDifficulty(_ newDifficulty: GameDifficulty) {
         difficultyRaw = newDifficulty.rawValue
         onSettingChanged?("difficulty")
     }
     
-    // 自動進行設定
     func setAutoAdvance(_ enabled: Bool) {
         autoAdvance = enabled
         onSettingChanged?("autoAdvance")
     }
     
-    // ヒント表示設定
     func setShowHints(_ enabled: Bool) {
         showHints = enabled
         onSettingChanged?("showHints")
     }
     
-    // 大きな文字設定
     func setLargeText(_ enabled: Bool) {
         largeText = enabled
         onSettingChanged?("largeText")
     }
     
-    // アニメーション軽減設定
     func setReduceAnimations(_ enabled: Bool) {
         reduceAnimations = enabled
         onSettingChanged?("reduceAnimations")
     }
     
-    // 設定をデフォルトに戻す
+    func setVoiceSpeed(_ speed: Double) {
+        voiceSpeed = max(0.5, min(2.0, speed))
+        onSettingChanged?("voiceSpeed")
+    }
+    
+    func updateSettings(soundEnabled: Bool, musicEnabled: Bool, playtimeLimit: Int, voiceSpeed: Double) {
+        self.soundEnabled = soundEnabled
+        self.musicEnabled = musicEnabled
+        self.playtimeLimit = playtimeLimit
+        self.voiceSpeed = max(0.5, min(2.0, voiceSpeed))
+        onSettingChanged?("updateSettings")
+    }
+    
     func resetToDefaults() {
         soundEnabled = true
         musicEnabled = true
@@ -150,7 +106,6 @@ final class UserSettings {
         onSettingChanged?("reset")
     }
     
-    // 設定の保存（UserDefaultsを使用）
     func save() {
         UserDefaults.standard.set(soundEnabled, forKey: "soundEnabled")
         UserDefaults.standard.set(musicEnabled, forKey: "musicEnabled")
@@ -165,7 +120,6 @@ final class UserSettings {
         UserDefaults.standard.set(reduceAnimations, forKey: "reduceAnimations")
     }
     
-    // 設定の読み込み（UserDefaultsから）
     func load() {
         soundEnabled = UserDefaults.standard.bool(forKey: "soundEnabled")
         musicEnabled = UserDefaults.standard.bool(forKey: "musicEnabled")
@@ -187,15 +141,9 @@ final class UserSettings {
         reduceAnimations = UserDefaults.standard.bool(forKey: "reduceAnimations")
     }
     
-    // 設定の検証
     func validateSettings() -> Bool {
         return soundVolume >= 0.0 && soundVolume <= 1.0 &&
                voiceSpeed >= 0.5 && voiceSpeed <= 2.0 &&
                playtimeLimit >= 0
-    }
-    
-    // 設定変更の通知を設定
-    private func setupNotifications() {
-        // 設定変更時の通知設定をここで行う
     }
 }

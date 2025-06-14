@@ -18,15 +18,29 @@ class GameViewModel {
     private let gameLogicService: GameLogicService
     private let audioService: AudioService
     private let starUnlockService: StarUnlockService
+    private let levelProgressionService: LevelProgressionService
     private var currentQuestions: [GameQuestion] = []
     private var currentQuestionIndex: Int = 0
     
     init(gameLogicService: GameLogicService = GameLogicService(), 
          audioService: AudioService = AudioService(),
-         starUnlockService: StarUnlockService = StarUnlockService()) {
+         starUnlockService: StarUnlockService = StarUnlockService(),
+         levelProgressionService: LevelProgressionService = LevelProgressionService()) {
         self.gameLogicService = gameLogicService
         self.audioService = audioService
         self.starUnlockService = starUnlockService
+        self.levelProgressionService = levelProgressionService
+    }
+    
+    convenience init(userSettings: UserSettings) {
+        let audioService = AudioService(userSettings: userSettings)
+        let gameLogicService = GameLogicService(userSettings: userSettings)
+        self.init(
+            gameLogicService: gameLogicService,
+            audioService: audioService,
+            starUnlockService: StarUnlockService(),
+            levelProgressionService: LevelProgressionService()
+        )
     }
     
     func startNewGame(level: Int) {
@@ -62,12 +76,18 @@ class GameViewModel {
             score += 1
             lastAnswerCorrect = true
             
+            // 正解音を再生
+            audioService.playCorrectSound()
+            
             // 正解時の音声再生
             Task {
                 await audioService.playAudio(for: currentGameQuestion.hiragana)
             }
         } else {
             lastAnswerCorrect = false
+            
+            // 不正解音を再生
+            audioService.playIncorrectSound()
         }
         
         // フィードバック表示
@@ -165,6 +185,9 @@ class GameViewModel {
             accuracy: accuracy,
             time: timeTaken
         )
+        
+        // レベル進行サービスにも記録
+        levelProgressionService.completeLevel(currentLevel, earnedStars: earnedStars)
         
         // ゲーム完了時の音声停止
         audioService.stopAllAudio()

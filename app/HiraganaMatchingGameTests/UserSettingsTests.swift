@@ -4,7 +4,7 @@ import SwiftData
 
 @Test("UserSettingsモデル初期化テスト")
 func userSettingsInitialization() {
-    let settings = UserSettings()
+    let settings = TestableUserSettings()
     
     #expect(settings.soundEnabled == true)
     #expect(settings.musicEnabled == true)
@@ -14,7 +14,7 @@ func userSettingsInitialization() {
 
 @Test("設定値更新テスト")
 func settingsUpdate() {
-    let settings = UserSettings()
+    let settings = TestableUserSettings()
     
     settings.updateSettings(
         soundEnabled: false,
@@ -31,7 +31,7 @@ func settingsUpdate() {
 
 @Test("音声速度の範囲制限テスト")
 func voiceSpeedRange() {
-    let settings = UserSettings()
+    let settings = TestableUserSettings()
     
     settings.setVoiceSpeed(2.5)
     #expect(settings.voiceSpeed == 2.0)

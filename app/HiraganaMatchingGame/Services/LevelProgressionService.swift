@@ -25,8 +25,12 @@ class LevelProgressionService {
     private let totalLevels: Int = 10
     
     init() {
-        // 初期化時はレベル1のみ解放
-        levelStars[1] = 0
+        loadFromUserDefaults()
+        
+        // 初期化時はレベル1のみ解放（初回起動時）
+        if levelStars.isEmpty {
+            levelStars[1] = 0
+        }
     }
     
     func getCurrentLevel() -> Int {
@@ -66,6 +70,7 @@ class LevelProgressionService {
         if clampedStars > previousStars {
             totalStars = totalStars - previousStars + clampedStars
             levelStars[level] = clampedStars
+            saveToUserDefaults()
         }
     }
     
@@ -206,6 +211,33 @@ class LevelProgressionService {
         levelStars.removeAll()
         levelStars[1] = 0
         totalStars = 0
+        saveToUserDefaults()
+    }
+    
+    // MARK: - データ永続化
+    
+    private func saveToUserDefaults() {
+        UserDefaults.standard.set(totalStars, forKey: "LevelProgression_TotalStars")
+        
+        // レベルスター辞書を保存
+        var levelStarsDict: [String: Int] = [:]
+        for (level, stars) in levelStars {
+            levelStarsDict[String(level)] = stars
+        }
+        UserDefaults.standard.set(levelStarsDict, forKey: "LevelProgression_LevelStars")
+    }
+    
+    private func loadFromUserDefaults() {
+        totalStars = UserDefaults.standard.integer(forKey: "LevelProgression_TotalStars")
+        
+        if let levelStarsDict = UserDefaults.standard.dictionary(forKey: "LevelProgression_LevelStars") as? [String: Int] {
+            levelStars.removeAll()
+            for (levelString, stars) in levelStarsDict {
+                if let level = Int(levelString) {
+                    levelStars[level] = stars
+                }
+            }
+        }
     }
     
     func loadProgress(from gameProgress: GameProgress) {

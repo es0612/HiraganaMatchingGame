@@ -149,7 +149,13 @@ struct LevelProgressionIntegrationTests {
         
         // レベル完了とデータ保存
         viewModel.completeLevel(1, stars: 3)
-        viewModel.saveProgress()
+        
+        // ModelContextを保存
+        do {
+            try context.save()
+        } catch {
+            print("Context save error: \(error)")
+        }
         
         // 新しいViewModelでデータ読み込み
         let newViewModel = LevelSelectionViewModel()

@@ -7,7 +7,7 @@ struct StarUnlockSystemTests {
     
     @Test("初期キャラクター解放状態確認")
     func initialCharacterUnlockState() {
-        let service = StarUnlockService()
+        let service = TestableStarUnlockService()
         
         // 初期状態：あ行のみ解放
         #expect(service.getUnlockedCharacters().count == 5)
@@ -24,7 +24,7 @@ struct StarUnlockSystemTests {
     
     @Test("スター獲得によるキャラクター解放")
     func characterUnlockByStars() {
-        let service = StarUnlockService()
+        let service = TestableStarUnlockService()
         
         // 1スター獲得でか行解放
         service.addStars(1)
@@ -48,7 +48,7 @@ struct StarUnlockSystemTests {
     
     @Test("スター獲得計算システム")
     func starCalculationSystem() {
-        let service = StarUnlockService()
+        let service = TestableStarUnlockService()
         
         // 完璧な正解率（100%）
         let perfectStars = service.calculateStars(correctAnswers: 5, totalQuestions: 5, timeTaken: 30.0)
@@ -73,7 +73,7 @@ struct StarUnlockSystemTests {
     
     @Test("特別キャラクター解放条件")
     func specialCharacterUnlock() {
-        let service = StarUnlockService()
+        let service = TestableStarUnlockService()
         
         // 通常の解放
         service.addStars(5)
@@ -85,13 +85,18 @@ struct StarUnlockSystemTests {
         service.updateUnlockedCharacters()
         #expect(service.isCharacterUnlocked("ん") == false) // まだ解放されない
         
+        // 全レベルクリアを記録
+        for level in 1...10 {
+            service.recordLevelCompletion(level: level, stars: 2, accuracy: 0.8, time: 40.0)
+        }
+        
         service.unlockSpecialCharacter("ん", requirement: .allLevelsCompleted)
         #expect(service.isCharacterUnlocked("ん") == true)
     }
     
     @Test("キャラクター解放通知システム")
     func characterUnlockNotification() {
-        let service = StarUnlockService()
+        let service = TestableStarUnlockService()
         var notificationReceived = false
         var unlockedCharacters: [String] = []
         
@@ -111,7 +116,7 @@ struct StarUnlockSystemTests {
     
     @Test("累積スター統計")
     func cumulativeStarStatistics() {
-        let service = StarUnlockService()
+        let service = TestableStarUnlockService()
         
         // 複数レベルからスター獲得
         service.recordLevelCompletion(level: 1, stars: 3, accuracy: 1.0, time: 30.0)
@@ -129,7 +134,7 @@ struct StarUnlockSystemTests {
     
     @Test("レベル改善による追加スター")
     func levelImprovementStars() {
-        let service = StarUnlockService()
+        let service = TestableStarUnlockService()
         
         // 初回クリア（1スター）
         service.recordLevelCompletion(level: 1, stars: 1, accuracy: 0.6, time: 90.0)
@@ -149,7 +154,7 @@ struct StarUnlockSystemTests {
     
     @Test("キャラクター解放進捗表示")
     func characterUnlockProgress() {
-        let service = StarUnlockService()
+        let service = TestableStarUnlockService()
         
         // 初期進捗
         let initialProgress = service.getUnlockProgress()
@@ -167,13 +172,14 @@ struct StarUnlockSystemTests {
         
         // 次の解放まで必要なスター数
         let nextUnlock = service.getNextUnlockInfo()
-        #expect(nextUnlock.requiredStars > 0)
-        #expect(nextUnlock.charactersToUnlock.contains("た"))
+        #expect(nextUnlock != nil)
+        #expect(nextUnlock!.requiredStars > 0)
+        #expect(nextUnlock!.charactersToUnlock.contains("た"))
     }
     
     @Test("実績・バッジシステム")
     func achievementBadgeSystem() {
-        let service = StarUnlockService()
+        let service = TestableStarUnlockService()
         
         // 初期状態：実績なし
         #expect(service.getUnlockedAchievements().isEmpty == true)
