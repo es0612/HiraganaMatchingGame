@@ -146,7 +146,7 @@ class LevelProgressionService {
                 level: 2,
                 title: "か行をおぼえよう",
                 characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ"],
-                requiredStars: 1,
+                requiredStars: 2,
                 questionsCount: 5,
                 description: "か行を覚えて、ひらがなの世界を広げよう！"
             ),
@@ -154,7 +154,7 @@ class LevelProgressionService {
                 level: 3,
                 title: "さ行をおぼえよう",
                 characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ"],
-                requiredStars: 2,
+                requiredStars: 4,
                 questionsCount: 6,
                 description: "さ行をマスターして、更にレベルアップ！"
             ),
@@ -162,7 +162,7 @@ class LevelProgressionService {
                 level: 4,
                 title: "た行をおぼえよう",
                 characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と"],
-                requiredStars: 3,
+                requiredStars: 6,
                 questionsCount: 6,
                 description: "た行も仲間に加えて、どんどん上達！"
             ),
@@ -170,7 +170,7 @@ class LevelProgressionService {
                 level: 5,
                 title: "な行をおぼえよう",
                 characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の"],
-                requiredStars: 4,
+                requiredStars: 8,
                 questionsCount: 7,
                 description: "な行を覚えて、ひらがなマスターに近づこう！"
             ),
@@ -178,7 +178,7 @@ class LevelProgressionService {
                 level: 6,
                 title: "は行をおぼえよう",
                 characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ"],
-                requiredStars: 5,
+                requiredStars: 10,
                 questionsCount: 7,
                 description: "は行をマスターして、さらなる高みを目指そう！"
             ),
@@ -186,7 +186,7 @@ class LevelProgressionService {
                 level: 7,
                 title: "ま行をおぼえよう",
                 characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ", "ま", "み", "む", "め", "も"],
-                requiredStars: 6,
+                requiredStars: 12,
                 questionsCount: 8,
                 description: "ま行も覚えて、ひらがなの達人に！"
             ),
@@ -194,7 +194,7 @@ class LevelProgressionService {
                 level: 8,
                 title: "や行をおぼえよう",
                 characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ", "ま", "み", "む", "め", "も", "や", "ゆ", "よ"],
-                requiredStars: 7,
+                requiredStars: 14,
                 questionsCount: 8,
                 description: "や行をマスターして、ゴールが見えてきた！"
             ),
@@ -202,7 +202,7 @@ class LevelProgressionService {
                 level: 9,
                 title: "ら行をおぼえよう",
                 characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ", "ま", "み", "む", "め", "も", "や", "ゆ", "よ", "ら", "り", "る", "れ", "ろ"],
-                requiredStars: 8,
+                requiredStars: 16,
                 questionsCount: 9,
                 description: "ら行をクリアして、最終ステージへ！"
             ),
@@ -210,7 +210,7 @@ class LevelProgressionService {
                 level: 10,
                 title: "すべてのひらがな",
                 characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ", "ま", "み", "む", "め", "も", "や", "ゆ", "よ", "ら", "り", "る", "れ", "ろ", "わ", "ゐ", "ゑ", "を", "ん"],
-                requiredStars: 9,
+                requiredStars: 18,
                 questionsCount: 10,
                 description: "全てのひらがなをマスターして、真のひらがな博士になろう！"
             )

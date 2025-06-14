@@ -51,11 +51,11 @@ struct LevelProgressionServiceTests {
         // 順次解放なので、レベル2をクリアするまでレベル3は解放されない
         #expect(service.isLevelUnlocked(3) == false)
         
-        // レベル2完了（1スター）
-        service.completeLevel(2, earnedStars: 1)
+        // レベル2完了（2スター）
+        service.completeLevel(2, earnedStars: 2)
         
-        #expect(service.getTotalStars() == 4)
-        #expect(service.getStarsForLevel(2) == 1)
+        #expect(service.getTotalStars() == 5)
+        #expect(service.getStarsForLevel(2) == 2)
         #expect(service.isLevelUnlocked(3) == true)
     }
     
@@ -86,12 +86,12 @@ struct LevelProgressionServiceTests {
         // 複数レベルクリア
         service.completeLevel(1, earnedStars: 3)
         service.completeLevel(2, earnedStars: 2)
-        service.completeLevel(3, earnedStars: 1)
+        service.completeLevel(3, earnedStars: 2)
         
         let stats = service.getProgressionStats()
         
         #expect(stats.completedLevels == 3)
-        #expect(stats.totalStars == 6)
+        #expect(stats.totalStars == 7)
         #expect(stats.maxUnlockedLevel == 4) // レベル3クリアでレベル4が解放
         #expect(stats.completionPercentage > 0.0)
         
@@ -113,7 +113,7 @@ struct LevelProgressionServiceTests {
         #expect(service.getRecommendedNextLevel() == 2)
         
         // レベル2クリア
-        service.completeLevel(2, earnedStars: 1)
+        service.completeLevel(2, earnedStars: 2)
         #expect(service.getRecommendedNextLevel() == 3)
         
         // 途中レベルもクリア
@@ -132,12 +132,12 @@ struct LevelProgressionServiceTests {
         #expect(level1Config.title == "あ行をおぼえよう")
         
         let level2Config = service.getLevelConfiguration(2)
-        #expect(level2Config.requiredStars == 1)
+        #expect(level2Config.requiredStars == 2)
         #expect(level2Config.characters.count == 10) // あ行+か行
         #expect(level2Config.title == "か行をおぼえよう")
         
         let level10Config = service.getLevelConfiguration(10)
-        #expect(level10Config.requiredStars == 9)
+        #expect(level10Config.requiredStars == 18)
         #expect(level10Config.characters.count == 48) // 全文字（「ゐ」「ゑ」含む）
         #expect(level10Config.title == "すべてのひらがな")
     }
