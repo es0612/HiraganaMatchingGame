@@ -1,0 +1,90 @@
+{
+  "" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/HiraganaMatchingGameTests-master.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/HiraganaMatchingGameTests-master.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/HiraganaMatchingGameTests-master.dia",
+    "emit-module-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/HiraganaMatchingGameTests-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/HiraganaMatchingGameTests-master-emit-module.dia",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/HiraganaMatchingGameTests-master.swiftdeps"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/AudioServiceIntegrationTests.swift" : {
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/AudioServiceIntegrationTests.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/AudioServiceIntegrationTests.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/AudioServiceIntegrationTests.o"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/AudioServiceTests.swift" : {
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/AudioServiceTests.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/AudioServiceTests.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/AudioServiceTests.o"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/CharacterTests.swift" : {
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/CharacterTests.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/CharacterTests.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/CharacterTests.o"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/GameIntegrationTests.swift" : {
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/GameIntegrationTests.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/GameIntegrationTests.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/GameIntegrationTests.o"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/GameLevelTests.swift" : {
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/GameLevelTests.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/GameLevelTests.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/GameLevelTests.o"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/GameLogicServiceTests.swift" : {
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/GameLogicServiceTests.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/GameLogicServiceTests.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/GameLogicServiceTests.o"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/GameProgressTests.swift" : {
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/GameProgressTests.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/GameProgressTests.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/GameProgressTests.o"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/GameViewModelTests.swift" : {
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/GameViewModelTests.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/GameViewModelTests.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/GameViewModelTests.o"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/HiraganaMatchingGameTests.swift" : {
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/HiraganaMatchingGameTests.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/HiraganaMatchingGameTests.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/HiraganaMatchingGameTests.o"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/LevelProgressionIntegrationTests.swift" : {
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/LevelProgressionIntegrationTests.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/LevelProgressionIntegrationTests.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/LevelProgressionIntegrationTests.o"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/LevelProgressionServiceTests.swift" : {
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/LevelProgressionServiceTests.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/LevelProgressionServiceTests.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/LevelProgressionServiceTests.o"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/SettingsViewTests.swift" : {
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/SettingsViewTests.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/SettingsViewTests.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/SettingsViewTests.o"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/StarUnlockSystemTests.swift" : {
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/StarUnlockSystemTests.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/StarUnlockSystemTests.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/StarUnlockSystemTests.o"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/TestableStarUnlockService.swift" : {
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/TestableStarUnlockService.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/TestableStarUnlockService.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/TestableStarUnlockService.o"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/TestableUserSettings.swift" : {
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/TestableUserSettings.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/TestableUserSettings.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/TestableUserSettings.o"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/UserSettingsTests.swift" : {
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/UserSettingsTests.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/UserSettingsTests.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGameTests.build/Objects-normal/arm64/UserSettingsTests.o"
+  }
+}

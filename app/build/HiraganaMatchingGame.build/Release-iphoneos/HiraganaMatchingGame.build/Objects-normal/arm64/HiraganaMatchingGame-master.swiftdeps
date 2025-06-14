@@ -1,0 +1,27 @@
+version: "Apple Swift version 6.1.2 (swiftlang-6.1.2.1.2 clang-1700.0.13.5)"
+options: "0feacb15bc455efdb40b10c400d04a2fafade859ddb83dd12b6de5e6816163c8"
+build_start_time: [1749788738, 756427000]
+build_end_time: [1749788745, 946484000]
+inputs:
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/ContentView.swift": [1749779120, 99078577]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/HiraganaMatchingGameApp.swift": [1749703806, 745489133]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Item.swift": [1749702595, 986560313]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Models/Character.swift": [1749703799, 924728267]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Models/GameLevel.swift": [1749703787, 925850337]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Models/GameProgress.swift": [1749703782, 110155289]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Models/HiraganaData.swift": [1749704113, 721524125]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Models/UserSettings.swift": [1749778602, 365035088]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Services/AudioService.swift": [1749785188, 21241371]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Services/GameLogicService.swift": [1749704922, 5581030]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Services/LevelProgressionService.swift": [1749705314, 529430755]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Services/StarUnlockService.swift": [1749705938, 1134997]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/ViewModels/GameViewModel.swift": [1749779081, 561761632]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/ViewModels/LevelSelectionViewModel.swift": [1749705587, 825659732]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/ViewModels/SettingsViewModel.swift": [1749778405, 308623238]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Views/Achievements/AchievementsView.swift": [1749706018, 29434611]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Views/Characters/CharacterCollectionView.swift": [1749705985, 946357833]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Views/Game/GameView.swift": [1749779138, 613062849]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Views/LevelSelection/LevelSelectionView.swift": [1749778926, 407464805]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Views/Settings/SettingsView.swift": [1749778644, 366291216]
+  ? "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Release-iphoneos/HiraganaMatchingGame.build/DerivedSources/GeneratedAssetSymbols.swift"
+  : [1749788716, 18646298]

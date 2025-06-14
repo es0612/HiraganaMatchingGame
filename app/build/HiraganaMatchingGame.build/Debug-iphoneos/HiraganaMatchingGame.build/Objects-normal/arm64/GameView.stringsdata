@@ -1,0 +1,120 @@
+{
+  "source": "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Views/Game/GameView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "この文字に合う絵を選んでね！",
+        "location": {
+          "startingColumn": 14,
+          "startingLine": 129
+        }
+      },
+      {
+        "comment": "",
+        "key": "レベル %lld",
+        "location": {
+          "startingColumn": 14,
+          "startingLine": 91
+        }
+      },
+      {
+        "comment": "",
+        "key": "正しい絵をタップしてください",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 179
+        }
+      },
+      {
+        "comment": "",
+        "key": "問題: %lld/%lld　正解: %lld",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 225
+        }
+      },
+      {
+        "comment": "",
+        "key": "戻る",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 242
+        }
+      },
+      {
+        "comment": "",
+        "key": "次のレベル",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 264
+        }
+      },
+      {
+        "comment": "",
+        "key": "ヒント",
+        "location": {
+          "startingColumn": 70,
+          "startingLine": 264
+        }
+      },
+      {
+        "comment": "",
+        "key": "正解！",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 284
+        }
+      },
+      {
+        "comment": "",
+        "key": "よくできました！",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 289
+        }
+      },
+      {
+        "comment": "",
+        "key": "残念...",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 299
+        }
+      },
+      {
+        "comment": "",
+        "key": "次は頑張ろう！",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 304
+        }
+      },
+      {
+        "comment": "",
+        "key": "ゲーム終了！",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 319
+        }
+      },
+      {
+        "comment": "",
+        "key": "スコア: %lld/%lld",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 323
+        }
+      },
+      {
+        "comment": "",
+        "key": "正解率: %lld%%",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 335
+        }
+      }
+    ]
+  },
+  "version": 1
+}

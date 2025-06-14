@@ -143,10 +143,28 @@ struct GameView: View {
     
     private var starsView: some View {
         HStack(spacing: 4) {
-            ForEach(0..<5, id: \.self) { index in
+            ForEach(0..<3, id: \.self) { index in
                 Image(systemName: "star.fill")
-                    .foregroundColor(index < 3 ? .yellow : .gray.opacity(0.3))
+                    .foregroundColor(index < getCurrentPotentialStars() ? .yellow : .gray.opacity(0.3))
                     .font(.title2)
+            }
+        }
+    }
+    
+    private func getCurrentPotentialStars() -> Int {
+        if gameViewModel.isGameCompleted {
+            return gameViewModel.earnedStars
+        } else {
+            // 現在の進行状況から予想される星数を計算
+            let currentAccuracy = Double(gameViewModel.score) / Double(gameViewModel.currentQuestion - 1)
+            if currentAccuracy >= 1.0 {
+                return 3
+            } else if currentAccuracy >= 0.8 {
+                return 2
+            } else if currentAccuracy >= 0.6 {
+                return 1
+            } else {
+                return 0
             }
         }
     }
@@ -334,15 +352,32 @@ struct GameView: View {
                 showHintAlert()
             }
         }) {
-            Text(gameViewModel.isGameCompleted ? "次のレベル" : "ヒント")
+            Text(getButtonText())
                 .font(.headline)
                 .foregroundColor(.white)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 10)
                 .background(
                     RoundedRectangle(cornerRadius: 25)
-                        .fill(Color.pink.opacity(0.8))
+                        .fill(getButtonColor())
                 )
+        }
+    }
+    
+    private func getButtonText() -> String {
+        if gameViewModel.isGameCompleted {
+            // 星を1つでも獲得していれば次のレベル、そうでなければやり直し
+            return gameViewModel.earnedStars > 0 ? "次のレベル" : "やり直し"
+        } else {
+            return "ヒント"
+        }
+    }
+    
+    private func getButtonColor() -> Color {
+        if gameViewModel.isGameCompleted && gameViewModel.earnedStars == 0 {
+            return Color.orange.opacity(0.8) // やり直しの場合はオレンジ
+        } else {
+            return Color.pink.opacity(0.8) // 通常はピンク
         }
     }
     

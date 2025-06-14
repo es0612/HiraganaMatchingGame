@@ -17,14 +17,17 @@ class AudioService: ObservableObject {
     private var audioPlayers: [String: AVAudioPlayer] = [:]
     private var audioSession: AVAudioSession
     private var effectPlayer: AVAudioPlayer?
+    private var speechSynthesizer: AVSpeechSynthesizer
     
     init() {
         self.audioSession = AVAudioSession.sharedInstance()
+        self.speechSynthesizer = AVSpeechSynthesizer()
         setupAudioSession()
     }
     
     init(userSettings: UserSettings) {
         self.audioSession = AVAudioSession.sharedInstance()
+        self.speechSynthesizer = AVSpeechSynthesizer()
         self.userSettings = userSettings
         setupAudioSession()
         syncWithUserSettings()
@@ -193,29 +196,22 @@ class AudioService: ObservableObject {
             return 
         }
         
-        print("🎵 Attempting to play audio for: \(character)")
+        print("🎵 Playing speech synthesis for: \(character)")
         
-        do {
-            if audioPlayers[character] == nil {
-                try await prepareAudio(for: character)
-                print("✅ Audio prepared for: \(character)")
-            }
+        await MainActor.run {
+            // 既存の音声を停止
+            speechSynthesizer.stopSpeaking(at: .immediate)
             
-            guard let player = audioPlayers[character] else { 
-                print("❌ No audio player found for: \(character)")
-                return 
-            }
+            // 音声合成の設定
+            let utterance = AVSpeechUtterance(string: character)
+            utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
+            utterance.rate = playbackSpeed * 0.5 // 少し遅めに調整
+            utterance.volume = currentVolume
+            utterance.pitchMultiplier = 1.2 // 少し高めの音程で子供に優しく
             
-            await MainActor.run {
-                player.volume = currentVolume
-                player.rate = playbackSpeed
-                player.stop()
-                player.currentTime = 0
-                player.play()
-                print("▶️ Playing audio for: \(character), volume: \(player.volume), rate: \(player.rate)")
-            }
-        } catch {
-            print("❌ Failed to play audio for \(character): \(error)")
+            // 音声合成で再生
+            speechSynthesizer.speak(utterance)
+            print("🗣️ Speaking: \(character) with voice synthesis")
         }
     }
     
@@ -224,6 +220,7 @@ class AudioService: ObservableObject {
     }
     
     func stopAllAudio() {
+        speechSynthesizer.stopSpeaking(at: .immediate)
         for (_, player) in audioPlayers {
             player.stop()
         }

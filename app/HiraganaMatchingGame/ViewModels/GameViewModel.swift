@@ -93,13 +93,16 @@ class GameViewModel {
         // フィードバック表示
         showFeedback = true
         
-        // 次の問題への進行
-        currentQuestion += 1
+        // 次の問題インデックスを増加
         currentQuestionIndex += 1
         
-        if currentQuestion > totalQuestions {
+        // ゲーム完了判定
+        if currentQuestionIndex >= currentQuestions.count {
             completeGame()
         } else {
+            // 次の問題に進む
+            currentQuestion += 1
+            
             // 短い遅延後に次の問題を表示
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 self.showFeedback = false

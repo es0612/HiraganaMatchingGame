@@ -1,0 +1,21 @@
+version: "Apple Swift version 6.1.2 (swiftlang-6.1.2.1.2 clang-1700.0.13.5)"
+options: "e5e9d85684a0ce34e6c1009e625d85d174165595a71bb670c16994ea2b827627"
+build_start_time: [1749788744, 334310000]
+build_end_time: [1749788745, 946991000]
+inputs:
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/AudioServiceIntegrationTests.swift": !dirty [1749788432, 526784418]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/AudioServiceTests.swift": !dirty [1749704904, 502250898]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/CharacterTests.swift": !dirty [1749703772, 484185113]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/GameIntegrationTests.swift": !dirty [1749705108, 245914124]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/GameLevelTests.swift": !dirty [1749703755, 933433399]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/GameLogicServiceTests.swift": !dirty [1749704890, 88768887]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/GameProgressTests.swift": !dirty [1749703974, 419271490]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/GameViewModelTests.swift": !dirty [1749704129, 899010257]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/HiraganaMatchingGameTests.swift": !dirty [1749702597, 609882896]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/LevelProgressionIntegrationTests.swift": !dirty [1749785148, 434059617]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/LevelProgressionServiceTests.swift": !dirty [1749785101, 620276266]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/SettingsViewTests.swift": !dirty [1749788001, 457420301]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/StarUnlockSystemTests.swift": !dirty [1749787991, 180828212]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/TestableStarUnlockService.swift": !dirty [1749787857, 902254580]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/TestableUserSettings.swift": !dirty [1749788352, 470928727]
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGameTests/UserSettingsTests.swift": !dirty [1749788214, 696414494]

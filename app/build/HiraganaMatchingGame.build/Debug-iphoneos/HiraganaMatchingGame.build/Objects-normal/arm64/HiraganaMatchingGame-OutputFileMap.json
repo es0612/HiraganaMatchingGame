@@ -1,0 +1,218 @@
+{
+  "" : {
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaMatchingGame-master.dia",
+    "emit-module-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaMatchingGame-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaMatchingGame-master-emit-module.dia",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaMatchingGame-master.swiftdeps"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/ContentView.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/ContentView.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/ContentView.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/ContentView.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/ContentView.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/ContentView.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/ContentView.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/ContentView~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/HiraganaMatchingGameApp.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaMatchingGameApp.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaMatchingGameApp.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaMatchingGameApp.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaMatchingGameApp.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaMatchingGameApp.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaMatchingGameApp.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaMatchingGameApp.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaMatchingGameApp~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Item.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/Item.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/Item.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/Item.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/Item.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/Item.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/Item.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/Item.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/Item~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Models/Character.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/Character.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/Character.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/Character.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/Character.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/Character.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/Character.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/Character.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/Character~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Models/GameLevel.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameLevel.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameLevel.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameLevel.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameLevel.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameLevel.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameLevel.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameLevel.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameLevel~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Models/GameProgress.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameProgress.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameProgress.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameProgress.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameProgress.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameProgress.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameProgress.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameProgress.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameProgress~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Models/HiraganaData.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaData.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaData.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaData.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaData.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaData.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaData.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaData.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/HiraganaData~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Models/UserSettings.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/UserSettings.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/UserSettings.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/UserSettings.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/UserSettings.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/UserSettings.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/UserSettings.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/UserSettings.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/UserSettings~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Services/AudioService.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/AudioService.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/AudioService.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/AudioService.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/AudioService.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/AudioService.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/AudioService.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/AudioService.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/AudioService~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Services/GameLogicService.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameLogicService.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameLogicService.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameLogicService.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameLogicService.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameLogicService.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameLogicService.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameLogicService.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameLogicService~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Services/LevelProgressionService.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelProgressionService.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelProgressionService.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelProgressionService.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelProgressionService.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelProgressionService.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelProgressionService.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelProgressionService.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelProgressionService~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Services/StarUnlockService.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/StarUnlockService.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/StarUnlockService.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/StarUnlockService.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/StarUnlockService.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/StarUnlockService.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/StarUnlockService.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/StarUnlockService.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/StarUnlockService~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/ViewModels/GameViewModel.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameViewModel.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameViewModel.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameViewModel.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameViewModel.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameViewModel.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameViewModel.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameViewModel.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameViewModel~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/ViewModels/LevelSelectionViewModel.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelSelectionViewModel.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelSelectionViewModel.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelSelectionViewModel.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelSelectionViewModel.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelSelectionViewModel.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelSelectionViewModel.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelSelectionViewModel.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelSelectionViewModel~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/ViewModels/SettingsViewModel.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/SettingsViewModel.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/SettingsViewModel.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/SettingsViewModel.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/SettingsViewModel.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/SettingsViewModel.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/SettingsViewModel.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/SettingsViewModel.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/SettingsViewModel~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Views/Achievements/AchievementsView.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/AchievementsView.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/AchievementsView.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/AchievementsView.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/AchievementsView.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/AchievementsView.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/AchievementsView.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/AchievementsView.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/AchievementsView~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Views/Characters/CharacterCollectionView.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/CharacterCollectionView.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/CharacterCollectionView.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/CharacterCollectionView.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/CharacterCollectionView.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/CharacterCollectionView.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/CharacterCollectionView.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/CharacterCollectionView.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/CharacterCollectionView~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Views/Game/GameView.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameView.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameView.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameView.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameView.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameView.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameView.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameView.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GameView~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Views/LevelSelection/LevelSelectionView.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelSelectionView.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelSelectionView.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelSelectionView.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelSelectionView.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelSelectionView.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelSelectionView.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelSelectionView.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/LevelSelectionView~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/HiraganaMatchingGame/Views/Settings/SettingsView.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/SettingsView.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/SettingsView.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/SettingsView.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/SettingsView.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/SettingsView.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/SettingsView.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/SettingsView.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/SettingsView~partial.swiftmodule"
+  },
+  "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/shinya/workspace/claude/HiraganaMatchingGame/app/build/HiraganaMatchingGame.build/Debug-iphoneos/HiraganaMatchingGame.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  }
+}
