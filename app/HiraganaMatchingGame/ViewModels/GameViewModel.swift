@@ -133,7 +133,12 @@ class GameViewModel {
     }
     
     func playHiraganaSound() {
-        guard !currentHiragana.isEmpty else { return }
+        guard !currentHiragana.isEmpty else { 
+            print("⚠️ playHiraganaSound: currentHiragana is empty")
+            return 
+        }
+        
+        print("🔊 Playing sound for: \(currentHiragana)")
         
         Task {
             await audioService.playAudio(for: currentHiragana)

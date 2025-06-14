@@ -56,8 +56,10 @@ class LevelProgressionService {
         
         if level == 1 { return true }
         
-        let requiredStars = level - 1
-        return totalStars >= requiredStars
+        // 前のレベルをクリア（最低1つ星を獲得）している必要がある
+        let previousLevel = level - 1
+        let previousLevelStars = levelStars[previousLevel] ?? 0
+        return previousLevelStars > 0
     }
     
     func completeLevel(_ level: Int, earnedStars: Int) {
@@ -207,12 +209,6 @@ class LevelProgressionService {
         return configurations[level]!
     }
     
-    func resetProgress() {
-        levelStars.removeAll()
-        levelStars[1] = 0
-        totalStars = 0
-        saveToUserDefaults()
-    }
     
     // MARK: - データ永続化
     
@@ -225,6 +221,15 @@ class LevelProgressionService {
             levelStarsDict[String(level)] = stars
         }
         UserDefaults.standard.set(levelStarsDict, forKey: "LevelProgression_LevelStars")
+        print("💾 Saved level progress: stars=\(totalStars), levels=\(levelStars)")
+    }
+    
+    // デバッグ用：進行データリセット
+    func resetProgress() {
+        levelStars = [1: 0] // レベル1のみ解放
+        totalStars = 0
+        saveToUserDefaults()
+        print("🔄 Level progress reset")
     }
     
     private func loadFromUserDefaults() {

@@ -188,22 +188,34 @@ class AudioService: ObservableObject {
     }
     
     func playAudio(for character: String) async {
-        guard isSoundEnabled else { return }
+        guard isSoundEnabled else { 
+            print("🔇 Audio disabled, skipping playback for: \(character)")
+            return 
+        }
+        
+        print("🎵 Attempting to play audio for: \(character)")
         
         do {
             if audioPlayers[character] == nil {
                 try await prepareAudio(for: character)
+                print("✅ Audio prepared for: \(character)")
             }
             
-            guard let player = audioPlayers[character] else { return }
+            guard let player = audioPlayers[character] else { 
+                print("❌ No audio player found for: \(character)")
+                return 
+            }
             
             await MainActor.run {
+                player.volume = currentVolume
+                player.rate = playbackSpeed
                 player.stop()
                 player.currentTime = 0
                 player.play()
+                print("▶️ Playing audio for: \(character), volume: \(player.volume), rate: \(player.rate)")
             }
         } catch {
-            print("Failed to play audio for \(character): \(error)")
+            print("❌ Failed to play audio for \(character): \(error)")
         }
     }
     

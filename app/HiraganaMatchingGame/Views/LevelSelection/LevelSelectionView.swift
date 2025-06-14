@@ -118,6 +118,13 @@ struct LevelSelectionView: View {
         let config = levelProgressionService.getLevelConfiguration(level)
         let isRecommended = levelProgressionService.getRecommendedNextLevel() == level
         
+        // デバッグ出力
+        if level <= 5 {
+            let previousLevel = level - 1
+            let previousStars = previousLevel > 0 ? levelProgressionService.getStarsForLevel(previousLevel) : -1
+            print("🔓 Level \(level): unlocked=\(isUnlocked), stars=\(stars), previous(\(previousLevel))=\(previousStars)")
+        }
+        
         return Button(action: {
             if isUnlocked {
                 onLevelSelected(level)

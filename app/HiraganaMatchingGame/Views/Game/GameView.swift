@@ -202,26 +202,29 @@ struct GameView: View {
     
     private var soundButton: some View {
         Button(action: {
+            print("🎯 Sound button tapped for: \(gameViewModel.currentHiragana)")
             gameViewModel.playHiraganaSound()
         }) {
             Image(systemName: "speaker.wave.2.fill")
                 .font(.title3)
                 .foregroundColor(.white)
-                .frame(width: 36, height: 36)
+                .frame(width: 40, height: 40)
                 .background(
                     Circle()
                         .fill(
                             LinearGradient(
-                                colors: [Color.pink.opacity(0.9), Color.orange.opacity(0.7)],
+                                colors: [Color.blue.opacity(0.8), Color.purple.opacity(0.6)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
                         )
-                        .shadow(color: .black.opacity(0.2), radius: 3, x: 0, y: 2)
+                        .shadow(color: .black.opacity(0.3), radius: 4, x: 0, y: 2)
                 )
         }
         .scaleEffect(1.0)
         .animation(.easeInOut(duration: 0.1), value: gameViewModel.currentHiragana)
+        .accessibilityLabel("ひらがなの音を聞く")
+        .accessibilityHint("\(gameViewModel.currentHiragana)の音声を再生します")
     }
     
     private var answerChoicesView: some View {
