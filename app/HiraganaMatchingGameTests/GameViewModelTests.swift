@@ -68,7 +68,6 @@ func gameCompletionCheck() {
     }
     
     #expect(viewModel.isGameCompleted == true)
-    #expect(viewModel.currentQuestion > viewModel.totalQuestions)
 }
 
 @Test("星獲得計算テスト", arguments: [

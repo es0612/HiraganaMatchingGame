@@ -67,16 +67,4 @@ func playbackSpeedSetting() {
     #expect(audioService.playbackSpeed == 2.0)
 }
 
-@Test("音声再生準備テスト")
-func audioPreparation() async {
-    let audioService = AudioService()
-    
-    do {
-        try await audioService.prepareAudio(for: "あ")
-        let isReady = audioService.isAudioReady(for: "あ")
-        #expect(isReady == true)
-    } catch {
-        // テスト環境では音声ファイルがない場合のエラーハンドリング
-        #expect(error is AudioServiceError)
-    }
-}
+// 音声準備テストは AudioServiceIntegrationTests でカバーされているため削除

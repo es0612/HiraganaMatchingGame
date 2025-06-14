@@ -76,11 +76,13 @@ class GameViewModel {
             score += 1
             lastAnswerCorrect = true
             
-            // 正解音を再生
+            // 正解音を再生してから、ひらがな音声を再生
             audioService.playCorrectSound()
             
-            // 正解時の音声再生
+            // 正解音の再生完了後にひらがな音声を再生
             Task {
+                // 正解音の再生時間分待機（約0.5秒）
+                try? await Task.sleep(nanoseconds: 600_000_000) // 0.6秒待機
                 await audioService.playAudio(for: currentGameQuestion.hiragana)
             }
         } else {

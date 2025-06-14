@@ -33,6 +33,19 @@ class LevelProgressionService {
         }
     }
     
+    // テスト用のクリーンな初期化
+    init(forTesting: Bool) {
+        if forTesting {
+            levelStars = [1: 0]
+            totalStars = 0
+        } else {
+            loadFromUserDefaults()
+            if levelStars.isEmpty {
+                levelStars[1] = 0
+            }
+        }
+    }
+    
     func getCurrentLevel() -> Int {
         return getRecommendedNextLevel()
     }
@@ -56,10 +69,10 @@ class LevelProgressionService {
         
         if level == 1 { return true }
         
-        // 前のレベルをクリア（最低1つ星を獲得）している必要がある
+        // 前のレベルをクリア（最低2つ星を獲得）している必要がある
         let previousLevel = level - 1
         let previousLevelStars = levelStars[previousLevel] ?? 0
-        return previousLevelStars > 0
+        return previousLevelStars >= 2
     }
     
     func completeLevel(_ level: Int, earnedStars: Int) {
@@ -80,9 +93,6 @@ class LevelProgressionService {
         return levelStars[level] ?? 0
     }
     
-    func addStars(_ stars: Int) {
-        totalStars += stars
-    }
     
     func getProgressionStats() -> ProgressionStats {
         let completedLevels = levelStars.keys.filter { levelStars[$0]! > 0 }.count

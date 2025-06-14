@@ -241,6 +241,22 @@ struct LevelSelectionView: View {
                         .fill(Color.gray.opacity(0.6))
                 )
             }
+            
+            // デバッグ用アイコン生成ボタン（一時的に無効）
+            #if false
+            Button("アイコン生成") {
+                // IconExporter.generateAppIcon()
+                print("アイコン生成機能は一時的に無効です")
+            }
+            .font(.caption)
+            .foregroundColor(.white)
+            .padding(.horizontal, 15)
+            .padding(.vertical, 8)
+            .background(
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(Color.red.opacity(0.7))
+            )
+            #endif
         }
     }
     
