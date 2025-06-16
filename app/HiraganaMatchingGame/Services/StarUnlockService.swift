@@ -73,7 +73,6 @@ struct NextUnlockInfo {
 
 @Observable
 class StarUnlockService {
-    private var totalStars: Int = 0
     private var unlockedCharacters: Set<String> = ["あ", "い", "う", "え", "お"]
     private var levelStatistics: [Int: LevelStatistics] = [:]
     private var unlockedAchievements: Set<Achievement> = []
@@ -85,6 +84,12 @@ class StarUnlockService {
     
     var onCharacterUnlocked: (([String]) -> Void)?
     var onAchievementUnlocked: ((Achievement) -> Void)?
+    
+    // LevelProgressionServiceから総スター数を取得
+    private func getTotalStars() -> Int {
+        let levelProgressionService = LevelProgressionService()
+        return levelProgressionService.getTotalStars()
+    }
     
     private let characterGroups: [String: [String]] = [
         "あ行": ["あ", "い", "う", "え", "お"],
@@ -125,19 +130,17 @@ class StarUnlockService {
         return unlockedCharacters.contains(character)
     }
     
-    func addStars(_ stars: Int) {
-        totalStars += stars
-    }
-    
-    func getTotalStars() -> Int {
-        return totalStars
+    // StarUnlockServiceはスター管理しない（LevelProgressionServiceが管理）
+    func getTotalStarsFromService() -> Int {
+        return getTotalStars()
     }
     
     func updateUnlockedCharacters() {
         var newlyUnlocked: [String] = []
+        let currentTotalStars = getTotalStars()
         
         for (groupName, requiredStars) in groupUnlockRequirements.sorted(by: { $0.value < $1.value }) {
-            if totalStars >= requiredStars {
+            if currentTotalStars >= requiredStars {
                 if let characters = characterGroups[groupName] {
                     for character in characters {
                         if !unlockedCharacters.contains(character) {
@@ -151,6 +154,7 @@ class StarUnlockService {
         
         // 新しく解放されたキャラクターがある場合は通知
         if !newlyUnlocked.isEmpty {
+            print("🔓 Unlocked characters: \(newlyUnlocked) (Total stars: \(currentTotalStars))")
             onCharacterUnlocked?(newlyUnlocked)
             checkCollectorAchievement()
         }
@@ -169,7 +173,7 @@ class StarUnlockService {
         case .perfectStreak(let count):
             return highestStreak >= count
         case .totalStars(let count):
-            return totalStars >= count
+            return getTotalStars() >= count
         case .timeRecord(let seconds):
             let bestTime = levelStatistics.values.min { $0.bestTime < $1.bestTime }?.bestTime ?? Double.infinity
             return bestTime <= seconds
@@ -202,14 +206,7 @@ class StarUnlockService {
     }
     
     func recordLevelCompletion(level: Int, stars: Int, accuracy: Double, time: Double) {
-        let previousBestStars = levelStatistics[level]?.bestStars ?? 0
-        let starDifference = max(0, stars - previousBestStars)
-        
-        // スター更新
-        if starDifference > 0 {
-            addStars(starDifference)
-            updateUnlockedCharacters()
-        }
+        print("🎯 StarUnlockService recording level \(level) completion: stars=\(stars)")
         
         // レベル統計更新
         updateLevelStatistics(level: level, stars: stars, accuracy: accuracy, time: time)
@@ -222,6 +219,9 @@ class StarUnlockService {
         
         // 連続記録更新
         updateStreak(stars: stars)
+        
+        // キャラクター解放更新（LevelProgressionServiceのスター数を参照）
+        updateUnlockedCharacters()
         
         // データを保存
         saveToUserDefaults()
@@ -274,10 +274,11 @@ class StarUnlockService {
     
     func getStarStatistics() -> StarStatistics {
         let completedLevels = levelStatistics.keys.count
-        let averageStars = completedLevels > 0 ? Double(totalStars) / Double(completedLevels) : 0.0
+        let currentTotalStars = getTotalStars()
+        let averageStars = completedLevels > 0 ? Double(currentTotalStars) / Double(completedLevels) : 0.0
         
         return StarStatistics(
-            totalStars: totalStars,
+            totalStars: currentTotalStars,
             totalLevelsCompleted: completedLevels,
             averageStarsPerLevel: averageStars,
             totalTimePlayed: totalTimePlayed,
@@ -310,10 +311,11 @@ class StarUnlockService {
         let sortedGroups = groupUnlockRequirements.sorted { $0.value < $1.value }
         
         for (groupName, requiredStars) in sortedGroups {
-            if totalStars < requiredStars {
+            let currentTotalStars = getTotalStars()
+            if currentTotalStars < requiredStars {
                 let charactersToUnlock = characterGroups[groupName] ?? []
                 return NextUnlockInfo(
-                    requiredStars: requiredStars - totalStars,
+                    requiredStars: requiredStars - currentTotalStars,
                     charactersToUnlock: charactersToUnlock,
                     groupName: groupName
                 )
@@ -325,9 +327,10 @@ class StarUnlockService {
     
     private func getCurrentUnlockGroup() -> String {
         let sortedGroups = groupUnlockRequirements.sorted { $0.value > $1.value }
+        let currentTotalStars = getTotalStars()
         
         for (groupName, requiredStars) in sortedGroups {
-            if totalStars >= requiredStars {
+            if currentTotalStars >= requiredStars {
                 return groupName
             }
         }
@@ -337,9 +340,10 @@ class StarUnlockService {
     
     private func getNextUnlockGroup() -> String? {
         let sortedGroups = groupUnlockRequirements.sorted { $0.value < $1.value }
+        let currentTotalStars = getTotalStars()
         
         for (groupName, requiredStars) in sortedGroups {
-            if totalStars < requiredStars {
+            if currentTotalStars < requiredStars {
                 return groupName
             }
         }
@@ -391,7 +395,6 @@ class StarUnlockService {
     }
     
     func resetProgress() {
-        totalStars = 0
         unlockedCharacters = ["あ", "い", "う", "え", "お"]
         levelStatistics.removeAll()
         unlockedAchievements.removeAll()
@@ -407,7 +410,7 @@ class StarUnlockService {
     // MARK: - データ永続化
     
     private func saveToUserDefaults() {
-        UserDefaults.standard.set(totalStars, forKey: "StarUnlock_TotalStars")
+        // totalStarsはLevelProgressionServiceが管理するため、保存しない
         UserDefaults.standard.set(Array(unlockedCharacters), forKey: "StarUnlock_UnlockedCharacters")
         UserDefaults.standard.set(totalTimePlayed, forKey: "StarUnlock_TotalTimePlayed")
         UserDefaults.standard.set(totalAccuracy, forKey: "StarUnlock_TotalAccuracy")
@@ -428,7 +431,7 @@ class StarUnlockService {
     }
     
     private func loadFromUserDefaults() {
-        totalStars = UserDefaults.standard.integer(forKey: "StarUnlock_TotalStars")
+        // totalStarsはLevelProgressionServiceから取得するため、ロードしない
         
         if let characters = UserDefaults.standard.array(forKey: "StarUnlock_UnlockedCharacters") as? [String] {
             unlockedCharacters = Set(characters)

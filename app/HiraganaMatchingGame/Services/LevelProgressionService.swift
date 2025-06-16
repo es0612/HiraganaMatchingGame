@@ -61,6 +61,13 @@ class LevelProgressionService {
     }
     
     func getTotalStars() -> Int {
+        // リアルタイムで計算して常に正確な値を返す
+        let calculatedTotal = levelStars.values.reduce(0, +)
+        if calculatedTotal != totalStars {
+            print("⚠️ Star count mismatch: stored=\(totalStars), calculated=\(calculatedTotal)")
+            totalStars = calculatedTotal
+            saveToUserDefaults()
+        }
         return totalStars
     }
     
@@ -69,10 +76,9 @@ class LevelProgressionService {
         
         if level == 1 { return true }
         
-        // 前のレベルをクリア（最低2つ星を獲得）している必要がある
-        let previousLevel = level - 1
-        let previousLevelStars = levelStars[previousLevel] ?? 0
-        return previousLevelStars >= 2
+        // 累積スター数で解放判定
+        let requiredStars = getLevelConfiguration(level).requiredStars
+        return totalStars >= requiredStars
     }
     
     func completeLevel(_ level: Int, earnedStars: Int) {
@@ -82,10 +88,34 @@ class LevelProgressionService {
         let clampedStars = max(0, min(3, earnedStars))
         let previousStars = levelStars[level] ?? 0
         
+        print("🎯 Level \(level) completion: earned=\(clampedStars), previous=\(previousStars)")
+        
+        // 常に最高スコアを記録（以前より良い場合のみ更新）
         if clampedStars > previousStars {
-            totalStars = totalStars - previousStars + clampedStars
             levelStars[level] = clampedStars
-            saveToUserDefaults()
+            print("⭐ Level \(level) stars updated: \(previousStars) → \(clampedStars)")
+            
+            // 総スター数を再計算
+            let newTotalStars = levelStars.values.reduce(0, +)
+            totalStars = newTotalStars
+            
+            print("⭐ Total stars recalculated: \(totalStars)")
+            
+            // 次のレベルが解放されたかチェック
+            let nextLevel = level + 1
+            if nextLevel <= totalLevels {
+                let wasUnlocked = isLevelUnlocked(nextLevel)
+                saveToUserDefaults()
+                let nowUnlocked = isLevelUnlocked(nextLevel)
+                
+                if !wasUnlocked && nowUnlocked {
+                    print("🎉 Level \(nextLevel) unlocked! Total stars: \(totalStars)")
+                }
+            } else {
+                saveToUserDefaults()
+            }
+        } else {
+            print("ℹ️ Level \(level) not updated (earned \(clampedStars) ≤ previous \(previousStars))")
         }
     }
     
@@ -95,7 +125,7 @@ class LevelProgressionService {
     
     
     func getProgressionStats() -> ProgressionStats {
-        let completedLevels = levelStars.keys.filter { levelStars[$0]! > 0 }.count
+        let completedLevels = levelStars.values.filter { $0 > 0 }.count
         let averageStars = completedLevels > 0 ? Double(totalStars) / Double(completedLevels) : 0.0
         let completionPercentage = Double(completedLevels) / Double(totalLevels)
         
@@ -231,7 +261,22 @@ class LevelProgressionService {
             levelStarsDict[String(level)] = stars
         }
         UserDefaults.standard.set(levelStarsDict, forKey: "LevelProgression_LevelStars")
-        print("💾 Saved level progress: stars=\(totalStars), levels=\(levelStars)")
+        
+        // 保存直後に確認
+        UserDefaults.standard.synchronize()
+        let savedTotal = UserDefaults.standard.integer(forKey: "LevelProgression_TotalStars")
+        let savedDict = UserDefaults.standard.dictionary(forKey: "LevelProgression_LevelStars") as? [String: Int]
+        
+        print("💾 Saved level progress: total_stars=\(totalStars), level_stars=\(levelStars)")
+        print("🔍 Verified saved data: total=\(savedTotal), dict=\(savedDict ?? [:])")
+        
+        // 解放状況をログ出力
+        for level in 1...min(5, totalLevels) {
+            let unlocked = isLevelUnlocked(level)
+            let required = getLevelConfiguration(level).requiredStars
+            let starsForLevel = getStarsForLevel(level)
+            print("📊 Level \(level): stars=\(starsForLevel), unlocked=\(unlocked), required=\(required), total=\(totalStars)")
+        }
     }
     
     // デバッグ用：進行データリセット
@@ -253,28 +298,78 @@ class LevelProgressionService {
                 }
             }
         }
+        
+        // データの整合性チェック
+        let calculatedTotal = levelStars.values.reduce(0, +)
+        if calculatedTotal != totalStars {
+            print("⚠️ Loading: star count mismatch detected - stored=\(totalStars), calculated=\(calculatedTotal)")
+            totalStars = calculatedTotal
+            saveToUserDefaults()
+        }
+        
+        print("📖 Loaded level progress: total_stars=\(totalStars), level_stars=\(levelStars)")
     }
     
     func loadProgress(from gameProgress: GameProgress) {
+        // GameProgressから基本データを読み込み
         totalStars = gameProgress.totalStars
         
-        // GameProgressから個別レベルのスター情報を復元
-        // 実装では追加のプロパティが必要かもしれません
-        for level in 1...totalLevels {
-            if gameProgress.unlockedCharacters.count >= getLevelConfiguration(level).characters.count {
-                // 仮の実装：解放文字数からレベル完了を推測
-                levelStars[level] = 1
+        // GameProgressから個別レベルのスターデータを復元
+        if !gameProgress.levelStarsData.isEmpty {
+            do {
+                let decodedLevelStars = try JSONDecoder().decode([String: Int].self, from: gameProgress.levelStarsData)
+                levelStars.removeAll()
+                for (levelString, stars) in decodedLevelStars {
+                    if let level = Int(levelString) {
+                        levelStars[level] = stars
+                    }
+                }
+                print("📖 Loaded individual level stars from GameProgress")
+            } catch {
+                print("⚠️ Failed to decode level stars data: \(error)")
+                // フォールバック：UserDefaultsから読み込み
+                loadFromUserDefaults()
             }
+        } else {
+            // levelStarsDataが空の場合はUserDefaultsから読み込み
+            print("📖 No level stars data in GameProgress, loading from UserDefaults")
+            loadFromUserDefaults()
         }
+        
+        // データの整合性チェック
+        let calculatedTotal = levelStars.values.reduce(0, +)
+        if calculatedTotal != gameProgress.totalStars {
+            print("⚠️ SwiftData integration: star count mismatch - gameProgress=\(gameProgress.totalStars), calculated=\(calculatedTotal)")
+            // より高い値を採用（データ欠損を防ぐ）
+            totalStars = max(gameProgress.totalStars, calculatedTotal)
+            gameProgress.totalStars = totalStars
+        }
+        
+        print("📖 Loaded progress from GameProgress: total_stars=\(totalStars), level_stars=\(levelStars)")
     }
     
     func saveProgress(to gameProgress: GameProgress) {
         gameProgress.totalStars = totalStars
         gameProgress.currentLevel = getRecommendedNextLevel()
         
+        // 個別レベルのスターデータをエンコードして保存
+        do {
+            var levelStarsDict: [String: Int] = [:]
+            for (level, stars) in levelStars {
+                levelStarsDict[String(level)] = stars
+            }
+            gameProgress.levelStarsData = try JSONEncoder().encode(levelStarsDict)
+            print("💾 Saved individual level stars to GameProgress")
+        } catch {
+            print("⚠️ Failed to encode level stars data: \(error)")
+        }
+        
         // 解放済み文字を更新
         let maxLevel = getMaxUnlockedLevel()
         let config = getLevelConfiguration(maxLevel)
         gameProgress.unlockedCharacters = config.characters
+        
+        // UserDefaultsにも保存（冗長だが確実性のため）
+        saveToUserDefaults()
     }
 }

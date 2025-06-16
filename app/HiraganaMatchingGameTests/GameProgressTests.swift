@@ -44,9 +44,15 @@ func characterUnlocking() {
 
 @Test("SwiftData永続化テスト") @MainActor
 func gameProgressPersistence() throws {
+    let schema = Schema([
+        GameProgress.self,
+        GameLevel.self,
+        UserSettings.self,
+        Character.self,
+    ])
     let container = try ModelContainer(
-        for: GameProgress.self,
-        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+        for: schema,
+        configurations: [ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)]
     )
     let context = container.mainContext
     

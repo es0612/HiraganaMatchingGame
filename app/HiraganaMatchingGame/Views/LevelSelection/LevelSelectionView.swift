@@ -1,40 +1,50 @@
 import SwiftUI
 
 struct LevelSelectionView: View {
-    @State private var levelProgressionService = LevelProgressionService()
+    @State var levelSelectionViewModel: LevelSelectionViewModel
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
+    @Environment(\.colorScheme) var colorScheme
     
     let onLevelSelected: (Int) -> Void
     let onCharacterCollectionPressed: () -> Void
     let onAchievementsPressed: () -> Void
     let onSettingsPressed: () -> Void
     
+    private var levelProgressionService: LevelProgressionService {
+        levelSelectionViewModel.levelProgressionService
+    }
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 LinearGradient(
-                    colors: [Color.blue.opacity(0.1), Color.purple.opacity(0.1)],
+                    colors: colorScheme == .dark ? [
+                        Color.blue.opacity(0.05),
+                        Color.purple.opacity(0.05)
+                    ] : [
+                        Color.blue.opacity(0.1),
+                        Color.purple.opacity(0.1)
+                    ],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
                 .ignoresSafeArea()
                 
-                VStack(spacing: 20) {
-                    headerView
-                    
-                    progressOverviewView
-                    
-                    Spacer()
-                    
-                    levelGridView
-                        .accessibilityIdentifier("レベル選択グリッド")
-                    
-                    Spacer()
-                    
-                    footerView
+                ScrollView {
+                    VStack(spacing: 20) {
+                        headerView
+                        
+                        progressOverviewView
+                        
+                        levelGridView
+                            .accessibilityIdentifier("レベル選択グリッド")
+                        
+                        footerView
+                            .padding(.bottom, max(geometry.safeAreaInsets.bottom, 20))
+                    }
+                    .padding()
                 }
-                .padding()
                 .accessibilityIdentifier("レベル選択画面")
             }
         }
@@ -81,7 +91,7 @@ struct LevelSelectionView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .fill(Color.white.opacity(0.8))
+                .fill(colorScheme == .dark ? Color(.systemGray6) : Color.white.opacity(0.8))
                 .shadow(radius: 5)
         )
     }
@@ -127,32 +137,52 @@ struct LevelSelectionView: View {
         
         return Button(action: {
             if isUnlocked {
-                onLevelSelected(level)
+                // タップ時のハプティクスフィードバック
+                let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+                impactFeedback.impactOccurred()
+                
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
+                    onLevelSelected(level)
+                }
             }
         }) {
             VStack(spacing: 8) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 15)
-                        .fill(isUnlocked ? Color.white : Color.gray.opacity(0.3))
+                        .fill(isUnlocked ? 
+                            (colorScheme == .dark ? Color(.systemGray6) : Color.white) : 
+                            (colorScheme == .dark ? Color(.systemGray5).opacity(0.3) : Color.gray.opacity(0.3))
+                        )
                         .frame(width: levelButtonSize, height: levelButtonSize)
-                        .shadow(color: .black.opacity(isUnlocked ? 0.1 : 0.05), radius: 3)
+                        .shadow(
+                            color: colorScheme == .dark ? 
+                                Color.white.opacity(isUnlocked ? 0.1 : 0.05) : 
+                                Color.black.opacity(isUnlocked ? 0.1 : 0.05), 
+                            radius: colorScheme == .dark ? 1 : 3
+                        )
                         .overlay(
                             RoundedRectangle(cornerRadius: 15)
                                 .stroke(isRecommended ? Color.orange : Color.clear, lineWidth: 3)
+                                .scaleEffect(isRecommended ? 1.05 : 1.0)
+                                .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: isRecommended)
                         )
                     
                     VStack(spacing: 4) {
                         Text("\(level)")
                             .font(.title2)
                             .fontWeight(.bold)
-                            .foregroundColor(isUnlocked ? .primary : .secondary)
+                            .foregroundColor(
+                                isUnlocked ? 
+                                    (colorScheme == .dark ? Color.white : Color.black) : 
+                                    (colorScheme == .dark ? Color.gray : Color.secondary)
+                            )
                         
                         if isUnlocked {
                             starsView(stars: stars)
                         } else {
                             Image(systemName: "lock.fill")
                                 .font(.title3)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(colorScheme == .dark ? Color.gray : Color.secondary)
                         }
                     }
                 }
@@ -160,7 +190,11 @@ struct LevelSelectionView: View {
                 Text(config.title)
                     .font(.caption)
                     .multilineTextAlignment(.center)
-                    .foregroundColor(isUnlocked ? .primary : .secondary)
+                    .foregroundColor(
+                        isUnlocked ? 
+                            (colorScheme == .dark ? Color.white : Color.primary) : 
+                            (colorScheme == .dark ? Color.gray : Color.secondary)
+                    )
                     .frame(height: 30)
                 
                 if isRecommended && isUnlocked {
@@ -184,9 +218,16 @@ struct LevelSelectionView: View {
     private func starsView(stars: Int) -> some View {
         HStack(spacing: 2) {
             ForEach(0..<3, id: \.self) { index in
-                Image(systemName: "star.fill")
+                Image(systemName: index < stars ? "star.fill" : "star")
                     .font(.caption2)
                     .foregroundColor(index < stars ? .yellow : .gray.opacity(0.3))
+                    .scaleEffect(index < stars ? 1.2 : 1.0)
+                    .rotationEffect(.degrees(index < stars ? 360 : 0))
+                    .animation(
+                        .spring(response: 0.6, dampingFraction: 0.8)
+                        .delay(Double(index) * 0.1), 
+                        value: stars
+                    )
             }
         }
     }
@@ -204,58 +245,108 @@ struct LevelSelectionView: View {
                     .foregroundColor(.secondary)
             }
             
-            HStack(spacing: 15) {
-                Button("コレクション") {
-                    onCharacterCollectionPressed()
-                }
-                .font(.headline)
-                .foregroundColor(.white)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
-                .background(
-                    RoundedRectangle(cornerRadius: 25)
-                        .fill(Color.green.opacity(0.8))
-                )
+            // デバッグ情報表示
+            #if DEBUG
+            VStack(spacing: 4) {
+                Text("Debug Info:")
+                    .font(.caption2)
+                    .foregroundColor(.red)
+                    .fontWeight(.bold)
                 
-                Button("実績") {
-                    onAchievementsPressed()
+                ForEach(1...5, id: \.self) { level in
+                    let stars = levelProgressionService.getStarsForLevel(level)
+                    let isUnlocked = levelProgressionService.isLevelUnlocked(level)
+                    let required = levelProgressionService.getLevelConfiguration(level).requiredStars
+                    Text("L\(level): \(stars)⭐ (\(isUnlocked ? "解放" : "未解放")) req:\(required)")
+                        .font(.caption2)
+                        .foregroundColor(.red)
                 }
-                .font(.headline)
-                .foregroundColor(.white)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
-                .background(
-                    RoundedRectangle(cornerRadius: 25)
-                        .fill(Color.purple.opacity(0.8))
-                )
                 
-                Button("設定") {
-                    onSettingsPressed()
+                let total = levelProgressionService.getTotalStars()
+                let calculated = (1...5).map { levelProgressionService.getStarsForLevel($0) }.reduce(0, +)
+                Text("Total: \(total)⭐ (calc: \(calculated)⭐)")
+                    .font(.caption2)
+                    .foregroundColor(.red)
+                    .fontWeight(.bold)
+                
+                let stats = levelProgressionService.getProgressionStats()
+                Text("Completed: \(stats.completedLevels), Progress: \(String(format: "%.0f", stats.completionPercentage * 100))%")
+                    .font(.caption2)
+                    .foregroundColor(.red)
+            }
+            .padding(.top, 10)
+            .background(Color.yellow.opacity(0.1))
+            .cornerRadius(8)
+            #endif
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 15) {
+                    Button("コレクション") {
+                        onCharacterCollectionPressed()
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 25)
+                            .fill(Color.green.opacity(0.8))
+                    )
+                    
+                    Button("実績") {
+                        onAchievementsPressed()
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 25)
+                            .fill(Color.purple.opacity(0.8))
+                    )
+                    
+                    Button("設定") {
+                        onSettingsPressed()
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 25)
+                            .fill(Color.gray.opacity(0.6))
+                    )
                 }
-                .font(.headline)
-                .foregroundColor(.white)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
-                .background(
-                    RoundedRectangle(cornerRadius: 25)
-                        .fill(Color.gray.opacity(0.6))
-                )
+                .padding(.horizontal)
             }
             
-            // デバッグ用アイコン生成ボタン（一時的に無効）
-            #if false
-            Button("アイコン生成") {
-                // IconExporter.generateAppIcon()
-                print("アイコン生成機能は一時的に無効です")
+            // デバッグ用進行状況リセットボタン
+            #if DEBUG
+            HStack(spacing: 10) {
+                Button("進行リセット") {
+                    levelSelectionViewModel.resetAllProgress()
+                }
+                .font(.caption)
+                .foregroundColor(.white)
+                .padding(.horizontal, 15)
+                .padding(.vertical, 8)
+                .background(
+                    RoundedRectangle(cornerRadius: 15)
+                        .fill(Color.red.opacity(0.7))
+                )
+                
+                Button("データ再読込") {
+                    levelSelectionViewModel.refreshProgress()
+                }
+                .font(.caption)
+                .foregroundColor(.white)
+                .padding(.horizontal, 15)
+                .padding(.vertical, 8)
+                .background(
+                    RoundedRectangle(cornerRadius: 15)
+                        .fill(Color.blue.opacity(0.7))
+                )
             }
-            .font(.caption)
-            .foregroundColor(.white)
-            .padding(.horizontal, 15)
-            .padding(.vertical, 8)
-            .background(
-                RoundedRectangle(cornerRadius: 15)
-                    .fill(Color.red.opacity(0.7))
-            )
             #endif
         }
     }
@@ -273,6 +364,7 @@ struct LevelSelectionView: View {
 
 #Preview {
     LevelSelectionView(
+        levelSelectionViewModel: LevelSelectionViewModel(),
         onLevelSelected: { level in
             print("Selected level: \(level)")
         },

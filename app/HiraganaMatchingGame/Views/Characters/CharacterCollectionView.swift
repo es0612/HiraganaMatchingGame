@@ -4,6 +4,7 @@ struct CharacterCollectionView: View {
     @State private var starUnlockService = StarUnlockService()
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
+    @Environment(\.colorScheme) var colorScheme
     
     let onBackPressed: () -> Void
     
@@ -11,7 +12,10 @@ struct CharacterCollectionView: View {
         GeometryReader { geometry in
             ZStack {
                 LinearGradient(
-                    colors: [Color.green.opacity(0.1), Color.cyan.opacity(0.1)],
+                    colors: [
+                        colorScheme == .dark ? Color.green.opacity(0.05) : Color.green.opacity(0.1),
+                        colorScheme == .dark ? Color.cyan.opacity(0.05) : Color.cyan.opacity(0.1)
+                    ],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
@@ -38,7 +42,7 @@ struct CharacterCollectionView: View {
             Button(action: onBackPressed) {
                 Image(systemName: "arrow.left.circle.fill")
                     .font(.title2)
-                    .foregroundColor(.primary)
+                    .foregroundColor(colorScheme == .dark ? .white : .primary)
             }
             
             Spacer()
@@ -47,10 +51,11 @@ struct CharacterCollectionView: View {
                 Text("ひらがなコレクション")
                     .font(.title2)
                     .fontWeight(.bold)
+                    .foregroundColor(colorScheme == .dark ? .white : .primary)
                 
                 Text("集めた文字たち")
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(colorScheme == .dark ? .gray : .secondary)
             }
             
             Spacer()
@@ -69,11 +74,12 @@ struct CharacterCollectionView: View {
                 VStack(alignment: .leading) {
                     Text("解放済み文字")
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(colorScheme == .dark ? .gray : .secondary)
                     
                     Text("\(progress.unlockedCount)/\(progress.totalCount)")
                         .font(.title2)
                         .fontWeight(.bold)
+                        .foregroundColor(colorScheme == .dark ? .white : .primary)
                 }
                 
                 Spacer()
@@ -81,7 +87,7 @@ struct CharacterCollectionView: View {
                 VStack(alignment: .trailing) {
                     Text("進捗")
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(colorScheme == .dark ? .gray : .secondary)
                     
                     Text("\(Int(progress.progressPercentage * 100))%")
                         .font(.title2)
@@ -98,7 +104,7 @@ struct CharacterCollectionView: View {
             HStack {
                 Text("現在: \(progress.currentGroup)")
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(colorScheme == .dark ? .gray : .secondary)
                 
                 Spacer()
                 
@@ -113,8 +119,11 @@ struct CharacterCollectionView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .fill(Color.white.opacity(0.8))
-                .shadow(radius: 5)
+                .fill(colorScheme == .dark ? Color(.systemGray6).opacity(0.3) : Color.white.opacity(0.8))
+                .shadow(
+                    color: colorScheme == .dark ? .white.opacity(0.1) : .black.opacity(0.1),
+                    radius: 5
+                )
         )
     }
     
@@ -139,9 +148,17 @@ struct CharacterCollectionView: View {
         return VStack(spacing: 8) {
             ZStack {
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(isUnlocked ? Color.white : Color.gray.opacity(0.3))
+                    .fill(isUnlocked ? 
+                        (colorScheme == .dark ? Color(.systemGray6) : Color.white) : 
+                        (colorScheme == .dark ? Color(.systemGray5).opacity(0.3) : Color.gray.opacity(0.3))
+                    )
                     .frame(width: characterCardSize, height: characterCardSize)
-                    .shadow(color: .black.opacity(isUnlocked ? 0.1 : 0.05), radius: 3)
+                    .shadow(
+                        color: colorScheme == .dark ? 
+                            .white.opacity(isUnlocked ? 0.1 : 0.05) : 
+                            .black.opacity(isUnlocked ? 0.1 : 0.05), 
+                        radius: 3
+                    )
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(getGroupColor(group), lineWidth: isUnlocked ? 2 : 0)
@@ -150,11 +167,15 @@ struct CharacterCollectionView: View {
                 if isUnlocked {
                     Text(character)
                         .font(.system(size: characterCardSize * 0.5, weight: .bold))
-                        .foregroundColor(.primary)
+                        .foregroundColor(colorScheme == .dark ? .white : .black)
+                        .scaleEffect(1.0)
+                        .animation(.spring(response: 0.6, dampingFraction: 0.8), value: isUnlocked)
                 } else {
                     Image(systemName: "lock.fill")
                         .font(.system(size: characterCardSize * 0.3))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(colorScheme == .dark ? .gray : .secondary)
+                        .rotationEffect(.degrees(-10))
+                        .animation(.easeInOut(duration: 2.0).repeatForever(autoreverses: true), value: isUnlocked)
                 }
                 
                 if isUnlocked {
@@ -164,6 +185,8 @@ struct CharacterCollectionView: View {
                             Image(systemName: "checkmark.circle.fill")
                                 .font(.caption2)
                                 .foregroundColor(.green)
+                                .scaleEffect(1.2)
+                                .animation(.spring(response: 0.4, dampingFraction: 0.6).delay(0.1), value: isUnlocked)
                         }
                         Spacer()
                     }
@@ -173,7 +196,10 @@ struct CharacterCollectionView: View {
             
             Text(getCharacterReading(character))
                 .font(.caption2)
-                .foregroundColor(isUnlocked ? .primary : .secondary)
+                .foregroundColor(isUnlocked ? 
+                    (colorScheme == .dark ? .white : .primary) : 
+                    (colorScheme == .dark ? .gray : .secondary)
+                )
                 .lineLimit(1)
         }
     }
@@ -185,6 +211,7 @@ struct CharacterCollectionView: View {
                     Text("次の解放まで")
                         .font(.headline)
                         .fontWeight(.bold)
+                        .foregroundColor(colorScheme == .dark ? .white : .primary)
                     
                     Text("\(nextUnlock.requiredStars)スター必要")
                         .font(.subheadline)
@@ -225,6 +252,7 @@ struct CharacterCollectionView: View {
                 Text("獲得した実績")
                     .font(.headline)
                     .fontWeight(.bold)
+                    .foregroundColor(colorScheme == .dark ? .white : .primary)
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
@@ -237,7 +265,7 @@ struct CharacterCollectionView: View {
             } else {
                 Text("レベルをクリアして実績を獲得しよう！")
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(colorScheme == .dark ? .gray : .secondary)
                     .multilineTextAlignment(.center)
             }
         }
@@ -258,6 +286,7 @@ struct CharacterCollectionView: View {
                 .font(.caption2)
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
+                .foregroundColor(colorScheme == .dark ? .white : .primary)
                 .frame(width: 60)
         }
     }

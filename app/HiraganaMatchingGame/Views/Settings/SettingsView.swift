@@ -101,14 +101,6 @@ struct SettingsView: View {
                     }
                 }
                 
-                // アクセシビリティ設定セクション
-                SettingsSection(title: "アクセシビリティ") {
-                    HStack {
-                        Toggle("大きな文字", isOn: $viewModel.largeText)
-                        Spacer(minLength: 50)
-                        Toggle("アニメーション軽減", isOn: $viewModel.reduceAnimations)
-                    }
-                }
                 
                 // リセット・その他セクション
                 SettingsSection(title: "その他") {

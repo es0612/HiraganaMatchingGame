@@ -62,7 +62,7 @@ struct LevelProgressionIntegrationTests {
     
     @Test("GameView統合テスト")
     func gameViewIntegration() {
-        let progressionService = LevelProgressionService()
+        let progressionService = LevelProgressionService(forTesting: true)
         var gameCompletionCalled = false
         var completedLevel = 0
         var earnedStars = 0
@@ -107,7 +107,7 @@ struct LevelProgressionIntegrationTests {
         #expect(level5Config.level == 5)
         #expect(level5Config.title == "な行をおぼえよう")
         #expect(level5Config.characters.count == 25) // あ〜な行
-        #expect(level5Config.requiredStars == 4)
+        #expect(level5Config.requiredStars == 8)
         #expect(level5Config.questionsCount == 7)
     }
     
@@ -139,8 +139,14 @@ struct LevelProgressionIntegrationTests {
     @MainActor
     @Test("SwiftData統合テスト")
     func swiftDataIntegration() async {
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try! ModelContainer(for: GameProgress.self, configurations: config)
+        let schema = Schema([
+            GameProgress.self,
+            GameLevel.self,
+            UserSettings.self,
+            Character.self,
+        ])
+        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: schema, configurations: [config])
         let context = container.mainContext
         
         let testProgressionService = LevelProgressionService(forTesting: true)
@@ -168,10 +174,11 @@ struct LevelProgressionIntegrationTests {
         newViewModel.loadProgress(from: context)
         
         #expect(newViewModel.getTotalStars() == 3)
-        // 注意: GameProgressモデルは個別レベルのスター数を保存しないため、
-        // 新しいサービスでの読み込み時は推測値になる
-        #expect(newViewModel.getStarsForLevel(1) >= 0) // 最低限の確認
+        // GameProgressモデルにlevelStarsDataを追加したため、
+        // 個別レベルのスター数も正確に復元される
+        #expect(newViewModel.getStarsForLevel(1) == 3) // レベル1で3スター獲得
         #expect(newViewModel.isLevelUnlocked(1) == true) // レベル1は常に解放
+        #expect(newViewModel.isLevelUnlocked(2) == true) // 3スター獲得でレベル2解放
     }
     
     @Test("エラーハンドリング統合テスト")

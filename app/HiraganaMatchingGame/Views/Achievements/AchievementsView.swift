@@ -4,6 +4,7 @@ struct AchievementsView: View {
     @State private var starUnlockService = StarUnlockService()
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
+    @Environment(\.colorScheme) var colorScheme
     
     let onBackPressed: () -> Void
     
@@ -11,7 +12,10 @@ struct AchievementsView: View {
         GeometryReader { geometry in
             ZStack {
                 LinearGradient(
-                    colors: [Color.purple.opacity(0.1), Color.indigo.opacity(0.1)],
+                    colors: [
+                        colorScheme == .dark ? Color.purple.opacity(0.05) : Color.purple.opacity(0.1),
+                        colorScheme == .dark ? Color.indigo.opacity(0.05) : Color.indigo.opacity(0.1)
+                    ],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
@@ -36,7 +40,7 @@ struct AchievementsView: View {
             Button(action: onBackPressed) {
                 Image(systemName: "arrow.left.circle.fill")
                     .font(.title2)
-                    .foregroundColor(.primary)
+                    .foregroundColor(colorScheme == .dark ? .white : .primary)
             }
             
             Spacer()
@@ -45,10 +49,11 @@ struct AchievementsView: View {
                 Text("実績・統計")
                     .font(.title2)
                     .fontWeight(.bold)
+                    .foregroundColor(colorScheme == .dark ? .white : .primary)
                 
                 Text("あなたの成長記録")
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(colorScheme == .dark ? .gray : .secondary)
             }
             
             Spacer()
@@ -66,6 +71,7 @@ struct AchievementsView: View {
             Text("統計情報")
                 .font(.headline)
                 .fontWeight(.bold)
+                .foregroundColor(colorScheme == .dark ? .white : .primary)
             
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 15) {
                 statisticCard(
@@ -114,8 +120,11 @@ struct AchievementsView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .fill(Color.white.opacity(0.8))
-                .shadow(radius: 5)
+                .fill(colorScheme == .dark ? Color(.systemGray6).opacity(0.3) : Color.white.opacity(0.8))
+                .shadow(
+                    color: colorScheme == .dark ? .white.opacity(0.1) : .black.opacity(0.1),
+                    radius: 5
+                )
         )
     }
     
@@ -128,10 +137,11 @@ struct AchievementsView: View {
             Text(value)
                 .font(.title3)
                 .fontWeight(.bold)
+                .foregroundColor(colorScheme == .dark ? .white : .primary)
             
             Text(title)
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .foregroundColor(colorScheme == .dark ? .gray : .secondary)
                 .multilineTextAlignment(.center)
         }
         .frame(height: 80)
@@ -151,10 +161,11 @@ struct AchievementsView: View {
             Text("実績")
                 .font(.headline)
                 .fontWeight(.bold)
+                .foregroundColor(colorScheme == .dark ? .white : .primary)
             
             Text("獲得した実績: \(unlockedAchievements.count)/\(allAchievements.count)")
                 .font(.subheadline)
-                .foregroundColor(.secondary)
+                .foregroundColor(colorScheme == .dark ? .gray : .secondary)
             
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: isLandscape ? 3 : 2), spacing: 20) {
                 ForEach(allAchievements, id: \.self) { achievement in
@@ -168,9 +179,16 @@ struct AchievementsView: View {
         VStack(spacing: 12) {
             ZStack {
                 Circle()
-                    .fill(isUnlocked ? achievement.iconColor : Color.gray.opacity(0.3))
+                    .fill(isUnlocked ? achievement.iconColor : 
+                        (colorScheme == .dark ? Color(.systemGray5).opacity(0.3) : Color.gray.opacity(0.3))
+                    )
                     .frame(width: 60, height: 60)
-                    .shadow(color: .black.opacity(isUnlocked ? 0.2 : 0.1), radius: 3)
+                    .shadow(
+                        color: colorScheme == .dark ? 
+                            .white.opacity(isUnlocked ? 0.1 : 0.05) : 
+                            .black.opacity(isUnlocked ? 0.2 : 0.1), 
+                        radius: 3
+                    )
                 
                 Image(systemName: achievement.iconName)
                     .font(.title2)
@@ -181,12 +199,15 @@ struct AchievementsView: View {
                 Text(achievement.rawValue)
                     .font(.headline)
                     .fontWeight(.bold)
-                    .foregroundColor(isUnlocked ? .primary : .gray)
+                    .foregroundColor(isUnlocked ? 
+                        (colorScheme == .dark ? .white : .primary) : 
+                        (colorScheme == .dark ? .gray : .gray)
+                    )
                     .multilineTextAlignment(.center)
                 
                 Text(achievement.description)
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(colorScheme == .dark ? .gray : .secondary)
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
             }
@@ -205,7 +226,7 @@ struct AchievementsView: View {
             } else {
                 Text("未達成")
                     .font(.caption2)
-                    .foregroundColor(.gray)
+                    .foregroundColor(colorScheme == .dark ? .gray : .gray)
             }
         }
         .frame(height: 160)
@@ -213,9 +234,21 @@ struct AchievementsView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .fill(isUnlocked ? Color.white : Color.gray.opacity(0.1))
-                .stroke(isUnlocked ? achievement.iconColor.opacity(0.5) : Color.gray.opacity(0.3), lineWidth: 2)
-                .shadow(color: .black.opacity(isUnlocked ? 0.1 : 0.05), radius: 3)
+                .fill(isUnlocked ? 
+                    (colorScheme == .dark ? Color(.systemGray6) : Color.white) : 
+                    (colorScheme == .dark ? Color(.systemGray5).opacity(0.1) : Color.gray.opacity(0.1))
+                )
+                .stroke(
+                    isUnlocked ? achievement.iconColor.opacity(0.5) : 
+                        (colorScheme == .dark ? Color(.systemGray4).opacity(0.3) : Color.gray.opacity(0.3)), 
+                    lineWidth: 2
+                )
+                .shadow(
+                    color: colorScheme == .dark ? 
+                        .white.opacity(isUnlocked ? 0.1 : 0.05) : 
+                        .black.opacity(isUnlocked ? 0.1 : 0.05), 
+                    radius: 3
+                )
         )
         .scaleEffect(isUnlocked ? 1.0 : 0.95)
         .animation(.easeInOut(duration: 0.2), value: isUnlocked)

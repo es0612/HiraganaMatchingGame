@@ -9,7 +9,7 @@
 import SwiftUI
 import SwiftData
 
-enum AppScreen {
+enum AppScreen: Equatable {
     case levelSelection
     case game(level: Int)
     case characterCollection
@@ -23,6 +23,7 @@ struct ContentView: View {
     @State private var levelSelectionViewModel = LevelSelectionViewModel()
     @State private var userSettings: UserSettings?
     @State private var showLaunchScreen = true
+    @State private var audioService: AudioService?
     
     var body: some View {
         ZStack {
@@ -30,6 +31,7 @@ struct ContentView: View {
                 switch currentScreen {
             case .levelSelection:
                 LevelSelectionView(
+                    levelSelectionViewModel: levelSelectionViewModel,
                     onLevelSelected: { selectedLevel in
                         currentScreen = .game(level: selectedLevel)
                     },
@@ -46,6 +48,11 @@ struct ContentView: View {
                 .onAppear {
                     levelSelectionViewModel.loadProgress(from: modelContext)
                     loadUserSettings()
+                }
+                .onChange(of: currentScreen) { _ in
+                    if currentScreen == .levelSelection {
+                        loadUserSettings()
+                    }
                 }
                 
             case .game(let level):
@@ -88,6 +95,7 @@ struct ContentView: View {
                 
             case .settings:
                 SettingsView(modelContext: modelContext) {
+                    loadUserSettings()
                     currentScreen = .levelSelection
                 }
                 }
@@ -112,6 +120,7 @@ struct ContentView: View {
         
         if let settings = existingSettings?.first {
             userSettings = settings
+            settings.load() // UserDefaultsから最新設定を読み込み
         } else {
             let newSettings = UserSettings()
             modelContext.insert(newSettings)
@@ -122,6 +131,11 @@ struct ContentView: View {
             } catch {
                 print("Failed to save user settings: \(error)")
             }
+        }
+        
+        // AudioServiceを初期化してBGMを開始
+        if let settings = userSettings {
+            audioService = AudioService(userSettings: settings)
         }
     }
 }

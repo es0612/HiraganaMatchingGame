@@ -1,0 +1,52 @@
+{
+  "configurations" : [
+    {
+      "id" : "7A26B80B-4B8F-4C89-A24A-6E31F6B5F1A2",
+      "name" : "Test Configuration",
+      "options" : {
+        "environmentVariableEntries" : [
+          {
+            "key" : "XCTestConfigurationFilePath",
+            "value" : "$(PRODUCT_BUNDLE_IDENTIFIER)"
+          }
+        ],
+        "testTimeoutsEnabled" : true,
+        "maximumTestExecutionTimeAllowance" : 600,
+        "maximumTestRepetitions" : 1,
+        "testRepetitionMode" : "none"
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "environmentVariableEntries" : [
+      {
+        "key" : "XCTestConfigurationFilePath", 
+        "value" : "$(PRODUCT_BUNDLE_IDENTIFIER)"
+      }
+    ],
+    "testTimeoutsEnabled" : true,
+    "maximumTestExecutionTimeAllowance" : 600,
+    "maximumTestRepetitions" : 1,
+    "testRepetitionMode" : "none"
+  },
+  "testTargets" : [
+    {
+      "enabled" : true,
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:HiraganaMatchingGame.xcodeproj",
+        "identifier" : "2B4B4A4A2C2E4B7300123456",
+        "name" : "HiraganaMatchingGameTests"
+      },
+      "testIdentifiers" : [
+        "GameLogicServiceTests\/answerValidation(hiragana:imageName:expected:)",
+        "GameLogicServiceTests\/randomChoicesGeneration()",
+        "GameLogicServiceTests\/levelQuestionGeneration()",
+        "GameLogicServiceTests\/scoreCalculation(correctAnswers:totalQuestions:expectedStars:)",
+        "GameLogicServiceTests\/levelUnlockCheck()",
+        "GameLogicServiceTests\/gameStatsCalculation()"
+      ]
+    }
+  ],
+  "version" : 1
+}

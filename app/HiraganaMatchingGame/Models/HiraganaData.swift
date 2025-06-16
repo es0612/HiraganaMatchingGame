@@ -20,6 +20,56 @@ class HiraganaDataManager {
     
     private init() {}
     
+    // 画像名から日本語の単語へのマッピング
+    private let imageNameToJapaneseWord: [String: String] = [
+        "ant": "ありさん",
+        "dog": "いぬ", 
+        "rabbit": "うさぎ",
+        "shrimp": "えび",
+        "demon": "おに",
+        "crab": "かに",
+        "giraffe": "きりん",
+        "bear": "くま",
+        "cake": "けーき",
+        "top": "こま",
+        "monkey": "さる",
+        "deer": "しか",
+        "watermelon": "すいか",
+        "cicada": "せみ",
+        "sky": "そら",
+        "octopus": "たこ",
+        "butterfly": "ちょう",
+        "crane": "つる",
+        "hand": "て",
+        "clock": "とけい",
+        "eggplant": "なす",
+        "carrot": "にんじん",
+        "doll": "ぬいぐるみ",
+        "cat": "ねこ",
+        "field": "のはら",
+        "flower": "はな",
+        "chick": "ひよこ",
+        "boat": "ふね",
+        "snake": "へび",
+        "bone": "ほね",
+        "bean": "まめ",
+        "ear": "みみ",
+        "bug": "むし",
+        "eye": "め",
+        "peach": "もも",
+        "arrow": "や",
+        "hot_water": "ゆ",
+        "night": "よる",
+        "trumpet": "らっぱ",
+        "apple": "りんご",
+        "loop": "る",
+        "refrigerator": "れいぞうこ",
+        "candle": "ろうそく",
+        "ring": "わ",
+        "man": "おとこ",
+        "antenna": "あんてな"
+    ]
+    
     private let allHiraganaData: [HiraganaItem] = [
         HiraganaItem(character: "あ", imageName: "ant", category: "animal"),
         HiraganaItem(character: "い", imageName: "dog", category: "animal"),
@@ -90,6 +140,10 @@ class HiraganaDataManager {
         }
         
         return allHiraganaData.filter { characters.contains($0.character) }
+    }
+    
+    func getJapaneseWord(for imageName: String) -> String? {
+        return imageNameToJapaneseWord[imageName]
     }
     
     func getRandomChoices(for hiragana: String, count: Int = 3) -> [HiraganaItem] {

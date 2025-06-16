@@ -6,12 +6,6 @@ struct GameQuestion {
     let correctAnswer: HiraganaItem
 }
 
-struct GameStats {
-    let accuracy: Double
-    let stars: Int
-    let timeTaken: TimeInterval
-    let averageTimePerQuestion: Double
-}
 
 class GameLogicService {
     private let hiraganaDataManager = HiraganaDataManager.shared
@@ -98,14 +92,12 @@ class GameLogicService {
     
     func calculateGameStats(correctAnswers: Int, totalQuestions: Int, timeTaken: TimeInterval) -> GameStats {
         let accuracy = Double(correctAnswers) / Double(totalQuestions)
-        let stars = calculateStars(correctAnswers: correctAnswers, totalQuestions: totalQuestions)
         let averageTime = timeTaken / Double(totalQuestions)
         
         return GameStats(
             accuracy: accuracy,
-            stars: stars,
-            timeTaken: timeTaken,
-            averageTimePerQuestion: averageTime
+            timeElapsed: timeTaken,
+            averageResponseTime: averageTime
         )
     }
     

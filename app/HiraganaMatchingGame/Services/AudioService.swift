@@ -9,28 +9,37 @@ enum AudioServiceError: Error {
 
 class AudioService: ObservableObject {
     @Published var isSoundEnabled: Bool = true
+    @Published var isMusicEnabled: Bool = true
     @Published var currentVolume: Float = 1.0
     @Published var playbackSpeed: Float = 1.0
     
     private var userSettings: UserSettings?
+    private let isTestMode: Bool
     
     private var audioPlayers: [String: AVAudioPlayer?] = [:]
     private var audioSession: AVAudioSession
     private var effectPlayer: AVAudioPlayer?
+    private var bgmPlayer: AVAudioPlayer?
     private var speechSynthesizer: AVSpeechSynthesizer
     
-    init() {
+    init(isTestMode: Bool = false) {
+        self.isTestMode = isTestMode
         self.audioSession = AVAudioSession.sharedInstance()
         self.speechSynthesizer = AVSpeechSynthesizer()
-        setupAudioSession()
+        if !isTestMode {
+            setupAudioSession()
+        }
     }
     
-    init(userSettings: UserSettings) {
+    init(userSettings: UserSettings, isTestMode: Bool = false) {
+        self.isTestMode = isTestMode
         self.audioSession = AVAudioSession.sharedInstance()
         self.speechSynthesizer = AVSpeechSynthesizer()
         self.userSettings = userSettings
-        setupAudioSession()
-        syncWithUserSettings()
+        if !isTestMode {
+            setupAudioSession()
+            syncWithUserSettings()
+        }
     }
     
     private func setupAudioSession() {
@@ -60,8 +69,14 @@ class AudioService: ObservableObject {
         guard let settings = userSettings else { return }
         
         isSoundEnabled = settings.soundEnabled
+        isMusicEnabled = settings.musicEnabled
         currentVolume = Float(settings.soundVolume)
         playbackSpeed = Float(settings.voiceSpeed)
+        
+        // BGMを開始
+        if isMusicEnabled {
+            startBackgroundMusic()
+        }
         
         // 設定変更の監視
         settings.onSettingChanged = { [weak self] settingName in
@@ -77,6 +92,8 @@ class AudioService: ObservableObject {
         switch settingName {
         case "soundEnabled":
             setSoundEnabled(settings.soundEnabled)
+        case "musicEnabled":
+            setMusicEnabled(settings.musicEnabled)
         case "soundVolume":
             setVolume(Float(settings.soundVolume))
         case "voiceSpeed":
@@ -96,6 +113,15 @@ class AudioService: ObservableObject {
         isSoundEnabled = enabled
         if !enabled {
             stopAllAudio()
+        }
+    }
+    
+    func setMusicEnabled(_ enabled: Bool) {
+        isMusicEnabled = enabled
+        if enabled {
+            startBackgroundMusic()
+        } else {
+            stopBackgroundMusic()
         }
     }
     
@@ -183,6 +209,7 @@ class AudioService: ObservableObject {
     }
     
     func playAudio(for character: String) async {
+        guard !isTestMode else { return }
         guard isSoundEnabled else { 
             print("🔇 Audio disabled, skipping playback for: \(character)")
             return 
@@ -197,13 +224,47 @@ class AudioService: ObservableObject {
             // 音声合成の設定
             let utterance = AVSpeechUtterance(string: character)
             utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
-            utterance.rate = playbackSpeed * 0.5 // 少し遅めに調整
+            utterance.rate = playbackSpeed * 0.25 // より遅く、はっきりと
+            utterance.volume = currentVolume
+            utterance.pitchMultiplier = 1.2 // 少し高めの音程で子供に優しく
+            utterance.preUtteranceDelay = 0.1 // 発音前の短い間
+            utterance.postUtteranceDelay = 0.2 // 発音後の余韻
+            
+            // 音声合成で再生
+            speechSynthesizer.speak(utterance)
+            print("🗣️ Speaking: \(character) with voice synthesis")
+        }
+    }
+    
+    func speakText(_ text: String, slowly: Bool = false) async {
+        guard !isTestMode else { return }
+        guard isSoundEnabled else { 
+            print("🔇 Audio disabled, skipping speech for: \(text)")
+            return 
+        }
+        
+        print("🎵 Speaking text slowly: \(text)")
+        
+        await MainActor.run {
+            // 既存の音声を停止
+            speechSynthesizer.stopSpeaking(at: .immediate)
+            
+            // 音声合成の設定
+            let utterance = AVSpeechUtterance(string: text)
+            utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
+            
+            if slowly {
+                utterance.rate = playbackSpeed * 0.3 // より遅く、はっきりと
+            } else {
+                utterance.rate = playbackSpeed * 0.5
+            }
+            
             utterance.volume = currentVolume
             utterance.pitchMultiplier = 1.2 // 少し高めの音程で子供に優しく
             
             // 音声合成で再生
             speechSynthesizer.speak(utterance)
-            print("🗣️ Speaking: \(character) with voice synthesis")
+            print("🗣️ Speaking text: \(text)")
         }
     }
     
@@ -215,6 +276,125 @@ class AudioService: ObservableObject {
         speechSynthesizer.stopSpeaking(at: .immediate)
         for (_, player) in audioPlayers {
             player?.stop()
+        }
+        // BGMは継続
+    }
+    
+    // MARK: - BGM機能
+    
+    func startBackgroundMusic() {
+        guard isMusicEnabled else { return }
+        
+        // BGMファイルがない場合は軽やかなトーンを生成
+        Task {
+            do {
+                let bgmData = generateBackgroundMusic()
+                bgmPlayer = try AVAudioPlayer(data: bgmData)
+                bgmPlayer?.numberOfLoops = -1 // 無限ループ
+                bgmPlayer?.volume = currentVolume * 0.3 // BGMは効果音より小さく
+                bgmPlayer?.play()
+                print("🎵 Background music started")
+            } catch {
+                print("BGM再生に失敗: \\(error)")
+            }
+        }
+    }
+    
+    func stopBackgroundMusic() {
+        bgmPlayer?.stop()
+        bgmPlayer = nil
+        print("🎵 Background music stopped")
+    }
+    
+    private func generateBackgroundMusic() -> Data {
+        // 子供向けのポップで楽しいメロディーを生成
+        let sampleRate: Double = 44100
+        let duration: Double = 12.0 // 12秒のより長いループ
+        let samples = Int(sampleRate * duration)
+        
+        var audioData = Data()
+        
+        // WAVヘッダー
+        let header = createWAVHeader(samples: samples, sampleRate: Int(sampleRate))
+        audioData.append(header)
+        
+        // 楽しいメロディー「きらきら星」風のポップアレンジ
+        // C-C-G-G-A-A-G-F-F-E-E-D-D-C の明るいメロディー
+        let melodyNotes: [(Double, Double)] = [
+            (523.25, 0.6), // C5 - Do (高め)
+            (523.25, 0.6), // C5 - Do
+            (783.99, 0.6), // G5 - Sol (高音で明るく)
+            (783.99, 0.6), // G5 - Sol
+            (880.00, 0.6), // A5 - La (最高音)
+            (880.00, 0.6), // A5 - La
+            (783.99, 1.2), // G5 - Sol (長め)
+            (698.46, 0.6), // F5 - Fa
+            (698.46, 0.6), // F5 - Fa
+            (659.25, 0.6), // E5 - Mi
+            (659.25, 0.6), // E5 - Mi
+            (587.33, 0.6), // D5 - Re
+            (587.33, 0.6), // D5 - Re
+            (523.25, 1.2)  // C5 - Do (終わり)
+        ]
+        
+        var currentTime: Double = 0
+        
+        for (frequency, noteDuration) in melodyNotes {
+            let noteStartSample = Int(currentTime * sampleRate)
+            let noteEndSample = Int((currentTime + noteDuration) * sampleRate)
+            
+            for i in noteStartSample..<noteEndSample {
+                let time = Double(i) / sampleRate
+                let noteTime = time - currentTime
+                
+                // より楽しい音作り：複数の倍音とエンベロープ
+                let envelope = createChildFriendlyEnvelope(noteTime: noteTime, duration: noteDuration)
+                
+                // メインのメロディー
+                let mainTone = sin(2.0 * Double.pi * frequency * noteTime)
+                
+                // ハーモニー（3度上）を追加してよりポップに
+                let harmonyFreq = frequency * 1.25992 // 3度上のハーモニー
+                let harmonyTone = sin(2.0 * Double.pi * harmonyFreq * noteTime) * 0.3
+                
+                // 軽やかなトレモロ効果
+                let tremolo = 1.0 + 0.1 * sin(2.0 * Double.pi * 6.0 * noteTime)
+                
+                let finalTone = (mainTone + harmonyTone) * envelope * tremolo * 0.25
+                
+                var sampleInt16 = Int16(finalTone * 32767)
+                
+                audioData.append(Data(bytes: &sampleInt16, count: 2))
+                audioData.append(Data(bytes: &sampleInt16, count: 2)) // ステレオ
+            }
+            
+            currentTime += noteDuration
+        }
+        
+        return audioData
+    }
+    
+    private func createChildFriendlyEnvelope(noteTime: Double, duration: Double) -> Double {
+        // 子供向けの楽しい音のエンベロープ
+        let attack = min(duration * 0.1, 0.05) // 立ち上がり
+        let decay = min(duration * 0.2, 0.1)  // 減衰
+        let sustain = 0.8 // サスティンレベル
+        let release = duration * 0.3 // リリース
+        
+        if noteTime < attack {
+            // アタック（0から1に）
+            return noteTime / attack
+        } else if noteTime < attack + decay {
+            // ディケイ（1からサスティンレベルに）
+            let decayProgress = (noteTime - attack) / decay
+            return 1.0 - (1.0 - sustain) * decayProgress
+        } else if noteTime < duration - release {
+            // サスティン（一定レベル維持）
+            return sustain
+        } else {
+            // リリース（サスティンから0に）
+            let releaseProgress = (noteTime - (duration - release)) / release
+            return sustain * (1.0 - releaseProgress)
         }
     }
     
@@ -273,6 +453,7 @@ class AudioService: ObservableObject {
     // MARK: - 効果音
     
     func playCorrectSound() {
+        guard !isTestMode else { return }
         guard isSoundEnabled else { return }
         
         Task {
@@ -288,6 +469,7 @@ class AudioService: ObservableObject {
     }
     
     func playIncorrectSound() {
+        guard !isTestMode else { return }
         guard isSoundEnabled else { return }
         
         Task {
@@ -393,6 +575,7 @@ class AudioService: ObservableObject {
     
     deinit {
         stopAllAudio()
+        stopBackgroundMusic()
         try? audioSession.setActive(false)
     }
 }

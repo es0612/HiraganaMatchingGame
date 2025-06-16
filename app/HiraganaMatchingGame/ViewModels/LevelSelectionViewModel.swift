@@ -95,4 +95,12 @@ class LevelSelectionViewModel {
         }
         saveProgress()
     }
+    
+    func refreshProgress() {
+        // デバッグ用：進行状況を強制的に再読み込み
+        levelProgressionService = LevelProgressionService()
+        if let context = modelContext {
+            loadProgress(from: context)
+        }
+    }
 }

@@ -1,6 +1,12 @@
 import Foundation
 import SwiftData
 
+struct GameStats {
+    let accuracy: Double
+    let timeElapsed: TimeInterval
+    let averageResponseTime: TimeInterval
+}
+
 @Observable
 class GameViewModel {
     var currentLevel: Int = 1
@@ -21,15 +27,21 @@ class GameViewModel {
     private let levelProgressionService: LevelProgressionService
     private var currentQuestions: [GameQuestion] = []
     private var currentQuestionIndex: Int = 0
+    private var gameTimer: Timer?
+    private var timeRemaining: Int = 0
+    private var userSettings: UserSettings?
+    private let isTestMode: Bool
     
     init(gameLogicService: GameLogicService = GameLogicService(), 
          audioService: AudioService = AudioService(),
          starUnlockService: StarUnlockService = StarUnlockService(),
-         levelProgressionService: LevelProgressionService = LevelProgressionService()) {
+         levelProgressionService: LevelProgressionService = LevelProgressionService(),
+         isTestMode: Bool = false) {
         self.gameLogicService = gameLogicService
         self.audioService = audioService
         self.starUnlockService = starUnlockService
         self.levelProgressionService = levelProgressionService
+        self.isTestMode = isTestMode
     }
     
     convenience init(userSettings: UserSettings) {
@@ -41,6 +53,7 @@ class GameViewModel {
             starUnlockService: StarUnlockService(),
             levelProgressionService: LevelProgressionService()
         )
+        self.userSettings = userSettings
     }
     
     func startNewGame(level: Int) {
@@ -51,6 +64,12 @@ class GameViewModel {
         showFeedback = false
         gameStartTime = Date()
         currentQuestionIndex = 0
+        
+        // 時間制限の設定（テストモードでは無効）
+        if !isTestMode, let settings = userSettings, settings.playtimeLimit > 0 {
+            timeRemaining = settings.playtimeLimit * 60 // 分を秒に変換
+            startGameTimer()
+        }
         
         // GameLogicServiceを使って問題を生成
         currentQuestions = gameLogicService.generateQuestionsForLevel(level, questionCount: totalQuestions)
@@ -79,11 +98,20 @@ class GameViewModel {
             // 正解音を再生してから、ひらがな音声を再生
             audioService.playCorrectSound()
             
-            // 正解音の再生完了後にひらがな音声を再生
-            Task {
-                // 正解音の再生時間分待機（約0.5秒）
-                try? await Task.sleep(nanoseconds: 600_000_000) // 0.6秒待機
-                await audioService.playAudio(for: currentGameQuestion.hiragana)
+            // 正解音の再生完了後に選んだ単語をゆっくり読み上げる（テストモードでは無効）
+            if !isTestMode {
+                Task {
+                    // 正解音の再生時間分待機（約0.5秒）
+                    try? await Task.sleep(nanoseconds: 600_000_000) // 0.6秒待機
+                    
+                    // 選んだ画像に対応する日本語の単語を取得
+                    if let japaneseWord = HiraganaDataManager.shared.getJapaneseWord(for: imageName) {
+                        await audioService.speakText(japaneseWord, slowly: true)
+                    } else {
+                        // フォールバックとしてひらがな文字を再生
+                        await audioService.playAudio(for: currentGameQuestion.hiragana)
+                    }
+                }
             }
         } else {
             lastAnswerCorrect = false
@@ -105,10 +133,16 @@ class GameViewModel {
             // 次の問題に進む
             currentQuestion += 1
             
-            // 短い遅延後に次の問題を表示
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            // 自動進行設定に基づいて次の問題を表示（テストモードでは即座に実行）
+            if isTestMode {
                 self.showFeedback = false
                 self.loadCurrentQuestion()
+            } else {
+                let delay = userSettings?.autoAdvance == true ? 2.0 : 1.5
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                    self.showFeedback = false
+                    self.loadCurrentQuestion()
+                }
             }
         }
     }
@@ -150,14 +184,6 @@ class GameViewModel {
         }
     }
     
-    func getGameStats() -> GameStats {
-        let timeTaken = Date().timeIntervalSince(gameStartTime)
-        return gameLogicService.calculateGameStats(
-            correctAnswers: score,
-            totalQuestions: totalQuestions,
-            timeTaken: timeTaken
-        )
-    }
     
     func getHint() -> String {
         return gameLogicService.generateHint(for: currentHiragana)
@@ -178,26 +204,30 @@ class GameViewModel {
     
     private func completeGame() {
         isGameCompleted = true
+        gameTimer?.invalidate()
+        gameTimer = nil
+        
         let timeTaken = Date().timeIntervalSince(gameStartTime)
         let accuracy = Double(score) / Double(totalQuestions)
         
-        // スター獲得計算
-        earnedStars = starUnlockService.calculateStars(
+        // スター獲得計算（GameLogicServiceを使用）
+        earnedStars = gameLogicService.calculateStars(
             correctAnswers: score,
-            totalQuestions: totalQuestions,
-            timeTaken: timeTaken
+            totalQuestions: totalQuestions
         )
         
-        // レベル完了記録
+        print("🎮 Game completed: Level \(currentLevel), Score: \(score)/\(totalQuestions), Stars: \(earnedStars)")
+        
+        // メインのレベル進行サービスに記録
+        levelProgressionService.completeLevel(currentLevel, earnedStars: earnedStars)
+        
+        // 実績とキャラクター解放用の記録
         starUnlockService.recordLevelCompletion(
             level: currentLevel,
             stars: earnedStars,
             accuracy: accuracy,
             time: timeTaken
         )
-        
-        // レベル進行サービスにも記録
-        levelProgressionService.completeLevel(currentLevel, earnedStars: earnedStars)
         
         // ゲーム完了時の音声停止
         audioService.stopAllAudio()
@@ -215,6 +245,18 @@ class GameViewModel {
         return Date().timeIntervalSince(gameStartTime)
     }
     
+    func getGameStats() -> GameStats {
+        let accuracy = Double(score) / Double(totalQuestions)
+        let timeElapsed = getTimeElapsed()
+        let averageResponseTime = timeElapsed / Double(max(currentQuestion - 1, 1))
+        
+        return GameStats(
+            accuracy: accuracy,
+            timeElapsed: timeElapsed,
+            averageResponseTime: averageResponseTime
+        )
+    }
+    
     func skipQuestion() {
         // ヒント機能として、問題をスキップ
         currentQuestion += 1
@@ -225,5 +267,40 @@ class GameViewModel {
         } else {
             loadCurrentQuestion()
         }
+    }
+    
+    private func startGameTimer() {
+        // テスト環境ではTimerを無効化
+        if TestUtils.isTestEnvironment {
+            TestUtils.debugPrint("Game timer disabled in test environment")
+            return
+        }
+        
+        gameTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+            if self.timeRemaining > 0 {
+                self.timeRemaining -= 1
+            } else {
+                // 時間切れでゲーム終了
+                self.completeGame()
+            }
+        }
+    }
+    
+    func getTimeRemaining() -> Int {
+        return timeRemaining
+    }
+    
+    func isTimeLimitEnabled() -> Bool {
+        return userSettings?.playtimeLimit ?? 0 > 0
+    }
+    
+    // テスト用：リソースのクリーンアップ
+    func cleanup() {
+        gameTimer?.invalidate()
+        gameTimer = nil
+    }
+    
+    deinit {
+        cleanup()
     }
 }

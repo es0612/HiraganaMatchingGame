@@ -10,8 +10,11 @@ struct GameView: View {
     @State private var gameViewModel: GameViewModel
     @State private var showHint = false
     @State private var hintText = ""
+    @State private var showLevelUnlockNotification = false
+    @State private var unlockedLevel = 0
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
+    @Environment(\.colorScheme) var colorScheme
     
     init(selectedLevel: Int = 1, 
          levelProgressionService: LevelProgressionService = LevelProgressionService(),
@@ -35,7 +38,11 @@ struct GameView: View {
         GeometryReader { geometry in
             ZStack {
                 LinearGradient(
-                    colors: [
+                    colors: colorScheme == .dark ? [
+                        Color.pink.opacity(0.03),
+                        Color.orange.opacity(0.02),
+                        Color.blue.opacity(0.02)
+                    ] : [
                         Color.pink.opacity(0.08),
                         Color.orange.opacity(0.06),
                         Color.blue.opacity(0.04)
@@ -45,42 +52,75 @@ struct GameView: View {
                 )
                 .ignoresSafeArea()
                 
-                VStack(spacing: 20) {
-                    headerView
-                        .accessibilityIdentifier("ゲームヘッダー")
-                    
-                    Spacer()
-                    
-                    if gameViewModel.showFeedback {
-                        feedbackView
-                    } else {
+                VStack(spacing: 0) {
+                    ScrollView {
                         VStack(spacing: 20) {
-                            instructionText
+                            headerView
+                                .accessibilityIdentifier("ゲームヘッダー")
                             
-                            hiraganaCardView
-                            
-                            // ヒント表示
-                            if showHint {
-                                hintView
+                            if gameViewModel.showFeedback {
+                                feedbackView
+                            } else {
+                                VStack(spacing: 20) {
+                                    instructionText
+                                    
+                                    hiraganaCardView
+                                    
+                                    // ヒント表示
+                                    if showHint {
+                                        hintView
+                                    }
+                                    
+                                    answerChoicesView
+                                }
+                                .accessibilityIdentifier("ゲームエリア")
                             }
-                            
-                            Spacer()
-                            
-                            answerChoicesView
                         }
-                        .accessibilityIdentifier("ゲームエリア")
+                        .padding()
                     }
                     
-                    Spacer()
-                    
                     bottomControlsView
+                        .padding()
+                        .padding(.bottom, max(geometry.safeAreaInsets.bottom, 10))
+                        .background(
+                            colorScheme == .dark ? 
+                                Color(.systemBackground).opacity(0.9) : 
+                                Color.white.opacity(0.9)
+                        )
                 }
-                .padding()
                 .accessibilityIdentifier("ゲーム画面")
+            }
+            
+            // パーティクルエフェクト
+            if gameViewModel.showFeedback {
+                ParticleEffectView(isCorrect: gameViewModel.score > 0)
+                    .allowsHitTesting(false)
+                    .zIndex(50)
+            }
+            
+            // ゲーム完了時の紙吹雪
+            if gameViewModel.isGameCompleted && gameViewModel.earnedStars > 0 {
+                ConfettiView()
+                    .allowsHitTesting(false)
+                    .zIndex(60)
+            }
+            
+            // レベル解放通知オーバーレイ
+            if showLevelUnlockNotification {
+                levelUnlockNotificationView
+                    .zIndex(100)
             }
         }
         .onAppear {
             gameViewModel.startNewGame(level: selectedLevel)
+        }
+        .onChange(of: gameViewModel.isGameCompleted) { completed in
+            if completed {
+                // ゲーム終了後に新しいレベルが解放されたかチェック
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    checkForLevelUnlock()
+                }
+            }
         }
     }
     
@@ -90,7 +130,14 @@ struct GameView: View {
             
             Spacer()
             
-            progressBarView
+            VStack(spacing: 4) {
+                progressBarView
+                
+                // 時間制限表示
+                if gameViewModel.isTimeLimitEnabled() {
+                    timeDisplayView
+                }
+            }
             
             Spacer()
             
@@ -151,6 +198,28 @@ struct GameView: View {
         }
     }
     
+    private var timeDisplayView: some View {
+        HStack(spacing: 4) {
+            Image(systemName: "clock")
+                .font(.caption)
+                .foregroundColor(.orange)
+            Text(formatTime(gameViewModel.getTimeRemaining()))
+                .font(.caption)
+                .fontWeight(.medium)
+                .foregroundColor(.orange)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(Color.orange.opacity(0.1))
+        .cornerRadius(8)
+    }
+    
+    private func formatTime(_ seconds: Int) -> String {
+        let minutes = seconds / 60
+        let remainingSeconds = seconds % 60
+        return String(format: "%d:%02d", minutes, remainingSeconds)
+    }
+    
     private func getCurrentPotentialStars() -> Int {
         if gameViewModel.isGameCompleted {
             return gameViewModel.earnedStars
@@ -205,6 +274,10 @@ struct GameView: View {
                 .font(.system(size: 90, weight: .bold, design: .rounded))
                 .foregroundColor(.black)
                 .frame(width: 220, height: 220)
+                .scaleEffect(gameViewModel.showFeedback ? 1.2 : 1.0)
+                .rotationEffect(.degrees(gameViewModel.showFeedback && gameViewModel.score > 0 ? 10 : 0))
+                .animation(.spring(response: 0.6, dampingFraction: 0.7), value: gameViewModel.showFeedback)
+                .animation(.spring(response: 0.6, dampingFraction: 0.7), value: gameViewModel.currentHiragana)
             
             // サウンドボタンを右上に配置
             VStack {
@@ -270,7 +343,13 @@ struct GameView: View {
     
     private func answerChoiceButton(_ choice: HiraganaItem) -> some View {
         Button(action: {
-            gameViewModel.selectAnswer(choice.imageName)
+            // タップ時のハプティクスフィードバック
+            let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+            impactFeedback.impactOccurred()
+            
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                gameViewModel.selectAnswer(choice.imageName)
+            }
         }) {
             VStack(spacing: 10) {
                 ZStack {
@@ -291,31 +370,46 @@ struct GameView: View {
                             lineWidth: 2
                         )
                         .frame(width: choiceButtonSize, height: choiceButtonSize)
-                        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
+                        .shadow(
+                            color: colorScheme == .dark ? 
+                                Color.white.opacity(0.05) : 
+                                Color.black.opacity(0.1), 
+                            radius: colorScheme == .dark ? 2 : 4, 
+                            x: 0, 
+                            y: 2
+                        )
                     
                     // 絵文字を中央に配置
                     Text(getEmojiForImageName(choice.imageName))
                         .font(.system(size: choiceButtonSize * 0.55))
                         .frame(width: choiceButtonSize, height: choiceButtonSize)
+                        .scaleEffect(gameViewModel.showFeedback ? 1.2 : 1.0)
+                        .animation(.spring(response: 0.4, dampingFraction: 0.6), value: gameViewModel.showFeedback)
                 }
                 
                 Text(getReadingForCharacter(choice.character))
                     .font(.caption)
                     .fontWeight(.medium)
-                    .foregroundColor(.black)
+                    .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
                     .multilineTextAlignment(.center)
             }
         }
         .buttonStyle(PlainButtonStyle())
         .scaleEffect(1.0)
-        .animation(.easeInOut(duration: 0.1), value: gameViewModel.currentHiragana)
+        .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(Double.random(in: 0...0.3)), value: gameViewModel.currentHiragana)
+        .onAppear {
+            // 選択肢ボタンが表示される時の楽しいアニメーション
+            withAnimation(.spring(response: 0.8, dampingFraction: 0.7).delay(Double.random(in: 0...0.5))) {
+                // 小さな跳ねるアニメーション
+            }
+        }
     }
     
     private var bottomControlsView: some View {
         HStack {
             Text("問題: \(gameViewModel.currentQuestion)/\(gameViewModel.totalQuestions)　正解: \(gameViewModel.score)")
                 .font(.caption)
-                .foregroundColor(.gray)
+                .foregroundColor(colorScheme == .dark ? Color.gray.opacity(0.8) : Color.gray)
             
             Spacer()
             
@@ -415,6 +509,12 @@ struct GameView: View {
     }
     
     private func showHintAlert() {
+        // ヒント設定が無効な場合は表示しない
+        guard userSettings?.showHints == true else {
+            print("💡 Hint disabled in settings")
+            return
+        }
+        
         hintText = gameViewModel.getHint()
         withAnimation(.easeInOut(duration: 0.3)) {
             showHint = true
@@ -474,9 +574,11 @@ struct GameView: View {
             Text("ゲーム終了！")
                 .font(.title2)
                 .fontWeight(.bold)
+                .foregroundColor(colorScheme == .dark ? .white : .primary)
             
             Text("スコア: \(gameViewModel.score)/\(gameViewModel.totalQuestions)")
                 .font(.headline)
+                .foregroundColor(colorScheme == .dark ? .white : .primary)
             
             HStack(spacing: 5) {
                 ForEach(0..<3, id: \.self) { index in
@@ -489,13 +591,16 @@ struct GameView: View {
             let stats = gameViewModel.getGameStats()
             Text("正解率: \(Int(stats.accuracy * 100))%")
                 .font(.subheadline)
-                .foregroundColor(.gray)
+                .foregroundColor(colorScheme == .dark ? .gray : .gray)
         }
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .fill(Color.white.opacity(0.9))
-                .shadow(radius: 5)
+                .fill(colorScheme == .dark ? Color(.systemGray6).opacity(0.8) : Color.white.opacity(0.9))
+                .shadow(
+                    color: colorScheme == .dark ? .white.opacity(0.1) : .black.opacity(0.1),
+                    radius: 5
+                )
         )
     }
     
@@ -616,6 +721,106 @@ struct GameView: View {
             "わ": "わ", "を": "をとこ", "ん": "あんてな"
         ]
         return readings[character] ?? character
+    }
+    
+    // MARK: - レベル解放通知
+    
+    private func checkForLevelUnlock() {
+        let nextLevel = selectedLevel + 1
+        guard nextLevel <= levelProgressionService.getTotalLevels() else { return }
+        
+        // ゲーム完了後にチェック
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            if levelProgressionService.isLevelUnlocked(nextLevel) {
+                unlockedLevel = nextLevel
+                withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                    showLevelUnlockNotification = true
+                }
+                
+                // 3秒後に自動で閉じる
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                    withAnimation(.easeOut(duration: 0.5)) {
+                        showLevelUnlockNotification = false
+                    }
+                }
+            }
+        }
+    }
+    
+    private var levelUnlockNotificationView: some View {
+        VStack(spacing: 20) {
+            // アニメーション付き鍵アイコン
+            ZStack {
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [Color.yellow, Color.orange],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 80, height: 80)
+                    .scaleEffect(showLevelUnlockNotification ? 1.0 : 0.5)
+                    .animation(.spring(response: 0.6, dampingFraction: 0.7), value: showLevelUnlockNotification)
+                
+                Image(systemName: "lock.open.fill")
+                    .font(.system(size: 40, weight: .bold))
+                    .foregroundColor(.white)
+                    .scaleEffect(showLevelUnlockNotification ? 1.0 : 0.3)
+                    .animation(.spring(response: 0.8, dampingFraction: 0.6).delay(0.1), value: showLevelUnlockNotification)
+            }
+            
+            VStack(spacing: 8) {
+                Text("🎉 新しいレベルが解放！")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(colorScheme == .dark ? .white : .primary)
+                    .multilineTextAlignment(.center)
+                    .scaleEffect(showLevelUnlockNotification ? 1.0 : 0.8)
+                    .animation(.spring(response: 0.6, dampingFraction: 0.7).delay(0.2), value: showLevelUnlockNotification)
+                
+                Text("レベル \(unlockedLevel) がプレイできるようになりました！")
+                    .font(.headline)
+                    .foregroundColor(colorScheme == .dark ? .gray : .secondary)
+                    .multilineTextAlignment(.center)
+                    .opacity(showLevelUnlockNotification ? 1.0 : 0.0)
+                    .animation(.easeIn(duration: 0.8).delay(0.4), value: showLevelUnlockNotification)
+            }
+            
+            Button(action: {
+                withAnimation(.easeOut(duration: 0.5)) {
+                    showLevelUnlockNotification = false
+                }
+            }) {
+                Text("続行")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.white)
+                    .frame(width: 120, height: 44)
+                    .background(
+                        LinearGradient(
+                            colors: [Color.blue, Color.purple],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .cornerRadius(22)
+            }
+        }
+        .padding(30)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(colorScheme == .dark ? Color(.systemGray6) : Color.white)
+                .shadow(
+                    color: colorScheme == .dark ? .white.opacity(0.1) : .black.opacity(0.2),
+                    radius: 10,
+                    x: 0,
+                    y: 5
+                )
+        )
+        .scaleEffect(showLevelUnlockNotification ? 1.0 : 0.8)
+        .opacity(showLevelUnlockNotification ? 1.0 : 0.0)
+        .animation(.spring(response: 0.6, dampingFraction: 0.8), value: showLevelUnlockNotification)
     }
 }
 

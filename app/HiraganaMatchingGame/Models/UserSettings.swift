@@ -167,11 +167,22 @@ final class UserSettings {
     
     // 設定の読み込み（UserDefaultsから）
     func load() {
-        soundEnabled = UserDefaults.standard.bool(forKey: "soundEnabled")
-        musicEnabled = UserDefaults.standard.bool(forKey: "musicEnabled")
-        playtimeLimit = UserDefaults.standard.integer(forKey: "playtimeLimit")
-        voiceSpeed = UserDefaults.standard.double(forKey: "voiceSpeed")
-        soundVolume = UserDefaults.standard.double(forKey: "soundVolume")
+        // 初回起動時にはデフォルト値を保持するため、キーの存在をチェック
+        if UserDefaults.standard.object(forKey: "soundEnabled") != nil {
+            soundEnabled = UserDefaults.standard.bool(forKey: "soundEnabled")
+        }
+        if UserDefaults.standard.object(forKey: "musicEnabled") != nil {
+            musicEnabled = UserDefaults.standard.bool(forKey: "musicEnabled")
+        }
+        if UserDefaults.standard.object(forKey: "playtimeLimit") != nil {
+            playtimeLimit = UserDefaults.standard.integer(forKey: "playtimeLimit")
+        }
+        if UserDefaults.standard.object(forKey: "voiceSpeed") != nil {
+            voiceSpeed = UserDefaults.standard.double(forKey: "voiceSpeed")
+        }
+        if UserDefaults.standard.object(forKey: "soundVolume") != nil {
+            soundVolume = UserDefaults.standard.double(forKey: "soundVolume")
+        }
         
         if let speedString = UserDefaults.standard.string(forKey: "gameSpeed") {
             gameSpeedRaw = speedString
@@ -181,10 +192,18 @@ final class UserSettings {
             difficultyRaw = difficultyString
         }
         
-        autoAdvance = UserDefaults.standard.bool(forKey: "autoAdvance")
-        showHints = UserDefaults.standard.bool(forKey: "showHints")
-        largeText = UserDefaults.standard.bool(forKey: "largeText")
-        reduceAnimations = UserDefaults.standard.bool(forKey: "reduceAnimations")
+        if UserDefaults.standard.object(forKey: "autoAdvance") != nil {
+            autoAdvance = UserDefaults.standard.bool(forKey: "autoAdvance")
+        }
+        if UserDefaults.standard.object(forKey: "showHints") != nil {
+            showHints = UserDefaults.standard.bool(forKey: "showHints")
+        }
+        if UserDefaults.standard.object(forKey: "largeText") != nil {
+            largeText = UserDefaults.standard.bool(forKey: "largeText")
+        }
+        if UserDefaults.standard.object(forKey: "reduceAnimations") != nil {
+            reduceAnimations = UserDefaults.standard.bool(forKey: "reduceAnimations")
+        }
     }
     
     // 設定の検証

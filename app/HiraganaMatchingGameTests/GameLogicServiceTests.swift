@@ -72,7 +72,6 @@ func gameStatsCalculation() {
     let stats = gameLogic.calculateGameStats(correctAnswers: 4, totalQuestions: 5, timeTaken: 120)
     
     #expect(stats.accuracy == 0.8)
-    #expect(stats.stars == 2)
-    #expect(stats.timeTaken == 120)
-    #expect(stats.averageTimePerQuestion == 24.0)
+    #expect(stats.timeElapsed == 120)
+    #expect(stats.averageResponseTime == 24.0)
 }
