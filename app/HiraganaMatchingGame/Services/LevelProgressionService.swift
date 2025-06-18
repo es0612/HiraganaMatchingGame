@@ -158,7 +158,7 @@ class LevelProgressionService {
                 title: "あ行をおぼえよう",
                 characters: ["あ", "い", "う", "え", "お"],
                 requiredStars: 0,
-                questionsCount: 5,
+                questionsCount: 12,
                 description: "ひらがなの基本、あ行をマスターしよう！"
             )
         }
@@ -169,7 +169,7 @@ class LevelProgressionService {
                 title: "あ行をおぼえよう",
                 characters: ["あ", "い", "う", "え", "お"],
                 requiredStars: 0,
-                questionsCount: 5,
+                questionsCount: 18,
                 description: "ひらがなの基本、あ行をマスターしよう！"
             ),
             2: LevelConfiguration(
@@ -177,7 +177,7 @@ class LevelProgressionService {
                 title: "か行をおぼえよう",
                 characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ"],
                 requiredStars: 2,
-                questionsCount: 5,
+                questionsCount: 22,
                 description: "か行を覚えて、ひらがなの世界を広げよう！"
             ),
             3: LevelConfiguration(
@@ -185,7 +185,7 @@ class LevelProgressionService {
                 title: "さ行をおぼえよう",
                 characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ"],
                 requiredStars: 4,
-                questionsCount: 6,
+                questionsCount: 14,
                 description: "さ行をマスターして、更にレベルアップ！"
             ),
             4: LevelConfiguration(
@@ -193,7 +193,7 @@ class LevelProgressionService {
                 title: "た行をおぼえよう",
                 characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と"],
                 requiredStars: 6,
-                questionsCount: 6,
+                questionsCount: 14,
                 description: "た行も仲間に加えて、どんどん上達！"
             ),
             5: LevelConfiguration(
@@ -201,7 +201,7 @@ class LevelProgressionService {
                 title: "な行をおぼえよう",
                 characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の"],
                 requiredStars: 8,
-                questionsCount: 7,
+                questionsCount: 16,
                 description: "な行を覚えて、ひらがなマスターに近づこう！"
             ),
             6: LevelConfiguration(
@@ -209,7 +209,7 @@ class LevelProgressionService {
                 title: "は行をおぼえよう",
                 characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ"],
                 requiredStars: 10,
-                questionsCount: 7,
+                questionsCount: 16,
                 description: "は行をマスターして、さらなる高みを目指そう！"
             ),
             7: LevelConfiguration(
@@ -217,7 +217,7 @@ class LevelProgressionService {
                 title: "ま行をおぼえよう",
                 characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ", "ま", "み", "む", "め", "も"],
                 requiredStars: 12,
-                questionsCount: 8,
+                questionsCount: 18,
                 description: "ま行も覚えて、ひらがなの達人に！"
             ),
             8: LevelConfiguration(
@@ -225,7 +225,7 @@ class LevelProgressionService {
                 title: "や行をおぼえよう",
                 characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ", "ま", "み", "む", "め", "も", "や", "ゆ", "よ"],
                 requiredStars: 14,
-                questionsCount: 8,
+                questionsCount: 18,
                 description: "や行をマスターして、ゴールが見えてきた！"
             ),
             9: LevelConfiguration(
@@ -233,7 +233,7 @@ class LevelProgressionService {
                 title: "ら行をおぼえよう",
                 characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ", "ま", "み", "む", "め", "も", "や", "ゆ", "よ", "ら", "り", "る", "れ", "ろ"],
                 requiredStars: 16,
-                questionsCount: 9,
+                questionsCount: 20,
                 description: "ら行をクリアして、最終ステージへ！"
             ),
             10: LevelConfiguration(
@@ -241,7 +241,7 @@ class LevelProgressionService {
                 title: "すべてのひらがな",
                 characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ", "ま", "み", "む", "め", "も", "や", "ゆ", "よ", "ら", "り", "る", "れ", "ろ", "わ", "ゐ", "ゑ", "を", "ん"],
                 requiredStars: 18,
-                questionsCount: 10,
+                questionsCount: 22,
                 description: "全てのひらがなをマスターして、真のひらがな博士になろう！"
             )
         ]

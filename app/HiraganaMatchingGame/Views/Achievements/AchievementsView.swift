@@ -21,16 +21,17 @@ struct AchievementsView: View {
                 )
                 .ignoresSafeArea()
                 
-                VStack(spacing: 20) {
-                    headerView
-                    
-                    statisticsView
-                    
-                    achievementsGridView
-                    
-                    Spacer()
+                ScrollView {
+                    VStack(spacing: 20) {
+                        headerView
+                        
+                        statisticsView
+                        
+                        achievementsGridView
+                    }
+                    .padding()
+                    .padding(.bottom, max(geometry.safeAreaInsets.bottom, 20))
                 }
-                .padding()
             }
         }
     }

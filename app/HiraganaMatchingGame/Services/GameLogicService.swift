@@ -35,7 +35,30 @@ class GameLogicService {
         // 難易度に応じて選択肢の数を調整
         let choiceCount = getChoiceCountForDifficulty()
         
-        for _ in 0..<questionCount {
+        // 各文字を最低1回は出題するようにする
+        var allCharacters = charactersForLevel.shuffled()
+        var remainingQuestions = questionCount
+        
+        // 各文字を最低1回ずつ出題
+        for character in allCharacters {
+            if remainingQuestions <= 0 { break }
+            
+            let choices = generateChoices(for: character, count: choiceCount)
+            guard let correctAnswer = hiraganaDataManager.getItem(for: character) else {
+                continue
+            }
+            
+            let question = GameQuestion(
+                hiragana: character,
+                choices: choices,
+                correctAnswer: correctAnswer
+            )
+            questions.append(question)
+            remainingQuestions -= 1
+        }
+        
+        // 残りの問題数をランダムに埋める
+        while remainingQuestions > 0 {
             let randomHiragana = charactersForLevel.randomElement() ?? ""
             let choices = generateChoices(for: randomHiragana, count: choiceCount)
             
@@ -49,9 +72,11 @@ class GameLogicService {
                 correctAnswer: correctAnswer
             )
             questions.append(question)
+            remainingQuestions -= 1
         }
         
-        return questions
+        // 最終的にシャッフルして出題順をランダムにする
+        return questions.shuffled()
     }
     
     private func getChoiceCountForDifficulty() -> Int {
@@ -70,15 +95,52 @@ class GameLogicService {
     func calculateStars(correctAnswers: Int, totalQuestions: Int) -> Int {
         let accuracy = Double(correctAnswers) / Double(totalQuestions)
         
-        switch accuracy {
-        case 1.0:
-            return 3
-        case 0.8...0.99:
-            return 2
-        case 0.6...0.79:
-            return 1
-        default:
-            return 0
+        // 難易度に応じて必要正解率を調整
+        guard let settings = userSettings else {
+            return calculateStarsForAccuracy(accuracy, difficulty: .normal)
+        }
+        
+        return calculateStarsForAccuracy(accuracy, difficulty: settings.difficulty)
+    }
+    
+    private func calculateStarsForAccuracy(_ accuracy: Double, difficulty: GameDifficulty) -> Int {
+        switch difficulty {
+        case .easy:
+            // 簡単モード：より高い正解率が必要
+            switch accuracy {
+            case 1.0:
+                return 3
+            case 0.9...0.99:
+                return 2
+            case 0.8...0.89:
+                return 1
+            default:
+                return 0
+            }
+        case .normal:
+            // 普通モード：標準の基準
+            switch accuracy {
+            case 1.0:
+                return 3
+            case 0.8...0.99:
+                return 2
+            case 0.6...0.79:
+                return 1
+            default:
+                return 0
+            }
+        case .hard:
+            // 難しいモード：少し甘めの基準でボーナス
+            switch accuracy {
+            case 1.0:
+                return 3
+            case 0.75...0.99:
+                return 2
+            case 0.5...0.74:
+                return 1
+            default:
+                return 0
+            }
         }
     }
     

@@ -128,12 +128,6 @@ struct LevelSelectionView: View {
         let config = levelProgressionService.getLevelConfiguration(level)
         let isRecommended = levelProgressionService.getRecommendedNextLevel() == level
         
-        // デバッグ出力
-        if level <= 5 {
-            let previousLevel = level - 1
-            let previousStars = previousLevel > 0 ? levelProgressionService.getStarsForLevel(previousLevel) : -1
-            print("🔓 Level \(level): unlocked=\(isUnlocked), stars=\(stars), previous(\(previousLevel))=\(previousStars)")
-        }
         
         return Button(action: {
             if isUnlocked {
@@ -245,39 +239,6 @@ struct LevelSelectionView: View {
                     .foregroundColor(.secondary)
             }
             
-            // デバッグ情報表示
-            #if DEBUG
-            VStack(spacing: 4) {
-                Text("Debug Info:")
-                    .font(.caption2)
-                    .foregroundColor(.red)
-                    .fontWeight(.bold)
-                
-                ForEach(1...5, id: \.self) { level in
-                    let stars = levelProgressionService.getStarsForLevel(level)
-                    let isUnlocked = levelProgressionService.isLevelUnlocked(level)
-                    let required = levelProgressionService.getLevelConfiguration(level).requiredStars
-                    Text("L\(level): \(stars)⭐ (\(isUnlocked ? "解放" : "未解放")) req:\(required)")
-                        .font(.caption2)
-                        .foregroundColor(.red)
-                }
-                
-                let total = levelProgressionService.getTotalStars()
-                let calculated = (1...5).map { levelProgressionService.getStarsForLevel($0) }.reduce(0, +)
-                Text("Total: \(total)⭐ (calc: \(calculated)⭐)")
-                    .font(.caption2)
-                    .foregroundColor(.red)
-                    .fontWeight(.bold)
-                
-                let stats = levelProgressionService.getProgressionStats()
-                Text("Completed: \(stats.completedLevels), Progress: \(String(format: "%.0f", stats.completionPercentage * 100))%")
-                    .font(.caption2)
-                    .foregroundColor(.red)
-            }
-            .padding(.top, 10)
-            .background(Color.yellow.opacity(0.1))
-            .cornerRadius(8)
-            #endif
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 15) {
@@ -320,35 +281,6 @@ struct LevelSelectionView: View {
                 .padding(.horizontal)
             }
             
-            // デバッグ用進行状況リセットボタン
-            #if DEBUG
-            HStack(spacing: 10) {
-                Button("進行リセット") {
-                    levelSelectionViewModel.resetAllProgress()
-                }
-                .font(.caption)
-                .foregroundColor(.white)
-                .padding(.horizontal, 15)
-                .padding(.vertical, 8)
-                .background(
-                    RoundedRectangle(cornerRadius: 15)
-                        .fill(Color.red.opacity(0.7))
-                )
-                
-                Button("データ再読込") {
-                    levelSelectionViewModel.refreshProgress()
-                }
-                .font(.caption)
-                .foregroundColor(.white)
-                .padding(.horizontal, 15)
-                .padding(.vertical, 8)
-                .background(
-                    RoundedRectangle(cornerRadius: 15)
-                        .fill(Color.blue.opacity(0.7))
-                )
-            }
-            #endif
-        }
     }
     
     // MARK: - Computed Properties

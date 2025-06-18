@@ -38,50 +38,24 @@ struct SettingsView: View {
                             Slider(value: $viewModel.soundVolume, in: 0...1)
                         }
                         
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack {
-                                Text("音声速度")
-                                Spacer()
-                                Text(viewModel.formattedVoiceSpeed())
-                                    .foregroundStyle(.secondary)
-                            }
-                            Slider(value: $viewModel.voiceSpeed, in: 0.5...2.0, step: 0.1)
-                        }
                     }
                 }
                 
                 // ゲーム設定セクション
                 SettingsSection(title: "ゲーム設定") {
                     VStack(spacing: 16) {
-                        HStack(spacing: 30) {
-                            VStack(alignment: .leading) {
-                                Text("ゲーム速度")
-                                    .font(.subheadline)
-                                Picker("ゲーム速度", selection: $viewModel.gameSpeed) {
-                                    ForEach(GameSpeed.allCases, id: \.self) { speed in
-                                        Text(speed.rawValue).tag(speed)
-                                    }
+                        VStack(alignment: .leading) {
+                            Text("難易度")
+                                .font(.subheadline)
+                            Picker("難易度", selection: $viewModel.difficulty) {
+                                ForEach(GameDifficulty.allCases, id: \.self) { difficulty in
+                                    Text(difficulty.rawValue).tag(difficulty)
                                 }
-                                .pickerStyle(.segmented)
                             }
-                            
-                            VStack(alignment: .leading) {
-                                Text("難易度")
-                                    .font(.subheadline)
-                                Picker("難易度", selection: $viewModel.difficulty) {
-                                    ForEach(GameDifficulty.allCases, id: \.self) { difficulty in
-                                        Text(difficulty.rawValue).tag(difficulty)
-                                    }
-                                }
-                                .pickerStyle(.segmented)
-                            }
+                            .pickerStyle(.segmented)
                         }
                         
-                        HStack {
-                            Toggle("自動進行", isOn: $viewModel.autoAdvance)
-                            Spacer(minLength: 50)
-                            Toggle("ヒント表示", isOn: $viewModel.showHints)
-                        }
+                        Toggle("ヒント表示", isOn: $viewModel.showHints)
                         
                         VStack(alignment: .leading, spacing: 12) {
                             HStack {
