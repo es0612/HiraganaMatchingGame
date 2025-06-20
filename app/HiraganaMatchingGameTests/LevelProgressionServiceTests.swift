@@ -128,17 +128,19 @@ struct LevelProgressionServiceTests {
         let level1Config = service.getLevelConfiguration(1)
         #expect(level1Config.requiredStars == 0)
         #expect(level1Config.characters.count == 5) // あ行
-        #expect(level1Config.questionsCount == 5)
+        #expect(level1Config.questionsCount == 18)
         #expect(level1Config.title == "あ行をおぼえよう")
         
         let level2Config = service.getLevelConfiguration(2)
         #expect(level2Config.requiredStars == 2)
         #expect(level2Config.characters.count == 10) // あ行+か行
+        #expect(level2Config.questionsCount == 22)
         #expect(level2Config.title == "か行をおぼえよう")
         
         let level10Config = service.getLevelConfiguration(10)
         #expect(level10Config.requiredStars == 18)
         #expect(level10Config.characters.count == 48) // 全文字（「ゐ」「ゑ」含む）
+        #expect(level10Config.questionsCount == 22)
         #expect(level10Config.title == "すべてのひらがな")
     }
     

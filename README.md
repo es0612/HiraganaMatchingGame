@@ -159,15 +159,12 @@ open app/HiraganaMatchingGame.xcodeproj
 ## 🎵 カスタム音声の追加
 
 ### BGM差し替え方法
-1. mp3ファイルをプロジェクトに追加
-2. `BGMGenerator.swift`を編集:
-```swift
-// BGMGenerator.swift:19行目
-if let bgmPath = Bundle.main.path(forResource: "your_bgm_file", ofType: "mp3"),
-   let bgmData = NSData(contentsOfFile: bgmPath) as Data? {
-    return bgmData
-}
-```
+BGMは`bgm.mp3`ファイルで自動的に読み込まれます:
+1. `bgm.mp3`ファイルをプロジェクトルートに配置
+2. Xcodeでプロジェクトに追加（Build Phasesで自動的にバンドルに含まれます）
+3. アプリ起動時に自動的に読み込まれます
+
+**フォールバック機能**: `bgm.mp3`が見つからない場合は、動的に生成された子供向けメロディーが使用されます。
 
 ### ひらがな音声ファイル
 音声ファイルは `{ひらがな}.mp3` の命名規則で配置:

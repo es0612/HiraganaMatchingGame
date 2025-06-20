@@ -23,8 +23,32 @@ class BGMGenerator {
         stopBackgroundMusic()
         
         do {
-            let bgmData = generateBackgroundMusic()
-            bgmPlayer = try AVAudioPlayer(data: bgmData)
+            // Debug: List all files in bundle
+            if let bundlePath = Bundle.main.resourcePath {
+                let bundleContents = try? FileManager.default.contentsOfDirectory(atPath: bundlePath)
+                print("🔍 Bundle contents: \(bundleContents?.filter { $0.contains("bgm") } ?? [])")
+            }
+            
+            // Try to load custom BGM file first
+            if let bgmPath = Bundle.main.path(forResource: "bgm", ofType: "mp3") {
+                let bgmURL = URL(fileURLWithPath: bgmPath)
+                bgmPlayer = try AVAudioPlayer(contentsOf: bgmURL)
+                print("🎵 SUCCESS: Loaded custom BGM file from: \(bgmPath)")
+            } else {
+                print("⚠️ bgm.mp3 not found in bundle, checking alternative paths...")
+                
+                // Try alternative resource lookup
+                if let bgmURL = Bundle.main.url(forResource: "bgm", withExtension: "mp3") {
+                    bgmPlayer = try AVAudioPlayer(contentsOf: bgmURL)
+                    print("🎵 SUCCESS: Loaded custom BGM via URL: \(bgmURL)")
+                } else {
+                    // Fallback to generated BGM
+                    let bgmData = generateBackgroundMusic()
+                    bgmPlayer = try AVAudioPlayer(data: bgmData)
+                    print("🎵 FALLBACK: Using generated BGM")
+                }
+            }
+            
             bgmPlayer?.volume = volume
             bgmPlayer?.numberOfLoops = -1 // Infinite loop
             bgmPlayer?.prepareToPlay()
@@ -109,7 +133,7 @@ class BGMGenerator {
             }
         }
         
-        print("🎵 Generated child-friendly BGM (\(audioData.count) bytes)")
+        print("🎵 Generated fallback BGM (\(audioData.count) bytes)")
         return audioData
     }
     

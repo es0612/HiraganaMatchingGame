@@ -36,28 +36,50 @@ struct GameFeedbackView: View {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 60))
                     .foregroundColor(.green)
+                    .scaleEffect(1.0)
+                    .animation(.spring(response: 0.5, dampingFraction: 0.6).delay(0.1), value: lastAnswerCorrect)
                 
                 Text("正解！")
                     .font(.title)
                     .fontWeight(.bold)
                     .foregroundColor(.green)
+                    .scaleEffect(1.0)
+                    .animation(.spring(response: 0.6, dampingFraction: 0.7).delay(0.2), value: lastAnswerCorrect)
                 
                 Text("よくできました！")
                     .font(.headline)
                     .foregroundColor(.gray)
+                    .opacity(1.0)
+                    .animation(.easeInOut(duration: 0.5).delay(0.3), value: lastAnswerCorrect)
             } else {
                 Image(systemName: "xmark.circle.fill")
                     .font(.system(size: 60))
                     .foregroundColor(.red)
+                    .scaleEffect(1.0)
+                    .animation(.spring(response: 0.5, dampingFraction: 0.6).delay(0.1), value: lastAnswerCorrect)
                 
                 Text("残念...")
                     .font(.title)
                     .fontWeight(.bold)
                     .foregroundColor(.red)
+                    .scaleEffect(1.0)
+                    .animation(.spring(response: 0.6, dampingFraction: 0.7).delay(0.2), value: lastAnswerCorrect)
                 
                 Text("次は頑張ろう！")
                     .font(.headline)
                     .foregroundColor(.gray)
+                    .opacity(1.0)
+                    .animation(.easeInOut(duration: 0.5).delay(0.3), value: lastAnswerCorrect)
+            }
+        }
+        .onAppear {
+            // 正解/不正解時の触覚フィードバック
+            if lastAnswerCorrect {
+                let successFeedback = UINotificationFeedbackGenerator()
+                successFeedback.notificationOccurred(.success)
+            } else {
+                let errorFeedback = UINotificationFeedbackGenerator()
+                errorFeedback.notificationOccurred(.error)
             }
         }
     }
@@ -78,8 +100,10 @@ struct GameFeedbackView: View {
                     Image(systemName: "star.fill")
                         .foregroundColor(index < earnedStars ? .yellow : .gray.opacity(0.3))
                         .font(.title2)
-                        .scaleEffect(index < earnedStars ? 1.2 : 1.0)
-                        .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(Double(index) * 0.1), value: earnedStars)
+                        .scaleEffect(index < earnedStars ? 1.3 : 1.0)
+                        .rotationEffect(.degrees(index < earnedStars ? 360 : 0))
+                        .animation(.spring(response: 0.7, dampingFraction: 0.6).delay(Double(index) * 0.15), value: earnedStars)
+                        .shadow(color: index < earnedStars ? .yellow.opacity(0.6) : .clear, radius: 4, x: 0, y: 2)
                 }
             }
             
@@ -92,6 +116,25 @@ struct GameFeedbackView: View {
                     .font(.caption)
                     .foregroundColor(colorScheme == .dark ? .gray : .secondary)
             }
+            
+            // 星条件の説明
+            VStack(spacing: 4) {
+                if earnedStars >= 2 {
+                    Text("🎉 次のレベルに進めます！")
+                        .font(.caption)
+                        .foregroundColor(.green)
+                        .fontWeight(.bold)
+                } else if earnedStars == 1 {
+                    Text("もう少し！星2つで次のレベルへ")
+                        .font(.caption)
+                        .foregroundColor(.orange)
+                } else {
+                    Text("頑張ろう！星2つを目指そう")
+                        .font(.caption)
+                        .foregroundColor(.red)
+                }
+            }
+            .padding(.top, 5)
         }
         .padding()
         .background(

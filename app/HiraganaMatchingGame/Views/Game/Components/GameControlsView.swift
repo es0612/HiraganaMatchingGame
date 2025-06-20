@@ -47,7 +47,12 @@ struct GameControlsView: View {
     }
     
     private var settingsButton: some View {
-        Button(action: onBackPressed) {
+        Button(action: {
+            // 触覚フィードバック
+            let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+            impactFeedback.impactOccurred()
+            onBackPressed()
+        }) {
             Text("戻る")
                 .font(.headline)
                 .foregroundColor(.white)
@@ -61,7 +66,17 @@ struct GameControlsView: View {
     }
     
     private var nextButton: some View {
-        Button(action: onNextPressed) {
+        Button(action: {
+            // 触覚フィードバック（成功状況に応じて強度を変更）
+            if isGameCompleted && earnedStars >= 2 {
+                let successFeedback = UINotificationFeedbackGenerator()
+                successFeedback.notificationOccurred(.success)
+            } else {
+                let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+                impactFeedback.impactOccurred()
+            }
+            onNextPressed()
+        }) {
             Text(getButtonText())
                 .font(.headline)
                 .foregroundColor(.white)
@@ -111,18 +126,30 @@ struct GameControlsView: View {
     
     private func getButtonText() -> String {
         if isGameCompleted {
-            // 星を1つでも獲得していれば次のレベル、そうでなければやり直し
-            return earnedStars > 0 ? "次のレベル" : "やり直し"
+            // 星2つ以上で次のレベル、星1つで再挑戦、星0つでやり直し
+            if earnedStars >= 2 {
+                return "次のレベル"
+            } else if earnedStars == 1 {
+                return "再挑戦"
+            } else {
+                return "やり直し"
+            }
         } else {
             return "ヒント"
         }
     }
     
     private func getButtonColor() -> Color {
-        if isGameCompleted && earnedStars == 0 {
-            return Color.orange.opacity(0.8) // やり直しの場合はオレンジ
+        if isGameCompleted {
+            if earnedStars >= 2 {
+                return Color.green.opacity(0.8) // 次のレベルの場合は緑
+            } else if earnedStars == 1 {
+                return Color.yellow.opacity(0.8) // 再挑戦の場合は黄色
+            } else {
+                return Color.orange.opacity(0.8) // やり直しの場合はオレンジ
+            }
         } else {
-            return Color.pink.opacity(0.8) // 通常はピンク
+            return Color.pink.opacity(0.8) // ヒントは通常のピンク
         }
     }
 }

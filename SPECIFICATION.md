@@ -272,33 +272,31 @@ AudioService (統合管理)
 └── EffectPlayer (効果音)
 ```
 
-### BGM生成アルゴリズム
+### BGM管理システム
 
-#### メロディー設計
+#### 実装方式
+- **プライマリ**: カスタムMP3ファイル (`bgm.mp3`)
+- **フォールバック**: 動的生成メロディー
+
+#### MP3ファイル読み込み
+```swift
+private func generateBackgroundMusic() -> Data {
+    // 指定されたBGMファイルを読み込み
+    if let bgmPath = Bundle.main.path(forResource: "bgm", ofType: "mp3"),
+       let bgmData = NSData(contentsOfFile: bgmPath) as Data? {
+        return bgmData
+    }
+    
+    // フォールバック：動的生成
+    // ...
+}
+```
+
+#### フォールバック：メロディー生成
 - **ベース**: きらきら星モチーフ
 - **音階**: C5-A5 (523.25Hz - 880.00Hz)
 - **構成**: 8小節の繰り返し
 - **ハーモニー**: 3度上のハーモニー追加
-
-#### 実装詳細
-```swift
-private func generateBackgroundMusic() -> Data {
-    let melodyNotes: [(frequency: Double, duration: Double)] = [
-        (523.25, 0.6), // C5 - Do
-        (523.25, 0.6), // C5 - Do
-        (783.99, 0.6), // G5 - Sol
-        (783.99, 0.6), // G5 - Sol
-        (880.00, 0.6), // A5 - La
-        (880.00, 0.6), // A5 - La
-        (783.99, 1.2), // G5 - Sol
-        // ... continues
-    ]
-    
-    // PCM音声データ生成
-    // ADSR envelope適用
-    // ハーモニー合成
-    // トレモロ効果追加
-}
 ```
 
 ## UI/UX設計仕様

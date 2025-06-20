@@ -123,6 +123,11 @@ class LevelProgressionService {
         return levelStars[level] ?? 0
     }
     
+    func canProgressToNextLevel(_ level: Int) -> Bool {
+        let starsForLevel = getStarsForLevel(level)
+        return starsForLevel >= 2 // 星2つ以上でレベル進行可能
+    }
+    
     
     func getProgressionStats() -> ProgressionStats {
         let completedLevels = levelStars.values.filter { $0 > 0 }.count

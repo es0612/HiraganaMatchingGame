@@ -285,17 +285,35 @@ class AudioService: ObservableObject {
     func startBackgroundMusic() {
         guard isMusicEnabled else { return }
         
-        // BGMファイルがない場合は軽やかなトーンを生成
         Task {
             do {
-                let bgmData = generateBackgroundMusic()
-                bgmPlayer = try AVAudioPlayer(data: bgmData)
+                // Debug: List all files in bundle
+                if let bundlePath = Bundle.main.resourcePath {
+                    let bundleContents = try? FileManager.default.contentsOfDirectory(atPath: bundlePath)
+                    print("🔍 Bundle contents: \(bundleContents?.filter { $0.contains("bgm") } ?? [])")
+                }
+                
+                // Try to load custom BGM file first
+                if let bgmPath = Bundle.main.path(forResource: "bgm", ofType: "mp3") {
+                    let bgmURL = URL(fileURLWithPath: bgmPath)
+                    bgmPlayer = try AVAudioPlayer(contentsOf: bgmURL)
+                    print("🎵 SUCCESS: Loaded custom BGM file from: \(bgmPath)")
+                } else if let bgmURL = Bundle.main.url(forResource: "bgm", withExtension: "mp3") {
+                    bgmPlayer = try AVAudioPlayer(contentsOf: bgmURL)
+                    print("🎵 SUCCESS: Loaded custom BGM via URL: \(bgmURL)")
+                } else {
+                    // Fallback to generated BGM
+                    let bgmData = generateBackgroundMusic()
+                    bgmPlayer = try AVAudioPlayer(data: bgmData)
+                    print("🎵 FALLBACK: Using generated BGM")
+                }
+                
                 bgmPlayer?.numberOfLoops = -1 // 無限ループ
                 bgmPlayer?.volume = currentVolume * 0.3 // BGMは効果音より小さく
                 bgmPlayer?.play()
                 print("🎵 Background music started")
             } catch {
-                print("BGM再生に失敗: \\(error)")
+                print("BGM再生に失敗: \(error)")
             }
         }
     }

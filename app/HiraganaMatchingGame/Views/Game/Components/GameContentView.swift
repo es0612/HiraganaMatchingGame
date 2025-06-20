@@ -29,12 +29,24 @@ struct GameContentView: View {
     }
     
     private var instructionText: some View {
-        Text("この文字に合う絵を選んでね！")
-            .font(.title2)
-            .fontWeight(.medium)
-            .foregroundColor(.primary.opacity(0.8))
-            .multilineTextAlignment(.center)
-            .padding(.horizontal)
+        VStack(spacing: 8) {
+            Text("この文字に合う絵を選んでね！")
+                .font(.title2)
+                .fontWeight(.medium)
+                .foregroundColor(.primary.opacity(0.8))
+                .multilineTextAlignment(.center)
+            
+            HStack(spacing: 8) {
+                Image(systemName: "speaker.wave.2.fill")
+                    .font(.caption)
+                    .foregroundColor(.blue)
+                Text("音声ボタンで発音を聞こう")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .opacity(0.8)
+        }
+        .padding(.horizontal)
     }
     
     private var hiraganaCardView: some View {
@@ -68,6 +80,9 @@ struct GameContentView: View {
                 .rotationEffect(.degrees(showFeedback ? 10 : 0))
                 .animation(.spring(response: 0.6, dampingFraction: 0.7), value: showFeedback)
                 .animation(.spring(response: 0.6, dampingFraction: 0.7), value: currentHiragana)
+                .accessibilityLabel("現在のひらがな文字")
+                .accessibilityValue(currentHiragana)
+                .accessibilityHint("この文字に合う絵を下から選んでください")
             
             // サウンドボタンを右上に配置
             VStack {
@@ -82,7 +97,12 @@ struct GameContentView: View {
     }
     
     private var soundButton: some View {
-        Button(action: onSoundButtonTap) {
+        Button(action: {
+            // 触覚フィードバック
+            let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+            impactFeedback.impactOccurred()
+            onSoundButtonTap()
+        }) {
             Image(systemName: "speaker.wave.2.fill")
                 .font(.title3)
                 .foregroundColor(.white)
@@ -184,6 +204,8 @@ struct GameContentView: View {
         .buttonStyle(PlainButtonStyle())
         .scaleEffect(1.0)
         .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(Double.random(in: 0...0.3)), value: currentHiragana)
+        .accessibilityLabel("\(getReadingForCharacter(choice.character))の絵")
+        .accessibilityHint("タップして\(choice.character)の文字に合う絵として選択します")
         .onAppear {
             // 選択肢ボタンが表示される時の楽しいアニメーション
             withAnimation(.spring(response: 0.8, dampingFraction: 0.7).delay(Double.random(in: 0...0.5))) {

@@ -243,6 +243,8 @@ struct LevelSelectionView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 15) {
                     Button("コレクション") {
+                        let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+                        impactFeedback.impactOccurred()
                         onCharacterCollectionPressed()
                     }
                     .font(.headline)
@@ -255,6 +257,8 @@ struct LevelSelectionView: View {
                     )
                     
                     Button("実績") {
+                        let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+                        impactFeedback.impactOccurred()
                         onAchievementsPressed()
                     }
                     .font(.headline)
@@ -267,6 +271,8 @@ struct LevelSelectionView: View {
                     )
                     
                     Button("設定") {
+                        let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+                        impactFeedback.impactOccurred()
                         onSettingsPressed()
                     }
                     .font(.headline)
@@ -280,7 +286,7 @@ struct LevelSelectionView: View {
                 }
                 .padding(.horizontal)
             }
-            
+        }
     }
     
     // MARK: - Computed Properties

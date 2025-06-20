@@ -17,7 +17,7 @@ enum Achievement: String, CaseIterable {
     
     var description: String {
         switch self {
-        case .firstCompletion: return "初めてレベルをクリア！"
+        case .firstCompletion: return "初めてレベルを星2つ以上でクリア！"
         case .perfectScore: return "100%の正解率を達成！"
         case .speedRun: return "素早くクリア！"
         case .streak: return "連続でレベルクリア！"
@@ -356,8 +356,8 @@ class StarUnlockService {
     }
     
     private func checkAchievements(level: Int, stars: Int, accuracy: Double, time: Double) {
-        // 初回クリア
-        if completedLevelsCount == 1 && !unlockedAchievements.contains(.firstCompletion) {
+        // 初回クリア（星2つ以上でのみ）
+        if completedLevelsCount == 1 && stars >= 2 && !unlockedAchievements.contains(.firstCompletion) {
             unlockAchievement(.firstCompletion)
         }
         

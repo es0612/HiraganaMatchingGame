@@ -100,7 +100,7 @@ struct LevelProgressionIntegrationTests {
         #expect(level1Config.title == "あ行をおぼえよう")
         #expect(level1Config.characters == ["あ", "い", "う", "え", "お"])
         #expect(level1Config.requiredStars == 0)
-        #expect(level1Config.questionsCount == 5)
+        #expect(level1Config.questionsCount == 18)
         
         // レベル5設定確認
         let level5Config = viewModel.getLevelConfiguration(5)
@@ -108,7 +108,7 @@ struct LevelProgressionIntegrationTests {
         #expect(level5Config.title == "な行をおぼえよう")
         #expect(level5Config.characters.count == 25) // あ〜な行
         #expect(level5Config.requiredStars == 8)
-        #expect(level5Config.questionsCount == 7)
+        #expect(level5Config.questionsCount == 16)
     }
     
     @Test("進行状況リセットテスト")
