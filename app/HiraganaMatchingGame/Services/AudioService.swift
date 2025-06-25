@@ -358,6 +358,10 @@ class AudioService: ObservableObject {
         print("🎵 Background music stopped")
     }
     
+    func isBGMPlaying() -> Bool {
+        return bgmPlayer?.isPlaying ?? false
+    }
+    
     private func generateBackgroundMusic() -> Data {
         // 子供向けのポップで楽しいメロディーを生成
         let sampleRate: Double = 44100

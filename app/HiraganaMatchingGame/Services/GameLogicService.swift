@@ -16,10 +16,11 @@ class GameLogicService {
     }
     
     func isCorrectAnswer(hiragana: String, imageName: String) -> Bool {
-        guard let correctItem = hiraganaDataManager.getItem(for: hiragana) else {
-            return false
-        }
-        return correctItem.imageName == imageName
+        // そのひらがなに対応するすべての選択肢を取得
+        let correctItems = hiraganaDataManager.getQuestionVariations(for: hiragana)
+        
+        // 選択されたimageNameがそのひらがなの正解選択肢の中にあるかチェック
+        return correctItems.contains { $0.imageName == imageName }
     }
     
     func generateChoices(for hiragana: String, count: Int) -> [HiraganaItem] {

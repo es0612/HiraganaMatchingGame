@@ -104,9 +104,17 @@ struct ContentView: View {
             .opacity(showLaunchScreen ? 0 : 1)
             .sheet(isPresented: $showTutorial) {
                 TutorialView(isPresented: $showTutorial)
+                    .onAppear {
+                        // チュートリアル開始時にBGMを一時停止
+                        audioService?.stopBackgroundMusic()
+                    }
                     .onDisappear {
                         userSettings?.markTutorialAsCompleted()
                         userSettings?.save()
+                        // チュートリアル終了時にBGMを再開
+                        if userSettings?.musicEnabled == true {
+                            audioService?.startBackgroundMusic()
+                        }
                     }
             }
             

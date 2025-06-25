@@ -162,6 +162,9 @@ struct SettingsView: View {
             }
             .sheet(isPresented: $showTutorial) {
                 TutorialView(isPresented: $showTutorial)
+                    .onAppear {
+                        // 設定内チュートリアル開始時はBGM継続（設定で制御可能）
+                    }
             }
         }
         .onAppear {
