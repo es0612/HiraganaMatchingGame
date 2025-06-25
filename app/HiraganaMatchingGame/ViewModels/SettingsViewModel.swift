@@ -6,6 +6,9 @@ class SettingsViewModel {
     private var userSettings: UserSettings
     private let modelContext: ModelContext?
     
+    // チュートリアル表示のコールバック
+    var onShowTutorial: (() -> Void)?
+    
     // 設定項目へのバインディング
     var soundEnabled: Bool {
         get { userSettings.soundEnabled }
@@ -183,5 +186,10 @@ class SettingsViewModel {
         - 音声速度: \(formattedVoiceSpeed())
         - プレイ時間制限: \(formattedPlaytimeLimit())
         """
+    }
+    
+    // チュートリアル表示を要求
+    func showTutorial() {
+        onShowTutorial?()
     }
 }

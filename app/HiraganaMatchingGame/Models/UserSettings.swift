@@ -28,6 +28,7 @@ final class UserSettings {
     var showHints: Bool
     var largeText: Bool
     var reduceAnimations: Bool
+    var hasSeenTutorial: Bool
     
     // 設定変更通知（@Modelからは除外）
     @Transient
@@ -64,6 +65,7 @@ final class UserSettings {
         self.showHints = true
         self.largeText = false
         self.reduceAnimations = false
+        self.hasSeenTutorial = false
     }
     
     func updateSettings(
@@ -147,6 +149,7 @@ final class UserSettings {
         showHints = true
         largeText = false
         reduceAnimations = false
+        hasSeenTutorial = false
         onSettingChanged?("reset")
     }
     
@@ -163,6 +166,7 @@ final class UserSettings {
         UserDefaults.standard.set(showHints, forKey: "showHints")
         UserDefaults.standard.set(largeText, forKey: "largeText")
         UserDefaults.standard.set(reduceAnimations, forKey: "reduceAnimations")
+        UserDefaults.standard.set(hasSeenTutorial, forKey: "hasSeenTutorial")
     }
     
     // 設定の読み込み（UserDefaultsから）
@@ -204,6 +208,9 @@ final class UserSettings {
         if UserDefaults.standard.object(forKey: "reduceAnimations") != nil {
             reduceAnimations = UserDefaults.standard.bool(forKey: "reduceAnimations")
         }
+        if UserDefaults.standard.object(forKey: "hasSeenTutorial") != nil {
+            hasSeenTutorial = UserDefaults.standard.bool(forKey: "hasSeenTutorial")
+        }
     }
     
     // 設定の検証
@@ -211,6 +218,12 @@ final class UserSettings {
         return soundVolume >= 0.0 && soundVolume <= 1.0 &&
                voiceSpeed >= 0.5 && voiceSpeed <= 2.0 &&
                playtimeLimit >= 0
+    }
+    
+    // チュートリアル完了設定
+    func markTutorialAsCompleted() {
+        hasSeenTutorial = true
+        onSettingChanged?("hasSeenTutorial")
     }
     
     // 設定変更の通知を設定

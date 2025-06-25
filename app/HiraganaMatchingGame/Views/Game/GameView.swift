@@ -113,6 +113,8 @@ struct GameView: View {
         }
         .onAppear {
             gameViewModel.startNewGame(level: selectedLevel)
+            // BGMが停止している場合は再開
+            gameViewModel.audioService.startBackgroundMusic()
         }
         .onChange(of: gameViewModel.isGameCompleted) { completed in
             if completed {

@@ -24,6 +24,7 @@ struct ContentView: View {
     @State private var userSettings: UserSettings?
     @State private var showLaunchScreen = true
     @State private var audioService: AudioService?
+    @State private var showTutorial = false
     
     var body: some View {
         ZStack {
@@ -101,12 +102,24 @@ struct ContentView: View {
                 }
             }
             .opacity(showLaunchScreen ? 0 : 1)
+            .sheet(isPresented: $showTutorial) {
+                TutorialView(isPresented: $showTutorial)
+                    .onDisappear {
+                        userSettings?.markTutorialAsCompleted()
+                        userSettings?.save()
+                    }
+            }
             
             // スプラッシュ画面
             if showLaunchScreen {
                 LaunchView {
                     withAnimation(.easeInOut(duration: 0.8)) {
                         showLaunchScreen = false
+                    }
+                    
+                    // スプラッシュ画面後にチュートリアルチェック
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        checkAndShowTutorial()
                     }
                 }
                 .transition(.opacity)
@@ -136,6 +149,15 @@ struct ContentView: View {
         // AudioServiceを初期化してBGMを開始
         if let settings = userSettings {
             audioService = AudioService(userSettings: settings)
+        }
+    }
+    
+    private func checkAndShowTutorial() {
+        guard let settings = userSettings else { return }
+        
+        // 初回起動時でチュートリアルを見たことがない場合に表示
+        if !settings.hasSeenTutorial {
+            showTutorial = true
         }
     }
 }

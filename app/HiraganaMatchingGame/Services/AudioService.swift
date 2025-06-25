@@ -93,9 +93,19 @@ class AudioService: ObservableObject {
         case "soundEnabled":
             setSoundEnabled(settings.soundEnabled)
         case "musicEnabled":
-            setMusicEnabled(settings.musicEnabled)
+            let newMusicEnabled = settings.musicEnabled
+            if newMusicEnabled != isMusicEnabled {
+                setMusicEnabled(newMusicEnabled)
+                if newMusicEnabled {
+                    startBackgroundMusic()
+                } else {
+                    stopBackgroundMusic()
+                }
+            }
         case "soundVolume":
             setVolume(Float(settings.soundVolume))
+            // BGMの音量も更新
+            bgmPlayer?.volume = Float(settings.soundVolume) * 0.3
         case "voiceSpeed":
             setPlaybackSpeed(Float(settings.voiceSpeed))
         default:
@@ -283,10 +293,28 @@ class AudioService: ObservableObject {
     // MARK: - BGM機能
     
     func startBackgroundMusic() {
-        guard isMusicEnabled else { return }
+        guard !isTestMode else { return }
+        guard isMusicEnabled else { 
+            print("🎵 Music disabled, not starting BGM")
+            return 
+        }
         
-        Task {
+        // 既存のBGMが再生中の場合は何もしない
+        if bgmPlayer?.isPlaying == true {
+            print("🎵 BGM already playing")
+            return
+        }
+        
+        print("🎵 Starting background music...")
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
             do {
+                // BGMを停止してリセット
+                self.bgmPlayer?.stop()
+                self.bgmPlayer = nil
+                
                 // Debug: List all files in bundle
                 if let bundlePath = Bundle.main.resourcePath {
                     let bundleContents = try? FileManager.default.contentsOfDirectory(atPath: bundlePath)
@@ -296,24 +324,30 @@ class AudioService: ObservableObject {
                 // Try to load custom BGM file first
                 if let bgmPath = Bundle.main.path(forResource: "bgm", ofType: "mp3") {
                     let bgmURL = URL(fileURLWithPath: bgmPath)
-                    bgmPlayer = try AVAudioPlayer(contentsOf: bgmURL)
+                    self.bgmPlayer = try AVAudioPlayer(contentsOf: bgmURL)
                     print("🎵 SUCCESS: Loaded custom BGM file from: \(bgmPath)")
                 } else if let bgmURL = Bundle.main.url(forResource: "bgm", withExtension: "mp3") {
-                    bgmPlayer = try AVAudioPlayer(contentsOf: bgmURL)
+                    self.bgmPlayer = try AVAudioPlayer(contentsOf: bgmURL)
                     print("🎵 SUCCESS: Loaded custom BGM via URL: \(bgmURL)")
                 } else {
                     // Fallback to generated BGM
-                    let bgmData = generateBackgroundMusic()
-                    bgmPlayer = try AVAudioPlayer(data: bgmData)
+                    let bgmData = self.generateBackgroundMusic()
+                    self.bgmPlayer = try AVAudioPlayer(data: bgmData)
                     print("🎵 FALLBACK: Using generated BGM")
                 }
                 
-                bgmPlayer?.numberOfLoops = -1 // 無限ループ
-                bgmPlayer?.volume = currentVolume * 0.3 // BGMは効果音より小さく
-                bgmPlayer?.play()
-                print("🎵 Background music started")
+                self.bgmPlayer?.numberOfLoops = -1 // 無限ループ
+                self.bgmPlayer?.volume = self.currentVolume * 0.3 // BGMは効果音より小さく
+                self.bgmPlayer?.prepareToPlay()
+                let started = self.bgmPlayer?.play() ?? false
+                print("🎵 Background music started: \(started)")
+                
+                if !started {
+                    print("⚠️ BGM failed to start")
+                }
+                
             } catch {
-                print("BGM再生に失敗: \(error)")
+                print("❌ BGM再生に失敗: \(error)")
             }
         }
     }

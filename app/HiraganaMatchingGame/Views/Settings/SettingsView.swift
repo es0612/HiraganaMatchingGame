@@ -7,6 +7,7 @@ struct SettingsView: View {
     @State private var viewModel: SettingsViewModel
     
     @State private var showResetAlert = false
+    @State private var showTutorial = false
     
     let onDismiss: () -> Void
     
@@ -119,6 +120,21 @@ struct SettingsView: View {
                                 .cornerRadius(10)
                             }
                             .buttonStyle(PlainButtonStyle())
+                            
+                            Button(action: {
+                                showTutorial = true
+                            }) {
+                                HStack {
+                                    Image(systemName: "questionmark.circle")
+                                    Text("チュートリアルを見る")
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                }
+                                .padding()
+                                .background(Color.purple.opacity(0.1))
+                                .cornerRadius(10)
+                            }
+                            .buttonStyle(PlainButtonStyle())
                         }
                     }
                 }
@@ -143,6 +159,9 @@ struct SettingsView: View {
                 Button("キャンセル", role: .cancel) { }
             } message: {
                 Text("すべての設定をデフォルト値に戻しますか？この操作は取り消せません。")
+            }
+            .sheet(isPresented: $showTutorial) {
+                TutorialView(isPresented: $showTutorial)
             }
         }
         .onAppear {

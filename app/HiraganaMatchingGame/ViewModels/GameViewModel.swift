@@ -22,7 +22,7 @@ class GameViewModel {
     var earnedStars: Int = 0
     
     private let gameLogicService: GameLogicService
-    private let audioService: AudioService
+    let audioService: AudioService
     private let starUnlockService: StarUnlockService
     private let levelProgressionService: LevelProgressionService
     private var currentQuestions: [GameQuestion] = []
