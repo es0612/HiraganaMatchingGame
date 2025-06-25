@@ -480,10 +480,6 @@ class HiraganaDataManager {
         return allHiraganaData.filter { characters.contains($0.character) }
     }
     
-    func getJapaneseWord(for imageName: String) -> String? {
-        return imageNameToJapaneseWord[imageName]
-    }
-    
     func getRandomChoices(for hiragana: String, count: Int = 3) -> [HiraganaItem] {
         // 指定されたひらがなの全ての選択肢を取得
         let correctItems = allHiraganaData.filter { $0.character == hiragana }
@@ -504,6 +500,10 @@ class HiraganaDataManager {
     
     func getQuestionVariations(for hiragana: String) -> [HiraganaItem] {
         return allHiraganaData.filter { $0.character == hiragana }
+    }
+    
+    func getJapaneseWord(for imageName: String) -> String? {
+        return imageNameToJapaneseWord[imageName]
     }
     
     func getAllCharacters() -> [String] {
