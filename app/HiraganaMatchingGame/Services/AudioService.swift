@@ -105,7 +105,7 @@ class AudioService: ObservableObject {
         case "soundVolume":
             setVolume(Float(settings.soundVolume))
             // BGMの音量も更新
-            bgmPlayer?.volume = Float(settings.soundVolume) * 0.3
+            bgmPlayer?.volume = Float(settings.soundVolume) * 0.15
         case "voiceSpeed":
             setPlaybackSpeed(Float(settings.voiceSpeed))
         default:
@@ -337,7 +337,7 @@ class AudioService: ObservableObject {
                 }
                 
                 self.bgmPlayer?.numberOfLoops = -1 // 無限ループ
-                self.bgmPlayer?.volume = self.currentVolume * 0.3 // BGMは効果音より小さく
+                self.bgmPlayer?.volume = self.currentVolume * 0.15 // BGMはデフォルトの半分の音量
                 self.bgmPlayer?.prepareToPlay()
                 let started = self.bgmPlayer?.play() ?? false
                 print("🎵 Background music started: \(started)")

@@ -510,6 +510,10 @@ class HiraganaDataManager {
         return allHiraganaData.map { $0.character }
     }
     
+    func getAllHiraganaData() -> [HiraganaItem] {
+        return allHiraganaData
+    }
+    
     func getItem(for character: String) -> HiraganaItem? {
         return allHiraganaData.first { $0.character == character }
     }

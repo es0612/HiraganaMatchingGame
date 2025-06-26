@@ -113,10 +113,6 @@ struct GameView: View {
         }
         .onAppear {
             gameViewModel.startNewGame(level: selectedLevel)
-            // BGMの状態をチェックして、再生されていない場合のみ開始
-            if !gameViewModel.audioService.isBGMPlaying() {
-                gameViewModel.audioService.startBackgroundMusic()
-            }
         }
         .onChange(of: gameViewModel.isGameCompleted) { completed in
             if completed {
@@ -621,74 +617,80 @@ struct GameView: View {
     // MARK: - Helper Functions
     
     private func getEmojiForImageName(_ imageName: String) -> String {
-        switch imageName {
-        // あ行
-        case "ant": return "🐜"
-        case "dog": return "🐶"
-        case "rabbit": return "🐰"
-        case "shrimp": return "🦐"
-        case "demon": return "👹"
+        // 完全なエモジマップ
+        let emojiMap: [String: String] = [
+            // あ行
+            "ant": "🐜", "duck": "🦆", "rain": "🌧️", "red": "🔴",
+            "dog": "🐶", "strawberry": "🍓", "chair": "🪑", "house": "🏠",
+            "rabbit": "🐰", "horse": "🐴", "sea": "🌊", "song": "🎵",
+            "shrimp": "🦐", "station": "🚉", "picture": "🖼️", "pencil": "✏️",
+            "demon": "👹", "king": "👑", "mother": "👩", "tea": "🍵",
+            
+            // か行
+            "crab": "🦀", "turtle": "🐢", "bag": "👜", "key": "🔑",
+            "giraffe": "🦒", "tree": "🌳", "train": "🚂", "mushroom": "🍄",
+            "bear": "🐻", "car": "🚗", "cloud": "☁️", "fruit": "🍇",
+            "cake": "🍰", "frog": "🐸", "game": "🎮", "smoke": "💨",
+            "top": "🌀", "child": "👶", "heart": "❤️", "ice": "🧊",
+            
+            // さ行
+            "monkey": "🐒", "fish": "🐟", "cherry": "🍒", "desert": "🏜️",
+            "deer": "🦌", "lion": "🦁", "salt": "🧂", "newspaper": "📰",
+            "watermelon": "🍉", "sparrow": "🐦", "nest": "🪹", "sand": "🏖️",
+            "cicada": "🦗", "world": "🌍", "soap": "🧼", "back": "↩️",
+            "sky": "🌌", "socks": "🧦", "outside": "🌲", "sleeve": "👕",
+            
+            // た行
+            "octopus": "🐙", "egg": "🥚", "tower": "🗼", "bamboo": "🎋",
+            "butterfly": "🦋", "cheese": "🧀", "map": "🗺️", "bird": "🐦",
+            "crane": "🦩", "moon": "🌙", "desk": "🪑", "fishing": "🎣",
+            "hand": "✋", "letter": "✉️", "tent": "⛺", "television": "📺",
+            "clock": "⏰", "tiger": "🐅", "door": "🚪", "tomato": "🍅",
+            
+            // な行
+            "eggplant": "🍆", "wave": "🌊", "name": "📛", "summer": "☀️",
+            "carrot": "🥕", "rainbow": "🌈", "garden": "🏡", "meat": "🥩",
+            "doll": "🪆", "cloth": "🧵", "mud": "🪨", "paint": "🎨",
+            "cat": "🐱", "mouse": "🐭", "sleep": "😴", "tie": "👔",
+            "field": "🌾", "drink": "🥤", "seaweed": "🌿", "notebook": "📓",
+            
+            // は行
+            "flower": "🌸", "brush": "🖌️", "box": "📦", "scissors": "✂️",
+            "chick": "🐤", "fire": "🔥", "sun": "☀️", "sheep": "🐑",
+            "boat": "🚤", "envelope": "✉️", "winter": "❄️", "futon": "🛏️",
+            "snake": "🐍", "helmet": "⛑️", "room": "🏠", "wall": "🧱",
+            "bone": "🦴", "book": "📖", "star": "⭐", "cheek": "😊",
+            
+            // ま行
+            "bean": "🫘", "window": "🪟", "pillow": "🛏️", "circle": "⭕",
+            "ear": "👂", "water": "💧", "road": "🛣️", "green": "💚",
+            "bug": "🐛", "purple": "💜", "village": "🏘️", "chest": "📦",
+            "eye": "👁️", "glasses": "👓", "noodles": "🍜", "female": "👩",
+            "peach": "🍑", "forest": "🌲", "thing": "📦", "rice_cake": "🍡",
+            
+            // や行
+            "arrow": "➡️", "roof": "🏠", "vegetable": "🥬", "mountain": "⛰️",
+            "hot_water": "♨️", "snow": "❄️", "finger": "👉", "dream": "💭",
+            "night": "🌙", "four": "4️⃣", "world2": "🌏", "good": "👍",
+            
+            // ら行
+            "trumpet": "🎺", "radio": "📻", "lion2": "🦁", "ramen": "🍜",
+            "apple": "🍎", "squirrel": "🐿️", "ribbon": "🎀", "reason": "💭",
+            "loop": "🔄", "ruby": "💎", "route": "🛣️", "ruler": "📏",
+            "refrigerator": "🧊", "lemon": "🍋", "train2": "🚆", "lettuce": "🥬",
+            "candle": "🕯️", "robot": "🤖", "rocket": "🚀", "rope": "🪢",
+            
+            // わ行
+            "ring": "💍", "cotton": "☁️", "young": "👶", "japanese": "🇯🇵",
+            "man": "👨", "dance": "💃", "woman": "👩", "antenna": "📡",
+            "bread": "🍞", "engine": "⚙️", "pen": "🖊️"
+        ]
         
-        // か行
-        case "crab": return "🦀"
-        case "giraffe": return "🦒"
-        case "bear": return "🐻"
-        case "cake": return "🍰"
-        case "top": return "🌀"
-        
-        // さ行
-        case "monkey": return "🐵"
-        case "deer": return "🦌"
-        case "watermelon": return "🍉"
-        case "cicada": return "🦗"
-        case "sky": return "🌌"
-        
-        // た行
-        case "octopus": return "🐙"
-        case "butterfly": return "🦋"
-        case "crane": return "🕊️"
-        case "hand": return "✋"
-        case "clock": return "⏰"
-        
-        // な行
-        case "eggplant": return "🍆"
-        case "carrot": return "🥕"
-        case "doll": return "🪆"
-        case "cat": return "🐱"
-        case "field": return "🌾"
-        
-        // は行
-        case "flower": return "🌸"
-        case "chick": return "🐤"
-        case "boat": return "⛵"
-        case "snake": return "🐍"
-        case "bone": return "🦴"
-        
-        // ま行
-        case "bean": return "🫘"
-        case "ear": return "👂"
-        case "bug": return "🐛"
-        case "eye": return "👁️"
-        case "peach": return "🍑"
-        
-        // や行
-        case "arrow": return "🏹"
-        case "hot_water": return "♨️"
-        case "night": return "🌙"
-        
-        // ら行
-        case "trumpet": return "🎺"
-        case "apple": return "🍎"
-        case "loop": return "🔄"
-        case "refrigerator": return "🧊"
-        case "candle": return "🕯️"
-        
-        // わ行
-        case "ring": return "💍"
-        case "man": return "👨"
-        case "antenna": return "📡"
-        
-        default: return "❓"
+        if let emoji = emojiMap[imageName] {
+            return emoji
+        } else {
+            print("⚠️ Missing emoji mapping for imageName: '\(imageName)'")
+            return "❓"
         }
     }
     
