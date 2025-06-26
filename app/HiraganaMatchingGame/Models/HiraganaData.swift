@@ -532,4 +532,114 @@ class HiraganaDataManager {
             10: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ", "ま", "み", "む", "め", "も", "や", "ゆ", "よ", "ら", "り", "る", "れ", "ろ", "わ", "を", "ん"]
         ]
     }
+    
+    // MARK: - Emoji Mapping
+    private static let emojiMap: [String: String] = [
+        // あ行
+        "ant": "🐜", "duck": "🦆", "rain": "🌧️", "red": "🔴",
+        "dog": "🐶", "strawberry": "🍓", "chair": "🪑", "house": "🏠",
+        "rabbit": "🐰", "horse": "🐴", "sea": "🌊", "song": "🎵",
+        "shrimp": "🦐", "station": "🚉", "picture": "🖼️", "pencil": "✏️",
+        "demon": "👹", "king": "👑", "mother": "👩", "tea": "🍵",
+        
+        // か行
+        "crab": "🦀", "turtle": "🐢", "bag": "👜", "key": "🔑",
+        "giraffe": "🦒", "tree": "🌳", "train": "🚂", "mushroom": "🍄",
+        "bear": "🐻", "car": "🚗", "cloud": "☁️", "fruit": "🍇",
+        "cake": "🍰", "frog": "🐸", "game": "🎮", "smoke": "💨",
+        "top": "🌀", "child": "👶", "heart": "❤️", "ice": "🧊",
+        
+        // さ行
+        "monkey": "🐒", "fish": "🐟", "cherry": "🍒", "desert": "🏜️",
+        "deer": "🦌", "lion": "🦁", "salt": "🧂", "newspaper": "📰",
+        "watermelon": "🍉", "sparrow": "🐦", "nest": "🪹", "sand": "🏖️",
+        "cicada": "🦗", "world": "🌍", "soap": "🧼", "back": "↩️",
+        "sky": "🌌", "socks": "🧦", "outside": "🌲", "sleeve": "👕",
+        
+        // た行
+        "octopus": "🐙", "egg": "🥚", "tower": "🗼", "bamboo": "🎋",
+        "butterfly": "🦋", "cheese": "🧀", "map": "🗺️", "bird": "🐦",
+        "crane": "🦩", "moon": "🌙", "desk": "🪑", "fishing": "🎣",
+        "hand": "✋", "letter": "✉️", "tent": "⛺", "television": "📺",
+        "clock": "⏰", "tiger": "🐅", "door": "🚪", "tomato": "🍅",
+        
+        // な行
+        "eggplant": "🍆", "wave": "🌊", "name": "📛", "summer": "☀️",
+        "carrot": "🥕", "rainbow": "🌈", "garden": "🏡", "meat": "🥩",
+        "doll": "🪆", "cloth": "🧵", "mud": "🪨", "paint": "🎨",
+        "cat": "🐱", "mouse": "🐭", "sleep": "😴", "tie": "👔",
+        "field": "🌾", "drink": "🥤", "seaweed": "🌿", "notebook": "📓",
+        
+        // は行
+        "flower": "🌸", "brush": "🖌️", "box": "📦", "scissors": "✂️",
+        "chick": "🐤", "fire": "🔥", "sun": "☀️", "sheep": "🐑",
+        "boat": "🚤", "envelope": "✉️", "winter": "❄️", "futon": "🛏️",
+        "snake": "🐍", "helmet": "⛑️", "room": "🏠", "wall": "🧱",
+        "bone": "🦴", "book": "📖", "star": "⭐", "cheek": "😊",
+        
+        // ま行
+        "bean": "🫘", "window": "🪟", "pillow": "🛏️", "circle": "⭕",
+        "ear": "👂", "water": "💧", "road": "🛣️", "green": "💚",
+        "bug": "🐛", "purple": "💜", "village": "🏘️", "chest": "📦",
+        "eye": "👁️", "glasses": "👓", "noodles": "🍜", "female": "👩",
+        "peach": "🍑", "forest": "🌲", "thing": "📦", "rice_cake": "🍡",
+        
+        // や行
+        "arrow": "➡️", "roof": "🏠", "vegetable": "🥬", "mountain": "⛰️",
+        "hot_water": "♨️", "snow": "❄️", "finger": "👉", "dream": "💭",
+        "night": "🌙", "four": "4️⃣", "world2": "🌏", "good": "👍",
+        
+        // ら行
+        "trumpet": "🎺", "radio": "📻", "lion2": "🦁", "ramen": "🍜",
+        "apple": "🍎", "squirrel": "🐿️", "ribbon": "🎀", "reason": "💭",
+        "loop": "🔄", "ruby": "💎", "route": "🛣️", "ruler": "📏",
+        "refrigerator": "🧊", "lemon": "🍋", "train2": "🚆", "lettuce": "🥬",
+        "candle": "🕯️", "robot": "🤖", "rocket": "🚀", "rope": "🪢",
+        
+        // わ行
+        "ring": "💍", "cotton": "☁️", "young": "👶", "japanese": "🇯🇵",
+        "man": "👨", "dance": "💃", "woman": "👩", "antenna": "📡",
+        "bread": "🍞", "engine": "⚙️", "pen": "🖊️"
+    ]
+    
+    func getEmojiForImageName(_ imageName: String) -> String {
+        return Self.emojiMap[imageName] ?? "❓"
+    }
+    
+    // MARK: - Reading Mapping
+    private static let readingMap: [String: String] = [
+        // あ行
+        "あ": "あり", "い": "いぬ", "う": "うさぎ", "え": "えび", "お": "おに",
+        
+        // か行
+        "か": "かに", "き": "きりん", "く": "くま", "け": "けーき", "こ": "こま",
+        
+        // さ行
+        "さ": "さる", "し": "しか", "す": "すいか", "せ": "せみ", "そ": "そら",
+        
+        // た行
+        "た": "たこ", "ち": "ちょう", "つ": "つる", "て": "て", "と": "とけい",
+        
+        // な行
+        "な": "なす", "に": "にんじん", "ぬ": "ぬいぐるみ", "ね": "ねこ", "の": "のはら",
+        
+        // は行
+        "は": "はな", "ひ": "ひよこ", "ふ": "ふね", "へ": "へび", "ほ": "ほね",
+        
+        // ま行
+        "ま": "まめ", "み": "みみ", "む": "むし", "め": "め", "も": "もも",
+        
+        // や行
+        "や": "やじるし", "ゆ": "ゆ", "よ": "よる",
+        
+        // ら行
+        "ら": "らっぱ", "り": "りんご", "る": "るーぷ", "れ": "れいぞうこ", "ろ": "ろうそく",
+        
+        // わ行
+        "わ": "わ", "を": "をとこ", "ん": "あんてな"
+    ]
+    
+    func getReadingForCharacter(_ character: String) -> String {
+        return Self.readingMap[character] ?? character
+    }
 }
