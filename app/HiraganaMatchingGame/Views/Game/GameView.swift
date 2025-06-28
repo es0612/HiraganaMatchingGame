@@ -387,7 +387,7 @@ struct GameView: View {
                         .animation(.spring(response: 0.4, dampingFraction: 0.6), value: gameViewModel.showFeedback)
                 }
                 
-                Text(getReadingForCharacter(choice.character))
+                Text(getReadingForImageName(choice.imageName))
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
@@ -626,8 +626,8 @@ struct GameView: View {
         return HiraganaDataManager.shared.getEmojiForImageName(imageName)
     }
     
-    private func getReadingForCharacter(_ character: String) -> String {
-        return HiraganaDataManager.shared.getReadingForCharacter(character)
+    private func getReadingForImageName(_ imageName: String) -> String {
+        return HiraganaDataManager.shared.getJapaneseWord(for: imageName) ?? imageName
     }
     
     // MARK: - レベル解放通知

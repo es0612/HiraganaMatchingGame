@@ -31,14 +31,14 @@ class AudioService: ObservableObject {
         }
     }
     
-    init(userSettings: UserSettings, isTestMode: Bool = false) {
+    init(userSettings: UserSettings, isTestMode: Bool = false, startBGM: Bool = false) {
         self.isTestMode = isTestMode
         self.audioSession = AVAudioSession.sharedInstance()
         self.speechSynthesizer = AVSpeechSynthesizer()
         self.userSettings = userSettings
         if !isTestMode {
             setupAudioSession()
-            syncWithUserSettings()
+            syncWithUserSettings(startBGM: startBGM)
         }
     }
     
@@ -65,7 +65,7 @@ class AudioService: ObservableObject {
         }
     }
     
-    private func syncWithUserSettings() {
+    private func syncWithUserSettings(startBGM: Bool = false) {
         guard let settings = userSettings else { return }
         
         isSoundEnabled = settings.soundEnabled
@@ -73,8 +73,8 @@ class AudioService: ObservableObject {
         currentVolume = Float(settings.soundVolume)
         playbackSpeed = Float(settings.voiceSpeed)
         
-        // BGMを開始
-        if isMusicEnabled {
+        // BGMを開始（スプラッシュスクリーン時のみ）
+        if isMusicEnabled && startBGM {
             startBackgroundMusic()
         }
         

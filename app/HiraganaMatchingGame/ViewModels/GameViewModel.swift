@@ -45,7 +45,7 @@ class GameViewModel {
     }
     
     convenience init(userSettings: UserSettings) {
-        let audioService = AudioService(userSettings: userSettings)
+        let audioService = AudioService(userSettings: userSettings, startBGM: false)
         let gameLogicService = GameLogicService(userSettings: userSettings)
         self.init(
             gameLogicService: gameLogicService,

@@ -130,7 +130,7 @@ struct ContentView: View {
                     // スプラッシュ画面表示開始時にBGMを開始
                     loadUserSettings()
                     if let settings = userSettings {
-                        audioService = AudioService(userSettings: settings)
+                        audioService = AudioService(userSettings: settings, startBGM: true)
                     }
                 }
             }
