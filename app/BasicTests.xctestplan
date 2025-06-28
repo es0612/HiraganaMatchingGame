@@ -11,7 +11,7 @@
           }
         ],
         "testTimeoutsEnabled" : true,
-        "maximumTestExecutionTimeAllowance" : 600,
+        "maximumTestExecutionTimeAllowance" : 120,
         "maximumTestRepetitions" : 1,
         "testRepetitionMode" : "none"
       }
@@ -25,7 +25,7 @@
       }
     ],
     "testTimeoutsEnabled" : true,
-    "maximumTestExecutionTimeAllowance" : 600,
+    "maximumTestExecutionTimeAllowance" : 120,
     "maximumTestRepetitions" : 1,
     "testRepetitionMode" : "none"
   },

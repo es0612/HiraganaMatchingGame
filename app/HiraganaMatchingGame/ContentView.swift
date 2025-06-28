@@ -2,7 +2,6 @@
 //  ContentView.swift
 //  HiraganaMatchingGame
 //  
-//  Created on 2025/06/12
 //
 
 
@@ -117,12 +116,23 @@ struct ContentView: View {
                         showLaunchScreen = false
                     }
                     
+                    // スプラッシュ画面終了時にBGMを停止
+                    audioService?.stopBackgroundMusic()
+                    audioService = nil
+                    
                     // スプラッシュ画面後にチュートリアルチェック
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         checkAndShowTutorial()
                     }
                 }
                 .transition(.opacity)
+                .onAppear {
+                    // スプラッシュ画面表示開始時にBGMを開始
+                    loadUserSettings()
+                    if let settings = userSettings {
+                        audioService = AudioService(userSettings: settings)
+                    }
+                }
             }
         }
     }
@@ -144,11 +154,6 @@ struct ContentView: View {
             } catch {
                 print("Failed to save user settings: \(error)")
             }
-        }
-        
-        // AudioServiceを初期化してBGMを開始
-        if let settings = userSettings {
-            audioService = AudioService(userSettings: settings)
         }
     }
     

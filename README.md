@@ -266,6 +266,4 @@ xcodebuild test -scheme HiraganaMatchingGame -destination 'platform=iOS Simulato
 
 ---
 
-**開発者**: Claude AI Assistant  
-**最終更新**: 2025年6月16日  
 **バージョン**: 1.0.0

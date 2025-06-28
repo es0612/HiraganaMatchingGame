@@ -302,13 +302,6 @@ struct AboutView: View {
                 .background(Color.gray.opacity(0.1))
                 .cornerRadius(12)
                 
-                VStack(spacing: 8) {
-                    Text("開発者")
-                        .font(.headline)
-                    Text("Claude AI Assistant")
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                }
             }
             .padding()
         }

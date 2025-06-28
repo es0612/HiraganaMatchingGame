@@ -2,7 +2,6 @@
 //  GameFeedbackView.swift
 //  HiraganaMatchingGame
 //
-//  Created on 2025/06/16
 //
 
 import SwiftUI

@@ -27,7 +27,7 @@ final class GameplayUITests: XCTestCase {
             let firstLevelButton = levelButtons.firstMatch
             if firstLevelButton.exists {
                 firstLevelButton.tap()
-                sleep(2)
+                XCTAssertTrue(app.staticTexts.element.waitForExistence(timeout: 3))
             }
         }
         XCTAssertTrue(app.exists, "ゲームが動作しています")
@@ -49,7 +49,7 @@ final class GameplayUITests: XCTestCase {
             let firstLevelButton = levelButtons.firstMatch
             if firstLevelButton.exists && firstLevelButton.isEnabled {
                 firstLevelButton.tap()
-                sleep(2)
+                XCTAssertTrue(app.staticTexts.element.waitForExistence(timeout: 3))
                 
                 // ゲーム画面の基本的な存在確認
                 XCTAssertTrue(app.staticTexts.count > 0, "ゲーム画面の要素が存在します")
@@ -90,7 +90,7 @@ final class GameplayUITests: XCTestCase {
                 levelButton.tap()
                 
                 // 短時間待機後に戻る
-                sleep(1)
+                XCTAssertTrue(app.staticTexts.element.waitForExistence(timeout: 2))
                 
                 let backButton = app.buttons["戻る"]
                 if backButton.exists {

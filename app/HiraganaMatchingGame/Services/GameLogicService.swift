@@ -27,6 +27,10 @@ class GameLogicService {
         return hiraganaDataManager.getRandomChoices(for: hiragana, count: count)
     }
     
+    func generateChoicesWithCorrectAnswer(_ correctAnswer: HiraganaItem, count: Int) -> [HiraganaItem] {
+        return hiraganaDataManager.getRandomChoicesWithCorrectAnswer(correctAnswer, count: count)
+    }
+    
     func generateQuestionsForLevel(_ level: Int, questionCount: Int) -> [GameQuestion] {
         let levelConfig = hiraganaDataManager.getLevelConfiguration()
         guard let charactersForLevel = levelConfig[level] else { return [] }
@@ -44,10 +48,11 @@ class GameLogicService {
         for character in allCharacters {
             if remainingQuestions <= 0 { break }
             
-            let choices = generateChoices(for: character, count: choiceCount)
             guard let correctAnswer = hiraganaDataManager.getItem(for: character) else {
                 continue
             }
+            
+            let choices = generateChoicesWithCorrectAnswer(correctAnswer, count: choiceCount)
             
             let question = GameQuestion(
                 hiragana: character,
@@ -61,11 +66,12 @@ class GameLogicService {
         // 残りの問題数をランダムに埋める
         while remainingQuestions > 0 {
             let randomHiragana = charactersForLevel.randomElement() ?? ""
-            let choices = generateChoices(for: randomHiragana, count: choiceCount)
             
             guard let correctAnswer = hiraganaDataManager.getItem(for: randomHiragana) else {
                 continue
             }
+            
+            let choices = generateChoicesWithCorrectAnswer(correctAnswer, count: choiceCount)
             
             let question = GameQuestion(
                 hiragana: randomHiragana,

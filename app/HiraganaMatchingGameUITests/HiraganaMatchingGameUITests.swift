@@ -43,7 +43,7 @@ final class HiraganaMatchingGameUITests: XCTestCase {
             let firstLevelButton = levelButtons.firstMatch
             if firstLevelButton.exists {
                 firstLevelButton.tap()
-                sleep(2)
+                XCTAssertTrue(app.staticTexts.element.waitForExistence(timeout: 3))
             }
         }
     }
@@ -67,7 +67,7 @@ final class HiraganaMatchingGameUITests: XCTestCase {
         let settingsButton = app.buttons["設定"]
         if settingsButton.waitForExistence(timeout: 5) {
             settingsButton.tap()
-            sleep(2)
+            XCTAssertTrue(app.staticTexts.element.waitForExistence(timeout: 3))
         }
     }
     
@@ -84,7 +84,7 @@ final class HiraganaMatchingGameUITests: XCTestCase {
         let settingsButton = app.buttons["設定"]
         if settingsButton.waitForExistence(timeout: 5) {
             settingsButton.tap()
-            sleep(2)
+            XCTAssertTrue(app.staticTexts.element.waitForExistence(timeout: 3))
             
             // 設定画面の基本的な存在確認
             XCTAssertTrue(app.staticTexts.count > 0, "設定画面の要素が存在します")
@@ -101,7 +101,7 @@ final class HiraganaMatchingGameUITests: XCTestCase {
         let collectionButton = app.buttons["コレクション"]
         if collectionButton.waitForExistence(timeout: 5) {
             collectionButton.tap()
-            sleep(2)
+            XCTAssertTrue(app.staticTexts.element.waitForExistence(timeout: 3))
             
             // コレクション画面の基本的な存在確認
             XCTAssertTrue(app.staticTexts.count > 0, "コレクション画面の要素が存在します")
@@ -118,7 +118,7 @@ final class HiraganaMatchingGameUITests: XCTestCase {
         let achievementsButton = app.buttons["実績"]
         if achievementsButton.waitForExistence(timeout: 5) {
             achievementsButton.tap()
-            sleep(2)
+            XCTAssertTrue(app.staticTexts.element.waitForExistence(timeout: 3))
             
             // 実績画面の基本的な存在確認
             XCTAssertTrue(app.staticTexts.count > 0, "実績画面の要素が存在します")

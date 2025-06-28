@@ -436,25 +436,31 @@ struct GameView: View {
         }
     }
     
+    @ViewBuilder
     private var nextButton: some View {
-        Button(action: {
-            if gameViewModel.isGameCompleted {
-                // レベル完了をサービスに通知してレベル選択画面に戻る
-                onGameComplete(selectedLevel, gameViewModel.earnedStars)
-            } else {
-                // ヒント表示
-                showHintAlert()
+        // ゲーム進行中でヒント設定がオフの場合はボタンを非表示
+        if !gameViewModel.isGameCompleted && userSettings?.showHints == false {
+            EmptyView()
+        } else {
+            Button(action: {
+                if gameViewModel.isGameCompleted {
+                    // レベル完了をサービスに通知してレベル選択画面に戻る
+                    onGameComplete(selectedLevel, gameViewModel.earnedStars)
+                } else {
+                    // ヒント表示
+                    showHintAlert()
+                }
+            }) {
+                Text(getButtonText())
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(
+                        RoundedRectangle(cornerRadius: 25)
+                            .fill(getButtonColor())
+                    )
             }
-        }) {
-            Text(getButtonText())
-                .font(.headline)
-                .foregroundColor(.white)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 10)
-                .background(
-                    RoundedRectangle(cornerRadius: 25)
-                        .fill(getButtonColor())
-                )
         }
     }
     

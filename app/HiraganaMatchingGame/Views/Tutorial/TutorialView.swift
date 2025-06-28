@@ -2,7 +2,6 @@
 //  TutorialView.swift
 //  HiraganaMatchingGame
 //
-//  Created on 2025/06/23
 //
 
 import SwiftUI

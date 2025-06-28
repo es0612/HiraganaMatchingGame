@@ -2,7 +2,6 @@
 //  HiraganaMatchingGameTests.swift
 //  HiraganaMatchingGameTests
 //  
-//  Created on 2025/06/12
 //
 
 

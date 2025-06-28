@@ -481,12 +481,9 @@ class HiraganaDataManager {
     }
     
     func getRandomChoices(for hiragana: String, count: Int = 3) -> [HiraganaItem] {
-        // 指定されたひらがなの全ての選択肢を取得
+        // 指定されたひらがなの最初の選択肢を正解として使用（一貫性を保つため）
         let correctItems = allHiraganaData.filter { $0.character == hiragana }
-        guard !correctItems.isEmpty else { return [] }
-        
-        // ランダムに1つの正解を選択
-        let correct = correctItems.randomElement()!
+        guard let correct = correctItems.first else { return [] }
         
         let wrongChoices = allHiraganaData.filter { $0.character != hiragana }
             .shuffled()
@@ -494,6 +491,18 @@ class HiraganaDataManager {
         
         var choices = Array(wrongChoices)
         choices.append(correct)
+        
+        return choices.shuffled()
+    }
+    
+    func getRandomChoicesWithCorrectAnswer(_ correctAnswer: HiraganaItem, count: Int = 3) -> [HiraganaItem] {
+        // 指定された正解アイテムを使用する新しいメソッド
+        let wrongChoices = allHiraganaData.filter { $0.character != correctAnswer.character }
+            .shuffled()
+            .prefix(count - 1)
+        
+        var choices = Array(wrongChoices)
+        choices.append(correctAnswer)
         
         return choices.shuffled()
     }
