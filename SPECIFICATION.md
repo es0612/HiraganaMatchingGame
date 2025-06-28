@@ -1,4 +1,4 @@
-# ひらがなマッチングゲーム - 技術仕様書
+# ひらがなマッチングゲーム - アプリ仕様書
 
 ## アプリケーション概要
 
@@ -6,7 +6,7 @@
 - **アプリ名**: ひらがなマッチングゲーム (Hiragana Matching Game)
 - **対象年齢**: 4〜7歳
 - **カテゴリ**: 教育アプリ
-- **プラットフォーム**: iOS 17.0+
+- **プラットフォーム**: iOS 18.5+
 - **開発言語**: Swift 6.0
 - **UIフレームワーク**: SwiftUI
 - **バージョン**: 1.0.0
@@ -17,116 +17,44 @@
 - 段階的な学習による着実な習得
 - ゲーミフィケーションによる学習意欲向上
 
-## システムアーキテクチャ
+## ゲームの流れ
 
-### アーキテクチャパターン
-- **MVVM (Model-View-ViewModel)**: UI分離とテスタビリティ
-- **Service Layer**: ビジネスロジックの集約
-- **Repository Pattern**: データアクセスの抽象化
+### アプリ起動時
+1. **スプラッシュスクリーン** (3秒間)
+   - アプリロゴ表示
+   - BGM再生開始
+   - ユーザー設定とデータ読み込み
 
-### レイヤー構成
-```
-┌──────────────────────────────┐
-│         Presentation         │
-│    (SwiftUI Views)          │
-├──────────────────────────────┤
-│         ViewModel           │
-│   (Business Logic)          │
-├──────────────────────────────┤
-│         Service             │
-│    (Core Features)          │
-├──────────────────────────────┤
-│         Repository          │
-│   (Data Access)             │
-├──────────────────────────────┤
-│         Storage             │
-│  (SwiftData + UserDefaults) │
-└──────────────────────────────┘
-```
+2. **チュートリアル** (初回のみ)
+   - 基本操作説明
+   - ゲームルール紹介
 
-## データモデル設計
+### メイン画面
+3. **レベル選択画面**
+   - 10レベルのレベル選択ボタン
+   - 進行状況表示（スター数）
+   - 推奨レベルのハイライト
+   - サブメニューへのアクセス
 
-### SwiftDataモデル
+### ゲームプレイ
+4. **ゲーム画面**
+   - ひらがな文字の表示
+   - 絵文字選択肢（2〜4択）
+   - 制限時間なし（子供に優しい設計）
+   - ヒント機能（設定で制御可能）
 
-#### Character
-```swift
-@Model
-final class Character {
-    var name: String                // ひらがな文字
-    var imageName: String          // 関連画像名
-    var unlockRequirement: Int     // 解放必要スター数
-    var isUnlocked: Bool           // 解放状態
-    var unlockedDate: Date?        // 解放日時
-}
-```
+5. **フィードバック**
+   - 正解時：パーティクルエフェクト、効果音
+   - 不正解時：優しい振動、再挑戦促進
 
-#### GameLevel
-```swift
-@Model
-final class GameLevel {
-    var levelNumber: Int           // レベル番号 (1-10)
-    var hiraganaSet: [String]     // 対象ひらがな文字
-    var isCompleted: Bool         // 完了状態
-    var bestScore: Int            // 最高スコア
-    var completionDate: Date?     // 完了日時
-}
-```
+6. **結果画面**
+   - スコア表示（スター評価）
+   - レベル解放通知
+   - 次レベルまたはメニューへの誘導
 
-#### GameProgress
-```swift
-@Model
-final class GameProgress {
-    var currentLevel: Int         // 現在のレベル
-    var totalStars: Int          // 総獲得スター数
-    var unlockedCharacters: [String] // 解放済み文字
-    var lastPlayedDate: Date     // 最終プレイ日
-    var levelStarsData: Data     // レベル別スター数(JSON)
-}
-```
+## レベル設計
 
-#### UserSettings
-```swift
-@Model
-final class UserSettings {
-    var soundEnabled: Bool        // 効果音有効
-    var musicEnabled: Bool        // BGM有効
-    var soundVolume: Double       // 音量 (0.0-1.0)
-    var difficulty: GameDifficulty // 難易度
-    var showHints: Bool           // ヒント表示
-    var playtimeLimit: Int        // プレイ時間制限(分)
-    var largeText: Bool           // 大きな文字
-    var reduceAnimations: Bool    // アニメーション軽減
-}
-```
-
-### 列挙型定義
-
-#### GameDifficulty
-```swift
-enum GameDifficulty: String, CaseIterable {
-    case easy = "簡単"     // 2択、厳しめスター条件
-    case normal = "普通"   // 3択、標準スター条件
-    case hard = "難しい"   // 4択、甘めスター条件
-}
-```
-
-#### Achievement
-```swift
-enum Achievement: String, CaseIterable {
-    case firstCompletion = "初回クリア"
-    case perfectScore = "パーフェクト"
-    case speedRun = "スピードマスター"
-    case streak = "連続チャンピオン"
-    case collector = "コレクター"
-    case master = "ひらがなマスター"
-}
-```
-
-## ゲームロジック仕様
-
-### レベル設計
-
-#### レベル構成表
+### レベル構成
 | レベル | 文字範囲 | 文字数 | 必要スター | 問題数 | 解放条件 |
 |--------|----------|--------|------------|--------|----------|
 | 1 | あ行 | 5 | 0 | 18 | 初期解放 |
@@ -140,372 +68,148 @@ enum Achievement: String, CaseIterable {
 | 9 | あ〜ら行 | 43 | 16 | 20 | 累計16スター |
 | 10 | 全ひらがな | 47 | 18 | 22 | 累計18スター |
 
-### 問題生成アルゴリズム
-
-#### 基本方針
-1. **文字の均等出題**: 各文字を最低1回出題
+### 問題生成ロジック
+1. **各文字を最低1回出題**: 学習の網羅性確保
 2. **ランダム追加**: 残り問題数をランダムに埋める
-3. **最終シャッフル**: 出題順序をランダム化
+3. **選択肢生成**: 正解と不正解のバランス調整
+4. **画像・文字一致**: 絵文字と日本語読みの整合性保証
 
-#### 実装疑似コード
-```swift
-func generateQuestions(level: Int, count: Int) -> [GameQuestion] {
-    let characters = getCharactersForLevel(level)
-    var questions: [GameQuestion] = []
-    
-    // 各文字を最低1回出題
-    for character in characters.shuffled() {
-        if questions.count < count {
-            questions.append(createQuestion(for: character))
-        }
-    }
-    
-    // 残り問題数をランダムに埋める
-    while questions.count < count {
-        let randomCharacter = characters.randomElement()
-        questions.append(createQuestion(for: randomCharacter))
-    }
-    
-    return questions.shuffled()
-}
-```
+## スコアリングシステム
 
-### スコア計算システム
+### スター評価基準
+| 難易度 | 3スター | 2スター | 1スター | 0スター |
+|--------|---------|---------|---------|---------|
+| 簡単(2択) | 100% | 90-99% | 80-89% | 80%未満 |
+| 普通(3択) | 100% | 80-99% | 60-79% | 60%未満 |
+| 難しい(4択) | 100% | 75-99% | 50-74% | 50%未満 |
 
-#### 難易度別スター計算
-```swift
-func calculateStars(accuracy: Double, difficulty: GameDifficulty) -> Int {
-    switch difficulty {
-    case .easy:    // 厳しめ
-        return accuracy >= 1.0 ? 3 : accuracy >= 0.9 ? 2 : accuracy >= 0.8 ? 1 : 0
-    case .normal:  // 標準
-        return accuracy >= 1.0 ? 3 : accuracy >= 0.8 ? 2 : accuracy >= 0.6 ? 1 : 0
-    case .hard:    // 甘め
-        return accuracy >= 1.0 ? 3 : accuracy >= 0.75 ? 2 : accuracy >= 0.5 ? 1 : 0
-    }
-}
-```
+### 進行管理
+- **レベル解放**: 累計スター数による段階的解放
+- **推奨レベル**: 現在の進行状況に基づく最適レベル提案
+- **データ永続化**: SwiftDataとUserDefaultsの併用
 
-## サービス層設計
+## 設定機能
 
-### LevelProgressionService
+### 音声設定
+- **効果音**: オン/オフ、音量調整
+- **BGM**: オン/オフ（スプラッシュスクリーン時のみ再生）
+- **音声合成**: ひらがな読み上げ、速度調整
 
-#### 責務
-- レベル進行の管理
-- スター数による解放制御
-- 進行状況の永続化
+### 難易度設定
+- **簡単**: 2択、厳しめスター条件
+- **普通**: 3択、標準スター条件（デフォルト）
+- **難しい**: 4択、甘めスター条件
 
-#### 主要メソッド
-```swift
-class LevelProgressionService {
-    func isLevelUnlocked(_ level: Int) -> Bool
-    func completeLevel(_ level: Int, earnedStars: Int)
-    func getTotalStars() -> Int
-    func getRecommendedNextLevel() -> Int
-    func getLevelConfiguration(_ level: Int) -> LevelConfiguration
-    func resetProgress()
-}
-```
+### アクセシビリティ
+- **ヒント表示**: オン/オフ（ヒントボタンの表示制御）
+- **大きな文字**: 文字サイズ拡大
+- **アニメーション軽減**: 動きを控えめに
 
-### GameLogicService
+### プレイタイム管理
+- **時間制限**: 1分〜60分の範囲で設定可能
+- **休憩促進**: 長時間プレイの抑制
 
-#### 責務
-- 問題生成ロジック
-- 答え合わせ処理
-- スコア計算
+## サブ機能
 
-#### 主要メソッド
-```swift
-class GameLogicService {
-    func generateQuestionsForLevel(_ level: Int, questionCount: Int) -> [GameQuestion]
-    func generateChoices(for hiragana: String, count: Int) -> [HiraganaItem]
-    func calculateStars(correctAnswers: Int, totalQuestions: Int) -> Int
-    func validateAnswer(_ answer: HiraganaItem, for question: GameQuestion) -> Bool
-}
-```
+### 文字コレクション
+- **解放済み文字**: 獲得スター数による段階的解放
+- **絵文字表示**: 各文字に対応する絵文字とその読み方
+- **解放条件**: 1〜30スターで順次解放
 
-### AudioService
+### 実績・統計
+- **総プレイ時間**: 累計学習時間
+- **レベル別成績**: 各レベルの最高スコア
+- **学習進捗**: 文字別の習得状況
 
-#### 責務
-- 音声ファイル管理
-- BGM制御
-- 効果音再生
-
-#### 主要メソッド
-```swift
-class AudioService {
-    func playHiraganaSound(_ hiragana: String)
-    func playCorrectSound()
-    func playIncorrectSound()
-    func startBackgroundMusic()
-    func stopBackgroundMusic()
-    func setVolume(_ volume: Float)
-}
-```
-
-### StarUnlockService
-
-#### 責務
-- キャラクター解放管理
-- 実績トラッキング
-- 統計計算
-
-#### 主要メソッド
-```swift
-class StarUnlockService {
-    func updateUnlockedCharacters()
-    func getUnlockedCharacters() -> [String]
-    func recordLevelCompletion(level: Int, stars: Int, accuracy: Double, time: Double)
-    func getStarStatistics() -> StarStatistics
-    func getUnlockedAchievements() -> Set<Achievement>
-}
-```
-
-## 音声システム設計
+## 技術仕様
 
 ### アーキテクチャ
-```
-AudioService (統合管理)
-├── SpeechSynthesizer (音声合成)
-├── AudioPlayer (ファイル再生)
-├── BGMGenerator (BGM生成)
-└── EffectPlayer (効果音)
-```
+- **MVVM パターン**: View、ViewModel、Modelの分離
+- **Service Layer**: ビジネスロジックの集約
+- **SwiftData**: メインのデータ永続化
+- **UserDefaults**: 重要データのバックアップ
 
-### BGM管理システム
+### 主要サービス
+- **GameLogicService**: 問題生成、スコア計算
+- **LevelProgressionService**: レベル進行管理
+- **AudioService**: 音声・BGM制御
+- **StarUnlockService**: 文字解放管理
 
-#### 実装方式
-- **プライマリ**: カスタムMP3ファイル (`bgm.mp3`)
-- **フォールバック**: 動的生成メロディー
+### 音声システム
+- **プライマリBGM**: カスタムMP3ファイル（bgm.mp3）
+- **フォールバックBGM**: 動的生成メロディー（きらきら星ベース）
+- **効果音**: 正解/不正解フィードバック
+- **音声合成**: AVSpeechSynthesizerによるひらがな読み上げ
 
-#### MP3ファイル読み込み
-```swift
-private func generateBackgroundMusic() -> Data {
-    // 指定されたBGMファイルを読み込み
-    if let bgmPath = Bundle.main.path(forResource: "bgm", ofType: "mp3"),
-       let bgmData = NSData(contentsOfFile: bgmPath) as Data? {
-        return bgmData
-    }
-    
-    // フォールバック：動的生成
-    // ...
-}
-```
+### データ管理
+- **文字データ**: 47文字の完全なひらがなセット
+- **画像マッピング**: 各文字に対応する複数の絵文字
+- **進行保存**: リアルタイムでの進行状況保存
+- **設定同期**: ユーザー設定の即座反映
 
-#### フォールバック：メロディー生成
-- **ベース**: きらきら星モチーフ
-- **音階**: C5-A5 (523.25Hz - 880.00Hz)
-- **構成**: 8小節の繰り返し
-- **ハーモニー**: 3度上のハーモニー追加
-```
-
-## UI/UX設計仕様
-
-### ナビゲーション構造
-```
-LaunchView (3秒スプラッシュ)
-├── LevelSelectionView (メインハブ)
-    ├── GameView (ゲームプレイ)
-    ├── CharacterCollectionView (コレクション)
-    ├── AchievementsView (実績・統計)
-    └── SettingsView (設定)
-```
+## UI/UXデザイン
 
 ### デザインシステム
+- **カラーパレット**: ブルー/パープル系グラデーション
+- **ダークモード**: システム設定に自動対応
+- **レスポンシブデザイン**: iPhone/iPad両対応
 
-#### カラーパレット
-- **プライマリ**: ブルー系グラデーション
-- **セカンダリ**: パープル系グラデーション
-- **アクセント**: オレンジ（推奨レベル）
-- **フィードバック**: 緑（正解）、赤（不正解）
+### アニメーション
+- **パーティクルエフェクト**: 正解時の祝福演出
+- **スムーズトランジション**: 画面間の自然な遷移
+- **フィードバック**: 視覚的なフィードバック強化
 
-#### タイポグラフィ
-- **タイトル**: .largeTitle, bold
-- **ヘッドライン**: .headline, semibold
-- **ボディ**: .body, regular
-- **キャプション**: .caption, light
+### アクセシビリティ
+- **VoiceOver対応**: 視覚障害者向けサポート
+- **大きなタッチターゲット**: 子供の操作性考慮
+- **明確なコントラスト**: 読みやすさの確保
 
-### アニメーション仕様
+## テスト戦略
 
-#### パーティクルエフェクト
-```swift
-struct ParticleEffect {
-    var type: ParticleType      // correct, incorrect
-    var emoji: String           // 🎉, 💫, etc.
-    var count: Int              // 10-20個
-    var duration: Double        // 2.0秒
-    var physics: PhysicsType    // gravity, explosion
-}
-```
+### ユニットテスト
+- **Swift Testing**: 新しいテストフレームワーク採用
+- **Service Layer**: 全サービスクラスのテスト
+- **カバレッジ**: 主要ビジネスロジックの網羅
 
-#### トランジション
-- **画面遷移**: .spring(response: 0.4, dampingFraction: 0.6)
-- **ボタン押下**: .easeInOut(duration: 0.2)
-- **スター表示**: .spring(response: 0.6, dampingFraction: 0.8)
+### 統合テスト
+- **データフロー**: サービス間連携の検証
+- **永続化**: SwiftDataとUserDefaultsの整合性
 
-## テスト設計
-
-### テスト戦略
-
-#### ユニットテスト
-- **対象**: Service層、ViewModel層
-- **フレームワーク**: Swift Testing
-- **カバレッジ目標**: 80%以上
-
-#### 統合テスト
-- **対象**: サービス間連携、データフロー
-- **重点領域**: 進行保存、設定同期
-
-#### UIテスト（現在無効化）
-- **フレームワーク**: XCUITest
-- **対象**: 完全なユーザーフロー
-
-### テスト環境対応
-
-#### TestUtils実装
-```swift
-struct TestUtils {
-    static var isTestEnvironment: Bool {
-        return ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
-    }
-    
-    static func debugPrint(_ message: String) {
-        if isTestEnvironment {
-            print("[TEST] \(message)")
-        }
-    }
-}
-```
-
-#### テストモード対応
-- **Timer無効化**: テスト環境でのタイムアウト防止
-- **音声無効化**: CI環境での安定実行
-- **SwiftData設定**: インメモリDB使用
-
-## データ永続化設計
-
-### 永続化戦略
-
-#### プライマリストレージ: SwiftData
-- **用途**: 複雑なリレーショナルデータ
-- **対象**: ユーザー設定、進行状況、実績
-- **利点**: 型安全、クエリ最適化
-
-#### セカンダリストレージ: UserDefaults
-- **用途**: 重要な進行データのバックアップ
-- **対象**: 総スター数、レベル進行状況
-- **利点**: 軽量、高速アクセス
-
-### データ同期機構
-
-#### 整合性保証
-```swift
-private func validateDataIntegrity() {
-    let swiftDataTotal = gameProgress.totalStars
-    let userDefaultsTotal = levelStars.values.reduce(0, +)
-    
-    if swiftDataTotal != userDefaultsTotal {
-        print("⚠️ Data mismatch detected")
-        let correctedTotal = max(swiftDataTotal, userDefaultsTotal)
-        syncDataStores(correctedValue: correctedTotal)
-    }
-}
-```
-
-## パフォーマンス最適化
-
-### メモリ管理
-
-#### 遅延ローディング
-- **レベルデータ**: レベル選択時に読み込み
-- **音声ファイル**: 必要時に動的生成
-- **画像リソース**: システムEmoji使用でメモリ削減
-
-#### ビューの効率化
-```swift
-// LazyVGridを使用した効率的レンダリング
-LazyVGrid(columns: columns) {
-    ForEach(levels, id: \.self) { level in
-        LevelButtonView(level: level)
-    }
-}
-```
-
-### バッテリー最適化
-
-#### タイマー管理
-```swift
-private func startGameTimer() {
-    if TestUtils.isTestEnvironment {
-        return // テスト環境ではタイマー無効
-    }
-    
-    gameTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-        updateGameTime()
-    }
-}
-```
-
-#### 音声セッション管理
-```swift
-deinit {
-    try? AVAudioSession.sharedInstance().setActive(false)
-}
-```
+### UIテスト（一部無効化）
+- **タイムアウト対策**: 120秒の制限時間設定
+- **安定性向上**: sleep()をwaitForExistence()に置換
 
 ## セキュリティ・プライバシー
 
+### 子供向けアプリ対応
+- **COPPA準拠**: 13歳未満の個人情報収集なし
+- **ローカルストレージのみ**: 外部通信一切なし
+- **安全な学習環境**: 広告なし、購入なし
+
 ### データ保護
+- **サンドボックス**: アプリ内でのみデータアクセス
+- **暗号化不要**: 機密性の低い学習データのみ
 
-#### 子供向けアプリ対応
-- **COPPA準拠**: 13歳未満の個人情報収集禁止
-- **データ収集なし**: 外部送信一切なし
-- **ローカルストレージのみ**: 全データをデバイス内保存
+## リリース・メンテナンス
 
-#### セキュリティ対策
-```swift
-// アプリサンドボックス内でのみデータアクセス
-private var documentsDirectory: URL {
-    FileManager.default.urls(for: .documentDirectory, 
-                           in: .userDomainMask).first!
-}
-```
-
-## デプロイメント仕様
-
-### App Store対応
-
-#### メタデータ
-- **カテゴリ**: Education
-- **年齢制限**: 4+ (preschool)
+### App Store 対応
+- **カテゴリ**: Education（教育）
+- **年齢制限**: 4+（未就学児対象）
 - **価格**: 無料
 - **アプリ内購入**: なし
 
-#### 必要素材
-- **アイコン**: 1024x1024px
-- **スクリーンショット**: iPhone/iPad各5枚
-- **プレビュー動画**: 30秒以内
-
 ### システム要件
-- **iOS**: 17.0以上
+- **iOS**: 18.5以上
 - **ストレージ**: 50MB未満
 - **RAM**: 最小1GB推奨
 - **プロセッサ**: A12 Bionic以降推奨
 
-## 今後の拡張計画
-
-### Phase 2機能
-- **カタカナ対応**: カタカナ学習モード追加
-- **単語学習**: ひらがなを使った単語学習
-- **手書き練習**: Apple Pencil対応の書字練習
-
-### Phase 3機能
-- **マルチプレイヤー**: 家族内での競争要素
-- **学習分析**: 詳細な学習進捗分析
-- **教師ダッシュボード**: 教育機関向け管理機能
+### 今後の拡張計画
+- **Phase 2**: カタカナ対応、単語学習
+- **Phase 3**: マルチプレイヤー、学習分析
 
 ---
 
-**文書バージョン**: 1.0  
-**最終更新**: 2025年6月16日  
-**レビュー担当**: Claude AI Assistant
+**文書バージョン**: 2.0  
+**最終更新**: 2025年6月28日  
+**対象リリース**: 1.0.0
