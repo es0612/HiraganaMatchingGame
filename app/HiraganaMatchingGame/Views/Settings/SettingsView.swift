@@ -67,8 +67,8 @@ struct SettingsView: View {
                             }
                             Stepper(
                                 value: $viewModel.playtimeLimit,
-                                in: 0...120,
-                                step: 5
+                                in: 0...180,
+                                step: 10
                             ) {
                                 EmptyView()
                             }
@@ -94,7 +94,7 @@ struct SettingsView: View {
                             .cornerRadius(10)
                         }
                         
-                        HStack(spacing: 16) {
+                        VStack(spacing: 12) {
                             NavigationLink(destination: LicenseView()) {
                                 HStack {
                                     Image(systemName: "doc.text")

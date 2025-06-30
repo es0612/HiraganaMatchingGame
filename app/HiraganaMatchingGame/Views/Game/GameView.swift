@@ -466,18 +466,32 @@ struct GameView: View {
     
     private func getButtonText() -> String {
         if gameViewModel.isGameCompleted {
-            // 星を1つでも獲得していれば次のレベル、そうでなければやり直し
-            return gameViewModel.earnedStars > 0 ? "次のレベル" : "やり直し"
+            // 次のレベルが解放されているかチェック
+            let nextLevel = selectedLevel + 1
+            let isNextLevelUnlocked = levelProgressionService.isLevelUnlocked(nextLevel)
+            
+            if gameViewModel.earnedStars > 0 && isNextLevelUnlocked {
+                return "次のレベル"
+            } else {
+                return "やり直し"
+            }
         } else {
             return "ヒント"
         }
     }
     
     private func getButtonColor() -> Color {
-        if gameViewModel.isGameCompleted && gameViewModel.earnedStars == 0 {
-            return Color.orange.opacity(0.8) // やり直しの場合はオレンジ
+        if gameViewModel.isGameCompleted {
+            let nextLevel = selectedLevel + 1
+            let isNextLevelUnlocked = levelProgressionService.isLevelUnlocked(nextLevel)
+            
+            if gameViewModel.earnedStars > 0 && isNextLevelUnlocked {
+                return Color.pink.opacity(0.8) // 次のレベルに進める場合はピンク
+            } else {
+                return Color.orange.opacity(0.8) // やり直しの場合はオレンジ
+            }
         } else {
-            return Color.pink.opacity(0.8) // 通常はピンク
+            return Color.pink.opacity(0.8) // ヒントボタンはピンク
         }
     }
     

@@ -19,7 +19,7 @@ enum Achievement: String, CaseIterable {
         switch self {
         case .firstCompletion: return "初めてレベルを星2つ以上でクリア！"
         case .perfectScore: return "100%の正解率を達成！"
-        case .speedRun: return "素早くクリア！"
+        case .speedRun: return "超速クリア！（平均3秒以下）"
         case .streak: return "連続でレベルクリア！"
         case .collector: return "たくさんのキャラクターを解放！"
         case .master: return "全てのひらがなをマスター！"
@@ -366,9 +366,9 @@ class StarUnlockService {
             unlockAchievement(.perfectScore)
         }
         
-        // スピードラン（平均5秒以下）
-        let averageTime = time / 5.0 // 5問想定
-        if averageTime <= 5.0 && !unlockedAchievements.contains(.speedRun) {
+        // スピードラン（平均3秒以下）
+        let averageTime = time / Double(max(level * 2, 5)) // レベルに応じた問題数で計算
+        if averageTime <= 3.0 && stars >= 2 && !unlockedAchievements.contains(.speedRun) {
             unlockAchievement(.speedRun)
         }
         

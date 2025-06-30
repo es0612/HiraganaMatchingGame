@@ -58,7 +58,7 @@ final class UserSettings {
         self.voiceSpeed = 1.0
         
         // 新しい設定項目の初期値
-        self.soundVolume = 0.8
+        self.soundVolume = 0.5
         self.gameSpeedRaw = GameSpeed.normal.rawValue
         self.difficultyRaw = GameDifficulty.normal.rawValue
         self.autoAdvance = false
