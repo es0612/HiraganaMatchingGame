@@ -13,6 +13,20 @@ enum GameDifficulty: String, CaseIterable {
     case hard = "難しい"
 }
 
+enum QuestionsPerSession: Int, CaseIterable {
+    case few = 5
+    case normal = 10
+    case many = 15
+    
+    var displayName: String {
+        switch self {
+        case .few: return "少なめ (5問)"
+        case .normal: return "普通 (10問)"
+        case .many: return "たくさん (15問)"
+        }
+    }
+}
+
 @Model
 final class UserSettings {
     var soundEnabled: Bool
@@ -29,6 +43,7 @@ final class UserSettings {
     var largeText: Bool
     var reduceAnimations: Bool
     var hasSeenTutorial: Bool
+    var questionsPerSession: Int
     
     // 設定変更通知（@Modelからは除外）
     @Transient
@@ -51,6 +66,14 @@ final class UserSettings {
         }
     }
     
+    var questionsPerSessionEnum: QuestionsPerSession {
+        get { QuestionsPerSession(rawValue: questionsPerSession) ?? .normal }
+        set { 
+            questionsPerSession = newValue.rawValue
+            onSettingChanged?("questionsPerSession")
+        }
+    }
+    
     init() {
         self.soundEnabled = true
         self.musicEnabled = true
@@ -66,6 +89,7 @@ final class UserSettings {
         self.largeText = false
         self.reduceAnimations = false
         self.hasSeenTutorial = false
+        self.questionsPerSession = 10
     }
     
     func updateSettings(
@@ -112,6 +136,12 @@ final class UserSettings {
         onSettingChanged?("difficulty")
     }
     
+    // 問題数設定のバリデーション付きメソッド
+    func setQuestionsPerSessionEnum(_ questionsEnum: QuestionsPerSession) {
+        questionsPerSession = questionsEnum.rawValue
+        onSettingChanged?("questionsPerSession")
+    }
+    
     // 自動進行設定
     func setAutoAdvance(_ enabled: Bool) {
         autoAdvance = enabled
@@ -150,6 +180,7 @@ final class UserSettings {
         largeText = false
         reduceAnimations = false
         hasSeenTutorial = false
+        questionsPerSession = 10
         onSettingChanged?("reset")
     }
     
@@ -167,6 +198,7 @@ final class UserSettings {
         UserDefaults.standard.set(largeText, forKey: "largeText")
         UserDefaults.standard.set(reduceAnimations, forKey: "reduceAnimations")
         UserDefaults.standard.set(hasSeenTutorial, forKey: "hasSeenTutorial")
+        UserDefaults.standard.set(questionsPerSession, forKey: "questionsPerSession")
     }
     
     // 設定の読み込み（UserDefaultsから）
@@ -211,13 +243,17 @@ final class UserSettings {
         if UserDefaults.standard.object(forKey: "hasSeenTutorial") != nil {
             hasSeenTutorial = UserDefaults.standard.bool(forKey: "hasSeenTutorial")
         }
+        if UserDefaults.standard.object(forKey: "questionsPerSession") != nil {
+            questionsPerSession = UserDefaults.standard.integer(forKey: "questionsPerSession")
+        }
     }
     
     // 設定の検証
     func validateSettings() -> Bool {
         return soundVolume >= 0.0 && soundVolume <= 1.0 &&
                voiceSpeed >= 0.5 && voiceSpeed <= 2.0 &&
-               playtimeLimit >= 0
+               playtimeLimit >= 0 &&
+               questionsPerSession >= 5 && questionsPerSession <= 20
     }
     
     // チュートリアル完了設定
@@ -226,8 +262,19 @@ final class UserSettings {
         onSettingChanged?("hasSeenTutorial")
     }
     
+    // 問題数設定
+    func setQuestionsPerSession(_ count: Int) {
+        questionsPerSession = max(5, min(20, count))
+        onSettingChanged?("questionsPerSession")
+    }
+    
     // 設定変更の通知を設定
     private func setupNotifications() {
         // 設定変更時の通知設定をここで行う
+    }
+    
+    // 問題数のフォーマット済み表示
+    func formattedQuestionsPerSession() -> String {
+        return "\(questionsPerSession)問"
     }
 }

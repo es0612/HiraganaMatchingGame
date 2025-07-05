@@ -7,6 +7,8 @@
 import SwiftUI
 
 // GameStats is imported from GameViewModel module
+// Import necessary for TestUtils
+import Foundation
 
 struct GameFeedbackView: View {
     let lastAnswerCorrect: Bool
@@ -18,15 +20,49 @@ struct GameFeedbackView: View {
     
     @Environment(\.colorScheme) var colorScheme
     
+    // 全問正解の判定
+    private var isPerfectScore: Bool {
+        score == totalQuestions && totalQuestions > 0
+    }
+    
     var body: some View {
         VStack(spacing: 20) {
             feedbackSection
             
             if isGameCompleted {
                 gameResultView
+                
+                // 全問正解時の特別なパーティクル効果
+                if isPerfectScore {
+                    ZStack {
+                        // 豪華な紙吹雪エフェクト
+                        ConfettiView()
+                            .allowsHitTesting(false)
+                        
+                        // 星のパーティクル
+                        ParticleEffectView(isCorrect: true)
+                            .allowsHitTesting(false)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .ignoresSafeArea()
+                }
             }
         }
         .animation(.easeInOut(duration: 0.5), value: isGameCompleted)
+        .onAppear {
+            // 全問正解時の特別な音響効果
+            if isGameCompleted && isPerfectScore {
+                // 成功音の後に特別な音を追加
+                let successFeedback = UINotificationFeedbackGenerator()
+                successFeedback.notificationOccurred(.success)
+                
+                // 0.5秒後に追加のお祝い音
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    let celebrationFeedback = UINotificationFeedbackGenerator()
+                    celebrationFeedback.notificationOccurred(.success)
+                }
+            }
+        }
     }
     
     private var feedbackSection: some View {
@@ -85,10 +121,38 @@ struct GameFeedbackView: View {
     
     private var gameResultView: some View {
         VStack(spacing: 15) {
-            Text("ゲーム終了！")
-                .font(.title2)
-                .fontWeight(.bold)
-                .foregroundColor(colorScheme == .dark ? .white : .primary)
+            // 全問正解時の特別なお祝いメッセージ
+            if isPerfectScore {
+                VStack(spacing: 8) {
+                    Text("🎉 完璧！ 🎉")
+                        .font(.title)
+                        .fontWeight(.heavy)
+                        .foregroundColor(.orange)
+                        .scaleEffect(1.2)
+                        .shadow(color: .orange.opacity(0.6), radius: 4, x: 0, y: 2)
+                    
+                    Text("全問正解だよ！すごいね！")
+                        .font(.headline)
+                        .fontWeight(.bold)
+                        .foregroundColor(.green)
+                        .multilineTextAlignment(.center)
+                }
+                .padding(.vertical, 8)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.yellow.opacity(0.2))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.orange.opacity(0.5), lineWidth: 2)
+                        )
+                )
+                .animation(.spring(response: 0.8, dampingFraction: 0.7).delay(0.5), value: isPerfectScore)
+            } else {
+                Text("ゲーム終了！")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(colorScheme == .dark ? .white : .primary)
+            }
             
             Text("スコア: \(score)/\(totalQuestions)")
                 .font(.headline)

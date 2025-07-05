@@ -56,7 +56,7 @@ class GameViewModel {
         self.userSettings = userSettings
     }
     
-    func startNewGame(level: Int) {
+    func startNewGame(level: Int, customQuestionCount: Int? = nil) {
         currentLevel = level
         currentQuestion = 1
         score = 0
@@ -64,6 +64,15 @@ class GameViewModel {
         showFeedback = false
         gameStartTime = Date()
         currentQuestionIndex = 0
+        
+        // 設定から問題数を取得（カスタム値がある場合はそちらを優先）
+        if let customCount = customQuestionCount {
+            totalQuestions = customCount
+        } else if let settings = userSettings {
+            totalQuestions = settings.questionsPerSession
+        } else {
+            totalQuestions = 10 // デフォルト値
+        }
         
         // 時間制限の設定（テストモードでは無効）
         if !isTestMode, let settings = userSettings, settings.playtimeLimit > 0 {

@@ -73,6 +73,17 @@ struct SettingsView: View {
                                 EmptyView()
                             }
                         }
+                        
+                        VStack(alignment: .leading) {
+                            Text("1セッションの問題数")
+                                .font(.subheadline)
+                            Picker("1セッションの問題数", selection: $viewModel.questionsPerSession) {
+                                ForEach(QuestionsPerSession.allCases, id: \.self) { questionCount in
+                                    Text(questionCount.displayName).tag(questionCount)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
                     }
                 }
                 

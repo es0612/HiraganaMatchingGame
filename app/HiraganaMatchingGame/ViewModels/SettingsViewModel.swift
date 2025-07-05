@@ -98,6 +98,14 @@ class SettingsViewModel {
         }
     }
     
+    var questionsPerSession: QuestionsPerSession {
+        get { userSettings.questionsPerSessionEnum }
+        set { 
+            userSettings.setQuestionsPerSessionEnum(newValue)
+            saveSettings()
+        }
+    }
+    
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
         
@@ -170,6 +178,11 @@ class SettingsViewModel {
         return String(format: "%.1fx", voiceSpeed)
     }
     
+    // 問題数のフォーマット
+    func formattedQuestionsPerSession() -> String {
+        return questionsPerSession.displayName
+    }
+    
     // デバッグ用の設定情報表示
     func debugDescription() -> String {
         return """
@@ -185,6 +198,7 @@ class SettingsViewModel {
         - アニメーション軽減: \(reduceAnimations ? "有効" : "無効")
         - 音声速度: \(formattedVoiceSpeed())
         - プレイ時間制限: \(formattedPlaytimeLimit())
+        - 問題数: \(formattedQuestionsPerSession())
         """
     }
     
