@@ -56,15 +56,7 @@ func scoreCalculation(correctAnswers: Int, totalQuestions: Int, expectedStars: I
     #expect(stars == expectedStars)
 }
 
-@Test("レベル解放判定テスト")
-func levelUnlockCheck() {
-    let gameLogic = GameLogicService()
-    
-    #expect(gameLogic.canUnlockLevel(2, withStars: 0) == false)
-    #expect(gameLogic.canUnlockLevel(2, withStars: 1) == true)
-    #expect(gameLogic.canUnlockLevel(5, withStars: 10) == true)
-    #expect(gameLogic.canUnlockLevel(11, withStars: 30) == false)
-}
+// レベル解放判定テストは削除：LevelProgressionServiceに統一されました
 
 @Test("ゲーム統計計算テスト")
 func gameStatsCalculation() {

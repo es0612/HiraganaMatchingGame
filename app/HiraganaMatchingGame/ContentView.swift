@@ -24,6 +24,7 @@ struct ContentView: View {
     @State private var showLaunchScreen = true
     @State private var audioService: AudioService?
     @State private var showTutorial = false
+    @State private var gameViewId = UUID()
     
     var body: some View {
         ZStack {
@@ -67,8 +68,13 @@ struct ContentView: View {
                         },
                         onBackToLevelSelection: {
                             currentScreen = .levelSelection
+                        },
+                        onRestart: {
+                            // 同じレベルを再開（画面状態は変更せず、ViewをリフレッシュするためにIDを更新）
+                            gameViewId = UUID()
                         }
                     )
+                    .id(gameViewId)
                 } else {
                     GameView(
                         selectedLevel: level,
@@ -79,8 +85,13 @@ struct ContentView: View {
                         },
                         onBackToLevelSelection: {
                             currentScreen = .levelSelection
+                        },
+                        onRestart: {
+                            // 同じレベルを再開（画面状態は変更せず、ViewをリフレッシュするためにIDを更新）
+                            gameViewId = UUID()
                         }
                     )
+                    .id(gameViewId)
                 }
                 
             case .characterCollection:

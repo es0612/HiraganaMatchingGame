@@ -11,6 +11,7 @@ struct RefactoredGameView: View {
     let levelProgressionService: LevelProgressionService
     let onGameComplete: (Int, Int) -> Void
     let onBackToLevelSelection: () -> Void
+    let onRestart: () -> Void
     let userSettings: UserSettings?
     
     @State private var gameViewModel: GameViewModel
@@ -24,12 +25,14 @@ struct RefactoredGameView: View {
          levelProgressionService: LevelProgressionService = LevelProgressionService(),
          userSettings: UserSettings? = nil,
          onGameComplete: @escaping (Int, Int) -> Void = { _, _ in },
-         onBackToLevelSelection: @escaping () -> Void = {}) {
+         onBackToLevelSelection: @escaping () -> Void = {},
+         onRestart: @escaping () -> Void = {}) {
         self.selectedLevel = selectedLevel
         self.levelProgressionService = levelProgressionService
         self.userSettings = userSettings
         self.onGameComplete = onGameComplete
         self.onBackToLevelSelection = onBackToLevelSelection
+        self.onRestart = onRestart
         
         if let settings = userSettings {
             self._gameViewModel = State(initialValue: GameViewModel(userSettings: settings))
@@ -163,6 +166,7 @@ struct RefactoredGameView: View {
                     showHintAlert()
                 }
             },
+            onRestart: onRestart,
             onHintDismissed: {
                 showHint = false
             }

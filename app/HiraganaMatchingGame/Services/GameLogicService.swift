@@ -82,8 +82,36 @@ class GameLogicService {
             remainingQuestions -= 1
         }
         
-        // 最終的にシャッフルして出題順をランダムにする
-        return questions.shuffled()
+        // 最終的にシャッフルして出題順をランダムにし、連続する同じ答えを回避
+        return shuffleWithConsecutiveAvoidance(questions)
+    }
+    
+    private func shuffleWithConsecutiveAvoidance(_ questions: [GameQuestion]) -> [GameQuestion] {
+        guard questions.count > 1 else { return questions }
+        
+        var shuffled = questions.shuffled()
+        let maxAttempts = 10
+        
+        for _ in 0..<maxAttempts {
+            var hasConsecutiveDuplicates = false
+            
+            // 連続する同じ答えがあるかチェック
+            for i in 0..<(shuffled.count - 1) {
+                if shuffled[i].correctAnswer.imageName == shuffled[i + 1].correctAnswer.imageName {
+                    hasConsecutiveDuplicates = true
+                    break
+                }
+            }
+            
+            if !hasConsecutiveDuplicates {
+                break
+            }
+            
+            // 連続する同じ答えがある場合、再シャッフル
+            shuffled = questions.shuffled()
+        }
+        
+        return shuffled
     }
     
     private func getChoiceCountForDifficulty() -> Int {
@@ -151,13 +179,6 @@ class GameLogicService {
         }
     }
     
-    func canUnlockLevel(_ level: Int, withStars stars: Int) -> Bool {
-        if level == 1 { return true }
-        if level > 10 { return false }
-        
-        let requiredStars = (level - 1) * 1
-        return stars >= requiredStars
-    }
     
     func calculateGameStats(correctAnswers: Int, totalQuestions: Int, timeTaken: TimeInterval) -> GameStats {
         let accuracy = Double(correctAnswers) / Double(totalQuestions)
@@ -170,10 +191,6 @@ class GameLogicService {
         )
     }
     
-    func getNextLevel(currentLevel: Int, earnedStars: Int) -> Int? {
-        let nextLevel = currentLevel + 1
-        return canUnlockLevel(nextLevel, withStars: earnedStars) ? nextLevel : nil
-    }
     
     func validateAnswer(_ answer: String, for hiragana: String) -> Bool {
         return isCorrectAnswer(hiragana: hiragana, imageName: answer)

@@ -8,6 +8,7 @@ struct SettingsView: View {
     
     @State private var showResetAlert = false
     @State private var showPlayDataResetAlert = false
+    @State private var showPlayDataResetSuccessAlert = false
     @State private var showTutorial = false
     
     let onDismiss: () -> Void
@@ -189,10 +190,16 @@ struct SettingsView: View {
             .alert("プレイデータをリセット", isPresented: $showPlayDataResetAlert) {
                 Button("リセット", role: .destructive) {
                     viewModel.resetPlayData()
+                    showPlayDataResetSuccessAlert = true
                 }
                 Button("キャンセル", role: .cancel) { }
             } message: {
                 Text("レベル進行、獲得スター、キャラクター解放、実績データをすべて削除して最初からやり直しますか？この操作は取り消せません。")
+            }
+            .alert("リセット完了", isPresented: $showPlayDataResetSuccessAlert) {
+                Button("OK") { }
+            } message: {
+                Text("プレイデータが正常にリセットされました。アプリを再起動すると初期状態から開始できます。")
             }
             .sheet(isPresented: $showTutorial) {
                 TutorialView(isPresented: $showTutorial)

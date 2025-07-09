@@ -18,6 +18,7 @@ struct GameControlsView: View {
     let levelProgressionService: LevelProgressionService
     let onBackPressed: () -> Void
     let onNextPressed: () -> Void
+    let onRestart: () -> Void
     let onHintDismissed: () -> Void
     
     @Environment(\.colorScheme) var colorScheme
@@ -68,15 +69,15 @@ struct GameControlsView: View {
     
     private var nextButton: some View {
         Button(action: {
-            // 触覚フィードバック（成功状況に応じて強度を変更）
-            if isGameCompleted && earnedStars >= 2 {
-                let successFeedback = UINotificationFeedbackGenerator()
-                successFeedback.notificationOccurred(.success)
+            // 触覚フィードバック
+            let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+            impactFeedback.impactOccurred()
+            
+            if isGameCompleted {
+                onRestart()
             } else {
-                let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
-                impactFeedback.impactOccurred()
+                onNextPressed()
             }
-            onNextPressed()
         }) {
             Text(getButtonText())
                 .font(.headline)
@@ -127,17 +128,7 @@ struct GameControlsView: View {
     
     private func getButtonText() -> String {
         if isGameCompleted {
-            // 次のレベルが解放されているかチェック
-            let nextLevel = selectedLevel + 1
-            let isNextLevelUnlocked = levelProgressionService.isLevelUnlocked(nextLevel)
-            
-            if earnedStars > 0 && isNextLevelUnlocked {
-                return "次のレベル"
-            } else if earnedStars > 0 {
-                return "再挑戦"
-            } else {
-                return "やり直し"
-            }
+            return "再挑戦"
         } else {
             return "ヒント"
         }
@@ -145,16 +136,7 @@ struct GameControlsView: View {
     
     private func getButtonColor() -> Color {
         if isGameCompleted {
-            let nextLevel = selectedLevel + 1
-            let isNextLevelUnlocked = levelProgressionService.isLevelUnlocked(nextLevel)
-            
-            if earnedStars > 0 && isNextLevelUnlocked {
-                return Color.green.opacity(0.8) // 次のレベルの場合は緑
-            } else if earnedStars > 0 {
-                return Color.yellow.opacity(0.8) // 再挑戦の場合は黄色
-            } else {
-                return Color.orange.opacity(0.8) // やり直しの場合はオレンジ
-            }
+            return Color.blue.opacity(0.8) // 再挑戦の場合は青
         } else {
             return Color.pink.opacity(0.8) // ヒントは通常のピンク
         }
@@ -175,6 +157,7 @@ struct GameControlsView: View {
             levelProgressionService: LevelProgressionService(),
             onBackPressed: { print("Back pressed") },
             onNextPressed: { print("Next pressed") },
+            onRestart: { print("Restart pressed") },
             onHintDismissed: { print("Hint dismissed") }
         )
         .padding()
@@ -193,6 +176,7 @@ struct GameControlsView: View {
             levelProgressionService: LevelProgressionService(),
             onBackPressed: { print("Back pressed") },
             onNextPressed: { print("Next pressed") },
+            onRestart: { print("Restart pressed") },
             onHintDismissed: { print("Hint dismissed") }
         )
         .padding()

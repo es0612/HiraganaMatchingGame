@@ -147,6 +147,21 @@ class SettingsViewModel {
         let starUnlockService = StarUnlockService()
         starUnlockService.resetProgress()
         
+        // SwiftDataのGameProgressエンティティをすべて削除
+        if let context = modelContext {
+            do {
+                let descriptor = FetchDescriptor<GameProgress>()
+                let gameProgressEntities = try context.fetch(descriptor)
+                for entity in gameProgressEntities {
+                    context.delete(entity)
+                }
+                try context.save()
+                print("🔄 SwiftData GameProgress entities deleted")
+            } catch {
+                print("❌ Failed to delete GameProgress entities: \(error)")
+            }
+        }
+        
         print("🔄 プレイデータがリセットされました")
     }
     

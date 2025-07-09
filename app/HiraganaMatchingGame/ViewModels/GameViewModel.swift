@@ -198,10 +198,6 @@ class GameViewModel {
         return gameLogicService.generateHint(for: currentHiragana)
     }
     
-    func canUnlockNextLevel(withTotalStars totalStars: Int) -> Bool {
-        let nextLevel = currentLevel + 1
-        return gameLogicService.canUnlockLevel(nextLevel, withStars: totalStars)
-    }
     
     private func loadCurrentQuestion() {
         guard currentQuestionIndex < currentQuestions.count else { return }

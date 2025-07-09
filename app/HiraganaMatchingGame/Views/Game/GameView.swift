@@ -5,6 +5,7 @@ struct GameView: View {
     let levelProgressionService: LevelProgressionService
     let onGameComplete: (Int, Int) -> Void
     let onBackToLevelSelection: () -> Void
+    let onRestart: () -> Void
     let userSettings: UserSettings?
     
     @State private var gameViewModel: GameViewModel
@@ -12,6 +13,7 @@ struct GameView: View {
     @State private var hintText = ""
     @State private var showLevelUnlockNotification = false
     @State private var unlockedLevel = 0
+    @State private var nextLevelWasUnlockedBeforeGame = false
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @Environment(\.colorScheme) var colorScheme
@@ -20,12 +22,14 @@ struct GameView: View {
          levelProgressionService: LevelProgressionService = LevelProgressionService(),
          userSettings: UserSettings? = nil,
          onGameComplete: @escaping (Int, Int) -> Void = { _, _ in },
-         onBackToLevelSelection: @escaping () -> Void = {}) {
+         onBackToLevelSelection: @escaping () -> Void = {},
+         onRestart: @escaping () -> Void = {}) {
         self.selectedLevel = selectedLevel
         self.levelProgressionService = levelProgressionService
         self.userSettings = userSettings
         self.onGameComplete = onGameComplete
         self.onBackToLevelSelection = onBackToLevelSelection
+        self.onRestart = onRestart
         
         if let settings = userSettings {
             self._gameViewModel = State(initialValue: GameViewModel(userSettings: settings))
@@ -112,6 +116,10 @@ struct GameView: View {
             }
         }
         .onAppear {
+            // ゲーム開始前の次レベル解放状態を記録
+            let nextLevel = selectedLevel + 1
+            nextLevelWasUnlockedBeforeGame = levelProgressionService.isLevelUnlocked(nextLevel)
+            
             gameViewModel.startNewGame(level: selectedLevel)
         }
         .onChange(of: gameViewModel.isGameCompleted) { completed in
@@ -444,8 +452,8 @@ struct GameView: View {
         } else {
             Button(action: {
                 if gameViewModel.isGameCompleted {
-                    // レベル完了をサービスに通知してレベル選択画面に戻る
-                    onGameComplete(selectedLevel, gameViewModel.earnedStars)
+                    // 再挑戦：同じレベルをもう一度開始
+                    onRestart()
                 } else {
                     // ヒント表示
                     showHintAlert()
@@ -466,17 +474,7 @@ struct GameView: View {
     
     private func getButtonText() -> String {
         if gameViewModel.isGameCompleted {
-            // 次のレベルが解放されているかチェック
-            let nextLevel = selectedLevel + 1
-            let isNextLevelUnlocked = levelProgressionService.isLevelUnlocked(nextLevel)
-            
-            if gameViewModel.earnedStars > 0 && isNextLevelUnlocked {
-                return "次のレベル"
-            } else if gameViewModel.earnedStars > 0 {
-                return "再挑戦"
-            } else {
-                return "やり直し"
-            }
+            return "再挑戦"
         } else {
             return "ヒント"
         }
@@ -484,16 +482,7 @@ struct GameView: View {
     
     private func getButtonColor() -> Color {
         if gameViewModel.isGameCompleted {
-            let nextLevel = selectedLevel + 1
-            let isNextLevelUnlocked = levelProgressionService.isLevelUnlocked(nextLevel)
-            
-            if gameViewModel.earnedStars > 0 && isNextLevelUnlocked {
-                return Color.green.opacity(0.8) // 次のレベルに進める場合は緑
-            } else if gameViewModel.earnedStars > 0 {
-                return Color.yellow.opacity(0.8) // 再挑戦の場合は黄色
-            } else {
-                return Color.orange.opacity(0.8) // やり直しの場合はオレンジ
-            }
+            return Color.blue.opacity(0.8) // 再挑戦の場合は青
         } else {
             return Color.pink.opacity(0.8) // ヒントボタンはピンク
         }
@@ -656,7 +645,10 @@ struct GameView: View {
         
         // ゲーム完了後にチェック
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            if levelProgressionService.isLevelUnlocked(nextLevel) {
+            let isNowUnlocked = levelProgressionService.isLevelUnlocked(nextLevel)
+            
+            // 新規解放の場合のみ通知を表示
+            if !nextLevelWasUnlockedBeforeGame && isNowUnlocked {
                 unlockedLevel = nextLevel
                 withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                     showLevelUnlockNotification = true
