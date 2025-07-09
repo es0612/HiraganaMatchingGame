@@ -151,6 +151,8 @@ struct RefactoredGameView: View {
             earnedStars: gameViewModel.earnedStars,
             showHint: showHint,
             hintText: hintText,
+            selectedLevel: selectedLevel,
+            levelProgressionService: levelProgressionService,
             onBackPressed: onBackToLevelSelection,
             onNextPressed: {
                 if gameViewModel.isGameCompleted {

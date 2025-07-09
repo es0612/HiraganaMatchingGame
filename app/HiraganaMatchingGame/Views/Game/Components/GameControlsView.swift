@@ -14,6 +14,8 @@ struct GameControlsView: View {
     let earnedStars: Int
     let showHint: Bool
     let hintText: String
+    let selectedLevel: Int
+    let levelProgressionService: LevelProgressionService
     let onBackPressed: () -> Void
     let onNextPressed: () -> Void
     let onHintDismissed: () -> Void
@@ -125,10 +127,13 @@ struct GameControlsView: View {
     
     private func getButtonText() -> String {
         if isGameCompleted {
-            // 星2つ以上で次のレベル、星1つで再挑戦、星0つでやり直し
-            if earnedStars >= 2 {
+            // 次のレベルが解放されているかチェック
+            let nextLevel = selectedLevel + 1
+            let isNextLevelUnlocked = levelProgressionService.isLevelUnlocked(nextLevel)
+            
+            if earnedStars > 0 && isNextLevelUnlocked {
                 return "次のレベル"
-            } else if earnedStars == 1 {
+            } else if earnedStars > 0 {
                 return "再挑戦"
             } else {
                 return "やり直し"
@@ -140,9 +145,12 @@ struct GameControlsView: View {
     
     private func getButtonColor() -> Color {
         if isGameCompleted {
-            if earnedStars >= 2 {
+            let nextLevel = selectedLevel + 1
+            let isNextLevelUnlocked = levelProgressionService.isLevelUnlocked(nextLevel)
+            
+            if earnedStars > 0 && isNextLevelUnlocked {
                 return Color.green.opacity(0.8) // 次のレベルの場合は緑
-            } else if earnedStars == 1 {
+            } else if earnedStars > 0 {
                 return Color.yellow.opacity(0.8) // 再挑戦の場合は黄色
             } else {
                 return Color.orange.opacity(0.8) // やり直しの場合はオレンジ
@@ -163,6 +171,8 @@ struct GameControlsView: View {
             earnedStars: 0,
             showHint: true,
             hintText: "「あ」から始まる動物を探してみてね！",
+            selectedLevel: 1,
+            levelProgressionService: LevelProgressionService(),
             onBackPressed: { print("Back pressed") },
             onNextPressed: { print("Next pressed") },
             onHintDismissed: { print("Hint dismissed") }
@@ -179,6 +189,8 @@ struct GameControlsView: View {
             earnedStars: 3,
             showHint: false,
             hintText: "",
+            selectedLevel: 1,
+            levelProgressionService: LevelProgressionService(),
             onBackPressed: { print("Back pressed") },
             onNextPressed: { print("Next pressed") },
             onHintDismissed: { print("Hint dismissed") }

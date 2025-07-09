@@ -138,6 +138,18 @@ class SettingsViewModel {
         saveSettings()
     }
     
+    func resetPlayData() {
+        // レベル進行データをリセット
+        let levelProgressionService = LevelProgressionService()
+        levelProgressionService.resetProgress()
+        
+        // スターとキャラクター解放データをリセット
+        let starUnlockService = StarUnlockService()
+        starUnlockService.resetProgress()
+        
+        print("🔄 プレイデータがリセットされました")
+    }
+    
     func saveSettings() {
         userSettings.save()
         

@@ -7,6 +7,7 @@ struct SettingsView: View {
     @State private var viewModel: SettingsViewModel
     
     @State private var showResetAlert = false
+    @State private var showPlayDataResetAlert = false
     @State private var showTutorial = false
     
     let onDismiss: () -> Void
@@ -105,6 +106,20 @@ struct SettingsView: View {
                             .cornerRadius(10)
                         }
                         
+                        Button(action: {
+                            showPlayDataResetAlert = true
+                        }) {
+                            HStack {
+                                Image(systemName: "arrow.counterclockwise.circle.fill")
+                                Text("プレイデータをリセット")
+                                Spacer()
+                            }
+                            .foregroundStyle(.orange)
+                            .padding()
+                            .background(Color.orange.opacity(0.1))
+                            .cornerRadius(10)
+                        }
+                        
                         VStack(spacing: 12) {
                             NavigationLink(destination: LicenseView()) {
                                 HStack {
@@ -170,6 +185,14 @@ struct SettingsView: View {
                 Button("キャンセル", role: .cancel) { }
             } message: {
                 Text("すべての設定をデフォルト値に戻しますか？この操作は取り消せません。")
+            }
+            .alert("プレイデータをリセット", isPresented: $showPlayDataResetAlert) {
+                Button("リセット", role: .destructive) {
+                    viewModel.resetPlayData()
+                }
+                Button("キャンセル", role: .cancel) { }
+            } message: {
+                Text("レベル進行、獲得スター、キャラクター解放、実績データをすべて削除して最初からやり直しますか？この操作は取り消せません。")
             }
             .sheet(isPresented: $showTutorial) {
                 TutorialView(isPresented: $showTutorial)

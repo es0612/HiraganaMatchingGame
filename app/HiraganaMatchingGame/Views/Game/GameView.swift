@@ -472,6 +472,8 @@ struct GameView: View {
             
             if gameViewModel.earnedStars > 0 && isNextLevelUnlocked {
                 return "次のレベル"
+            } else if gameViewModel.earnedStars > 0 {
+                return "再挑戦"
             } else {
                 return "やり直し"
             }
@@ -486,7 +488,9 @@ struct GameView: View {
             let isNextLevelUnlocked = levelProgressionService.isLevelUnlocked(nextLevel)
             
             if gameViewModel.earnedStars > 0 && isNextLevelUnlocked {
-                return Color.pink.opacity(0.8) // 次のレベルに進める場合はピンク
+                return Color.green.opacity(0.8) // 次のレベルに進める場合は緑
+            } else if gameViewModel.earnedStars > 0 {
+                return Color.yellow.opacity(0.8) // 再挑戦の場合は黄色
             } else {
                 return Color.orange.opacity(0.8) // やり直しの場合はオレンジ
             }
