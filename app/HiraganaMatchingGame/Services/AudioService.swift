@@ -292,7 +292,7 @@ class AudioService: ObservableObject {
     
     // MARK: - BGM機能
     
-    func startBackgroundMusic() {
+    func startBackgroundMusic(filename: String = "bgm") {
         guard !isTestMode else { return }
         guard isMusicEnabled else { 
             print("🎵 Music disabled, not starting BGM")
@@ -322,13 +322,28 @@ class AudioService: ObservableObject {
                 }
                 
                 // Try to load custom BGM file first
-                if let bgmPath = Bundle.main.path(forResource: "bgm", ofType: "mp3") {
+                if let bgmPath = Bundle.main.path(forResource: filename, ofType: "mp3") {
                     let bgmURL = URL(fileURLWithPath: bgmPath)
                     self.bgmPlayer = try AVAudioPlayer(contentsOf: bgmURL)
                     print("🎵 SUCCESS: Loaded custom BGM file from: \(bgmPath)")
-                } else if let bgmURL = Bundle.main.url(forResource: "bgm", withExtension: "mp3") {
+                } else if let bgmURL = Bundle.main.url(forResource: filename, withExtension: "mp3") {
                     self.bgmPlayer = try AVAudioPlayer(contentsOf: bgmURL)
                     print("🎵 SUCCESS: Loaded custom BGM via URL: \(bgmURL)")
+                } else if filename != "bgm" {
+                    // Fallback to default bgm.mp3 if specific file not found
+                    if let bgmPath = Bundle.main.path(forResource: "bgm", ofType: "mp3") {
+                        let bgmURL = URL(fileURLWithPath: bgmPath)
+                        self.bgmPlayer = try AVAudioPlayer(contentsOf: bgmURL)
+                        print("🎵 FALLBACK: Loaded default BGM file from: \(bgmPath)")
+                    } else if let bgmURL = Bundle.main.url(forResource: "bgm", withExtension: "mp3") {
+                        self.bgmPlayer = try AVAudioPlayer(contentsOf: bgmURL)
+                        print("🎵 FALLBACK: Loaded default BGM via URL: \(bgmURL)")
+                    } else {
+                        // Fallback to generated BGM
+                        let bgmData = self.generateBackgroundMusic()
+                        self.bgmPlayer = try AVAudioPlayer(data: bgmData)
+                        print("🎵 FALLBACK: Using generated BGM")
+                    }
                 } else {
                     // Fallback to generated BGM
                     let bgmData = self.generateBackgroundMusic()
@@ -360,6 +375,24 @@ class AudioService: ObservableObject {
     
     func isBGMPlaying() -> Bool {
         return bgmPlayer?.isPlaying ?? false
+    }
+    
+    func switchToGameplayBGM() {
+        guard !isTestMode else { return }
+        guard isMusicEnabled else { return }
+        
+        print("🎵 Switching to gameplay BGM")
+        stopBackgroundMusic()
+        startBackgroundMusic(filename: "playingBgm")
+    }
+    
+    func switchToMenuBGM() {
+        guard !isTestMode else { return }
+        guard isMusicEnabled else { return }
+        
+        print("🎵 Switching to menu BGM")
+        stopBackgroundMusic()
+        startBackgroundMusic(filename: "bgm")
     }
     
     private func generateBackgroundMusic() -> Data {

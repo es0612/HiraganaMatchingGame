@@ -6,6 +6,7 @@ struct GameView: View {
     let onGameComplete: (Int, Int) -> Void
     let onBackToLevelSelection: () -> Void
     let onRestart: () -> Void
+    let onNextLevel: () -> Void
     let userSettings: UserSettings?
     
     @State private var gameViewModel: GameViewModel
@@ -23,18 +24,29 @@ struct GameView: View {
          userSettings: UserSettings? = nil,
          onGameComplete: @escaping (Int, Int) -> Void = { _, _ in },
          onBackToLevelSelection: @escaping () -> Void = {},
-         onRestart: @escaping () -> Void = {}) {
+         onRestart: @escaping () -> Void = {},
+         onNextLevel: @escaping () -> Void = {}) {
         self.selectedLevel = selectedLevel
         self.levelProgressionService = levelProgressionService
         self.userSettings = userSettings
         self.onGameComplete = onGameComplete
         self.onBackToLevelSelection = onBackToLevelSelection
         self.onRestart = onRestart
+        self.onNextLevel = onNextLevel
         
         if let settings = userSettings {
-            self._gameViewModel = State(initialValue: GameViewModel(userSettings: settings))
+            let audioService = AudioService(userSettings: settings, startBGM: false)
+            let gameLogicService = GameLogicService(userSettings: settings)
+            self._gameViewModel = State(initialValue: GameViewModel(
+                gameLogicService: gameLogicService,
+                audioService: audioService,
+                starUnlockService: StarUnlockService(),
+                levelProgressionService: levelProgressionService
+            ))
         } else {
-            self._gameViewModel = State(initialValue: GameViewModel())
+            self._gameViewModel = State(initialValue: GameViewModel(
+                levelProgressionService: levelProgressionService
+            ))
         }
     }
     
@@ -129,6 +141,10 @@ struct GameView: View {
                     checkForLevelUnlock()
                 }
             }
+        }
+        .onDisappear {
+            // ゲーム画面を離れる時にメニューBGMに切り替え
+            gameViewModel.audioService.switchToMenuBGM()
         }
     }
     
@@ -421,9 +437,13 @@ struct GameView: View {
             
             Spacer()
             
-            HStack(spacing: 15) {
-                settingsButton
-                nextButton
+            if gameViewModel.isGameCompleted {
+                completedGameButtonsView
+            } else {
+                HStack(spacing: 15) {
+                    settingsButton
+                    nextButton
+                }
             }
         }
     }
@@ -485,6 +505,66 @@ struct GameView: View {
             return Color.blue.opacity(0.8) // 再挑戦の場合は青
         } else {
             return Color.pink.opacity(0.8) // ヒントボタンはピンク
+        }
+    }
+    
+    private var completedGameButtonsView: some View {
+        let hasEarnedTwoOrMoreStars = gameViewModel.earnedStars >= 2
+        let nextLevel = selectedLevel + 1
+        let isNextLevelAvailable = nextLevel <= levelProgressionService.getTotalLevels()
+        
+        return HStack(spacing: 10) {
+            // 戻るボタン
+            Button(action: {
+                onBackToLevelSelection()
+            }) {
+                Text("戻る")
+                    .font(.subheadline)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color.gray.opacity(0.6))
+                    )
+            }
+            
+            // 再挑戦ボタン
+            Button(action: {
+                onRestart()
+            }) {
+                Text("再挑戦")
+                    .font(.subheadline)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color.blue.opacity(0.8))
+                    )
+            }
+            
+            // 次のレベルボタン（2つ星以上かつ次のレベルが存在する場合のみ表示）
+            if hasEarnedTwoOrMoreStars && isNextLevelAvailable {
+                Button(action: {
+                    onNextLevel()
+                }) {
+                    Text("次のレベルへ")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(LinearGradient(
+                                    colors: [Color.green.opacity(0.8), Color.blue.opacity(0.6)],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                ))
+                        )
+                }
+            }
         }
     }
     

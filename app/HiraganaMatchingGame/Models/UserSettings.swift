@@ -89,7 +89,7 @@ final class UserSettings {
         self.largeText = false
         self.reduceAnimations = false
         self.hasSeenTutorial = false
-        self.questionsPerSession = 10
+        self.questionsPerSession = 5
     }
     
     func updateSettings(
@@ -180,7 +180,7 @@ final class UserSettings {
         largeText = false
         reduceAnimations = false
         hasSeenTutorial = false
-        questionsPerSession = 10
+        questionsPerSession = 5
         onSettingChanged?("reset")
     }
     

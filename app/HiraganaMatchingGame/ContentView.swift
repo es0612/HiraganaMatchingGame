@@ -53,6 +53,13 @@ struct ContentView: View {
                 .onChange(of: currentScreen) { _ in
                     if currentScreen == .levelSelection {
                         loadUserSettings()
+                        // レベル選択画面に戻った時はメニューBGMを確保
+                        if let settings = userSettings, settings.musicEnabled {
+                            if audioService == nil {
+                                audioService = AudioService(userSettings: settings, startBGM: false)
+                            }
+                            audioService?.switchToMenuBGM()
+                        }
                     }
                 }
                 
@@ -63,7 +70,9 @@ struct ContentView: View {
                         levelProgressionService: levelSelectionViewModel.levelProgressionService,
                         userSettings: settings,
                         onGameComplete: { completedLevel, stars in
-                            levelSelectionViewModel.completeLevel(completedLevel, stars: stars)
+                            // Level completion is handled by GameViewModel
+                            // Just save the progress and return to level selection
+                            levelSelectionViewModel.saveProgress()
                             currentScreen = .levelSelection
                         },
                         onBackToLevelSelection: {
@@ -72,6 +81,13 @@ struct ContentView: View {
                         onRestart: {
                             // 同じレベルを再開（画面状態は変更せず、ViewをリフレッシュするためにIDを更新）
                             gameViewId = UUID()
+                        },
+                        onNextLevel: {
+                            let nextLevel = level + 1
+                            if nextLevel <= levelSelectionViewModel.levelProgressionService.getTotalLevels() {
+                                currentScreen = .game(level: nextLevel)
+                                gameViewId = UUID()
+                            }
                         }
                     )
                     .id(gameViewId)
@@ -80,7 +96,9 @@ struct ContentView: View {
                         selectedLevel: level,
                         levelProgressionService: levelSelectionViewModel.levelProgressionService,
                         onGameComplete: { completedLevel, stars in
-                            levelSelectionViewModel.completeLevel(completedLevel, stars: stars)
+                            // Level completion is handled by GameViewModel
+                            // Just save the progress and return to level selection
+                            levelSelectionViewModel.saveProgress()
                             currentScreen = .levelSelection
                         },
                         onBackToLevelSelection: {
@@ -89,6 +107,13 @@ struct ContentView: View {
                         onRestart: {
                             // 同じレベルを再開（画面状態は変更せず、ViewをリフレッシュするためにIDを更新）
                             gameViewId = UUID()
+                        },
+                        onNextLevel: {
+                            let nextLevel = level + 1
+                            if nextLevel <= levelSelectionViewModel.levelProgressionService.getTotalLevels() {
+                                currentScreen = .game(level: nextLevel)
+                                gameViewId = UUID()
+                            }
                         }
                     )
                     .id(gameViewId)
@@ -127,9 +152,8 @@ struct ContentView: View {
                         showLaunchScreen = false
                     }
                     
-                    // スプラッシュ画面終了時にBGMを停止
-                    audioService?.stopBackgroundMusic()
-                    audioService = nil
+                    // スプラッシュ画面終了時にメニューBGMに切り替え
+                    audioService?.switchToMenuBGM()
                     
                     // スプラッシュ画面後にチュートリアルチェック
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {

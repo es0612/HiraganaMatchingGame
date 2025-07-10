@@ -71,7 +71,7 @@ class GameViewModel {
         } else if let settings = userSettings {
             totalQuestions = settings.questionsPerSession
         } else {
-            totalQuestions = 10 // デフォルト値
+            totalQuestions = 5 // デフォルト値
         }
         
         // 時間制限の設定（テストモードでは無効）
@@ -85,6 +85,9 @@ class GameViewModel {
         
         if !currentQuestions.isEmpty {
             loadCurrentQuestion()
+            
+            // ゲームプレイ用BGMに切り替え
+            audioService.switchToGameplayBGM()
             
             // 音声を事前読み込み
             Task {
@@ -234,8 +237,9 @@ class GameViewModel {
             time: timeTaken
         )
         
-        // ゲーム完了時の音声停止
+        // ゲーム完了時の音声停止とメニューBGMに切り替え
         audioService.stopAllAudio()
+        audioService.switchToMenuBGM()
     }
     
     func getCurrentProgress() -> Double {
