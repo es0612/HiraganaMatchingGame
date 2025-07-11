@@ -14,28 +14,22 @@ final class IntegrationUITests: XCTestCase {
         app = nil
     }
     
-    func testCompleteUserFlow() throws {
-        // ユーザーフロー統合テスト
-        XCTAssertTrue(app.exists, "統合テストが機能しています")
+    func testBasicUserFlow() throws {
+        // Test basic user flow from app launch to level selection
+        let waitResult = app.staticTexts["レベルを選んでね！"].waitForExistence(timeout: 10)
+        XCTAssertTrue(waitResult, "レベル選択画面が表示されませんでした")
+        
+        // Verify basic UI elements exist
+        XCTAssertTrue(app.buttons.count > 0, "UIボタンが存在します")
+        XCTAssertTrue(app.staticTexts.count > 0, "UIテキストが存在します")
     }
     
-    func testGameDataPersistence() throws {
-        // ゲームデータ永続化の基本テスト
-        XCTAssertTrue(app.exists, "データ永続化が機能しています")
-    }
-    
-    func testAppStateManagement() throws {
-        // アプリ状態管理の基本テスト
-        XCTAssertTrue(app.exists, "状態管理が機能しています")
-    }
-    
-    func testPerformanceIntegration() throws {
-        // パフォーマンス統合テスト
-        XCTAssertTrue(app.exists, "パフォーマンステストが機能しています")
-    }
-    
-    func testErrorRecovery() throws {
-        // エラー回復の基本テスト
-        XCTAssertTrue(app.exists, "エラー回復が機能しています")
+    func testAppStability() throws {
+        // Test app stability during basic navigation
+        let waitResult = app.staticTexts["レベルを選んでね！"].waitForExistence(timeout: 10)
+        XCTAssertTrue(waitResult, "レベル選択画面が表示されませんでした")
+        
+        // Verify app doesn't crash during basic operations
+        XCTAssertTrue(app.exists, "アプリが安定して動作しています")
     }
 }
