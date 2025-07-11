@@ -172,6 +172,16 @@ struct SettingsView: View {
             .navigationTitle("設定")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
+                        onDismiss()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.title2)
+                            .foregroundStyle(.primary)
+                    }
+                }
+                
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("完了") {
                         onDismiss()

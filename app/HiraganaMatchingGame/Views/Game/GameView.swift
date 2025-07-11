@@ -136,6 +136,9 @@ struct GameView: View {
         }
         .onChange(of: gameViewModel.isGameCompleted) { completed in
             if completed {
+                // ゲーム完了をContentViewに通知
+                onGameComplete(selectedLevel, gameViewModel.earnedStars)
+                
                 // ゲーム終了後に新しいレベルが解放されたかチェック
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     checkForLevelUnlock()

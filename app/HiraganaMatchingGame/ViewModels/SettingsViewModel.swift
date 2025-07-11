@@ -22,6 +22,7 @@ class SettingsViewModel {
         get { userSettings.musicEnabled }
         set { 
             userSettings.musicEnabled = newValue
+            userSettings.onSettingChanged?("musicEnabled")
             saveSettings()
         }
     }

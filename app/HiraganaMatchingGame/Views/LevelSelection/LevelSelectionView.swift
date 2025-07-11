@@ -287,6 +287,9 @@ struct LevelSelectionView: View {
                 .padding(.horizontal)
             }
         }
+        .onAppear {
+            levelSelectionViewModel.refreshProgress()
+        }
     }
     
     // MARK: - Computed Properties
