@@ -8,6 +8,12 @@ enum AudioServiceError: Error {
 }
 
 class AudioService: ObservableObject {
+    
+    // MARK: - Singleton
+    static let shared = AudioService()
+    
+    // Private initializer to prevent multiple instances
+    private var isSharedInstance = false
     @Published var isSoundEnabled: Bool = true
     @Published var isMusicEnabled: Bool = true
     @Published var currentVolume: Float = 1.0
@@ -21,25 +27,37 @@ class AudioService: ObservableObject {
     private var effectPlayer: AVAudioPlayer?
     private var bgmPlayer: AVAudioPlayer?
     private var speechSynthesizer: AVSpeechSynthesizer
+    private var currentBGMType: BGMType = .none
     
-    init(isTestMode: Bool = false) {
+    enum BGMType {
+        case none
+        case menu
+        case gameplay
+    }
+    
+    private init(isTestMode: Bool = false) {
         self.isTestMode = isTestMode
         self.audioSession = AVAudioSession.sharedInstance()
         self.speechSynthesizer = AVSpeechSynthesizer()
+        self.isSharedInstance = true
         if !isTestMode {
             setupAudioSession()
         }
     }
     
-    init(userSettings: UserSettings, isTestMode: Bool = false, startBGM: Bool = false) {
-        self.isTestMode = isTestMode
-        self.audioSession = AVAudioSession.sharedInstance()
-        self.speechSynthesizer = AVSpeechSynthesizer()
-        self.userSettings = userSettings
+    // Factory method for creating AudioService with settings
+    static func createWithSettings(_ userSettings: UserSettings, isTestMode: Bool = false, startBGM: Bool = false) -> AudioService {
+        let instance = AudioService.shared
+        instance.userSettings = userSettings
         if !isTestMode {
-            setupAudioSession()
-            syncWithUserSettings(startBGM: startBGM)
+            instance.syncWithUserSettings(startBGM: startBGM)
         }
+        return instance
+    }
+    
+    // Factory method for testing
+    static func createForTesting() -> AudioService {
+        return AudioService(isTestMode: true)
     }
     
     private func setupAudioSession() {
@@ -355,7 +373,16 @@ class AudioService: ObservableObject {
                 self.bgmPlayer?.volume = self.currentVolume * 0.15 // BGMはデフォルトの半分の音量
                 self.bgmPlayer?.prepareToPlay()
                 let started = self.bgmPlayer?.play() ?? false
-                print("🎵 Background music started: \(started)")
+                print("🎵 Background music started: \(started) (Type: \(filename))")
+                
+                // Set current BGM type based on filename
+                if filename == "playingBgm" {
+                    self.currentBGMType = .gameplay
+                } else if filename == "bgm" {
+                    self.currentBGMType = .menu
+                } else {
+                    self.currentBGMType = .menu // Default to menu
+                }
                 
                 if !started {
                     print("⚠️ BGM failed to start")
@@ -370,6 +397,7 @@ class AudioService: ObservableObject {
     func stopBackgroundMusic() {
         bgmPlayer?.stop()
         bgmPlayer = nil
+        currentBGMType = .none
         print("🎵 Background music stopped")
     }
     
@@ -380,18 +408,28 @@ class AudioService: ObservableObject {
     func switchToGameplayBGM() {
         guard !isTestMode else { return }
         guard isMusicEnabled else { return }
+        guard currentBGMType != .gameplay else { 
+            print("🎵 Gameplay BGM already playing")
+            return 
+        }
         
         print("🎵 Switching to gameplay BGM")
         stopBackgroundMusic()
+        currentBGMType = .gameplay
         startBackgroundMusic(filename: "playingBgm")
     }
     
     func switchToMenuBGM() {
         guard !isTestMode else { return }
         guard isMusicEnabled else { return }
+        guard currentBGMType != .menu else { 
+            print("🎵 Menu BGM already playing")
+            return 
+        }
         
         print("🎵 Switching to menu BGM")
         stopBackgroundMusic()
+        currentBGMType = .menu
         startBackgroundMusic(filename: "bgm")
     }
     

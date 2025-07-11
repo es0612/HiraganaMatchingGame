@@ -77,7 +77,7 @@ func mixedAnswerPattern() async {
 func serviceIntegration() async {
     let viewModel = GameViewModel()
     let gameLogic = GameLogicService()
-    let audioService = AudioService()
+    let audioService = AudioService.createForTesting()
     
     viewModel.startNewGame(level: 1)
     

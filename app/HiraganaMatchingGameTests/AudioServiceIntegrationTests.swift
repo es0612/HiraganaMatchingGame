@@ -8,7 +8,7 @@ struct AudioServiceIntegrationTests {
     @Test("設定との連携テスト")
     func settingsIntegration() {
         let settings = TestableUserSettings()
-        let audioService = AudioService(isTestMode: true) // Use test mode
+        let audioService = AudioService.createForTesting()
         
         // 初期設定の確認（AudioServiceは独自のデフォルト値を持つ）
         #expect(audioService.isSoundEnabled == true)
@@ -33,7 +33,7 @@ struct AudioServiceIntegrationTests {
     
     @Test("音声ファイル検出テスト")
     func audioFileDetection() {
-        let audioService = AudioService(isTestMode: true)
+        let audioService = AudioService.createForTesting()
         
         // 基本的なひらがな文字の音声ファイル検出
         let basicCharacters = ["あ", "い", "う", "え", "お"]
@@ -49,7 +49,7 @@ struct AudioServiceIntegrationTests {
     
     @Test("音量設定テスト")
     func volumeSettingsTest() {
-        let audioService = AudioService(isTestMode: true)
+        let audioService = AudioService.createForTesting()
         
         // 音量設定の境界値テスト
         audioService.setVolume(-0.5) // 負の値
@@ -64,7 +64,7 @@ struct AudioServiceIntegrationTests {
     
     @Test("音声速度設定テスト")
     func playbackSpeedTest() {
-        let audioService = AudioService(isTestMode: true)
+        let audioService = AudioService.createForTesting()
         
         // 音声速度設定の境界値テスト
         audioService.setPlaybackSpeed(0.3) // 最小値を下回る値
@@ -79,7 +79,7 @@ struct AudioServiceIntegrationTests {
     
     @Test("音声無効化テスト")
     func soundDisableTest() async {
-        let audioService = AudioService(isTestMode: true)
+        let audioService = AudioService.createForTesting()
         
         // 音声を無効化
         audioService.setSoundEnabled(false)
@@ -95,7 +95,7 @@ struct AudioServiceIntegrationTests {
     
     @Test("複数音声の管理テスト")
     func multipleAudioManagementTest() async {
-        let audioService = AudioService(isTestMode: true)
+        let audioService = AudioService.createForTesting()
         
         let characters = ["あ", "か"]
         
@@ -116,7 +116,7 @@ struct AudioServiceIntegrationTests {
     
     @Test("レベル音声プリロードテスト")
     func levelAudioPreloadTest() async {
-        let audioService = AudioService(isTestMode: true)
+        let audioService = AudioService.createForTesting()
         
         // レベル1の音声をプリロード
         await audioService.preloadAudioForLevel(1)

@@ -4,7 +4,7 @@ import AVFoundation
 
 @Test("AudioService初期化テスト")
 func audioServiceInitialization() {
-    let audioService = AudioService()
+    let audioService = AudioService.createForTesting()
     
     #expect(audioService.isSoundEnabled == true)
     #expect(audioService.currentVolume == 1.0)
@@ -12,7 +12,7 @@ func audioServiceInitialization() {
 
 @Test("音声ファイル存在確認テスト")
 func audioFileExistenceCheck() {
-    let audioService = AudioService()
+    let audioService = AudioService.createForTesting()
     
     let hiraganaCharacters = ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ"]
     
@@ -26,7 +26,7 @@ func audioFileExistenceCheck() {
 
 @Test("音声再生設定テスト")
 func audioPlaybackSettings() {
-    let audioService = AudioService()
+    let audioService = AudioService.createForTesting()
     
     audioService.setSoundEnabled(false)
     #expect(audioService.isSoundEnabled == false)
@@ -37,7 +37,7 @@ func audioPlaybackSettings() {
 
 @Test("音量調整テスト")
 func volumeControl() {
-    let audioService = AudioService()
+    let audioService = AudioService.createForTesting()
     
     audioService.setVolume(0.5)
     #expect(audioService.currentVolume == 0.5)
@@ -51,7 +51,7 @@ func volumeControl() {
 
 @Test("音声再生速度設定テスト")
 func playbackSpeedSetting() {
-    let audioService = AudioService()
+    let audioService = AudioService.createForTesting()
     
     audioService.setPlaybackSpeed(0.8)
     #expect(audioService.playbackSpeed == 0.8)

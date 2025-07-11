@@ -35,7 +35,7 @@ struct GameView: View {
         self.onNextLevel = onNextLevel
         
         if let settings = userSettings {
-            let audioService = AudioService(userSettings: settings, startBGM: false)
+            let audioService = AudioService.createWithSettings(settings, startBGM: false)
             let gameLogicService = GameLogicService(userSettings: settings)
             self._gameViewModel = State(initialValue: GameViewModel(
                 gameLogicService: gameLogicService,

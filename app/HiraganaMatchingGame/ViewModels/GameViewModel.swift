@@ -33,7 +33,7 @@ class GameViewModel {
     private let isTestMode: Bool
     
     init(gameLogicService: GameLogicService = GameLogicService(), 
-         audioService: AudioService = AudioService(),
+         audioService: AudioService = AudioService.createForTesting(),
          starUnlockService: StarUnlockService = StarUnlockService(),
          levelProgressionService: LevelProgressionService = LevelProgressionService(),
          isTestMode: Bool = false) {
@@ -45,7 +45,7 @@ class GameViewModel {
     }
     
     convenience init(userSettings: UserSettings) {
-        let audioService = AudioService(userSettings: userSettings, startBGM: false)
+        let audioService = AudioService.createWithSettings(userSettings, startBGM: false)
         let gameLogicService = GameLogicService(userSettings: userSettings)
         self.init(
             gameLogicService: gameLogicService,

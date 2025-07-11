@@ -87,8 +87,8 @@ class StarUnlockService {
     
     // LevelProgressionServiceから総スター数を取得
     private func getTotalStars() -> Int {
-        let levelProgressionService = LevelProgressionService()
-        return levelProgressionService.getTotalStars()
+        // UserDefaultsから直接読み込んで一貫性を保つ
+        return UserDefaults.standard.integer(forKey: "LevelProgression_TotalStars")
     }
     
     private let characterGroups: [String: [String]] = [

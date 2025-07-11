@@ -55,9 +55,7 @@ struct ContentView: View {
                         loadUserSettings()
                         // レベル選択画面に戻った時はメニューBGMを確保
                         if let settings = userSettings, settings.musicEnabled {
-                            if audioService == nil {
-                                audioService = AudioService(userSettings: settings, startBGM: false)
-                            }
+                            audioService = AudioService.createWithSettings(settings, startBGM: false)
                             audioService?.switchToMenuBGM()
                         }
                     }
@@ -165,7 +163,7 @@ struct ContentView: View {
                     // スプラッシュ画面表示開始時にBGMを開始
                     loadUserSettings()
                     if let settings = userSettings {
-                        audioService = AudioService(userSettings: settings, startBGM: true)
+                        audioService = AudioService.createWithSettings(settings, startBGM: true)
                     }
                 }
             }
