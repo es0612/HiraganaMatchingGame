@@ -130,6 +130,30 @@ class UserSettingsManager: ObservableObject {
         }
     }
     
+    var playtimeLimit: Int {
+        get { settings?.playtimeLimit ?? 0 }
+        set { 
+            settings?.playtimeLimit = newValue
+            saveSettings()
+        }
+    }
+    
+    var questionsPerSession: Int {
+        get { settings?.questionsPerSession ?? 5 }
+        set { 
+            settings?.setQuestionsPerSession(newValue)
+            saveSettings()
+        }
+    }
+    
+    var questionsPerSessionEnum: QuestionsPerSession {
+        get { settings?.questionsPerSessionEnum ?? .few }
+        set { 
+            settings?.setQuestionsPerSessionEnum(newValue)
+            saveSettings()
+        }
+    }
+    
     // MARK: - Tutorial Management
     func markTutorialAsCompleted() {
         hasSeenTutorial = true
