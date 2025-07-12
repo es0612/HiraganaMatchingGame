@@ -19,13 +19,13 @@ func settingsUpdate() {
     settings.updateSettings(
         soundEnabled: false,
         musicEnabled: false,
-        playtimeLimit: 30,
+        playtimeLimit: 120,
         voiceSpeed: 0.8
     )
     
     #expect(settings.soundEnabled == false)
     #expect(settings.musicEnabled == false)
-    #expect(settings.playtimeLimit == 30)
+    #expect(settings.playtimeLimit == 120)
     #expect(settings.voiceSpeed == 0.8)
 }
 

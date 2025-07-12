@@ -192,12 +192,20 @@ class SettingsViewModel {
         return "\(Int(soundVolume * 100))%"
     }
     
-    // 制限時間のフォーマット
+    // 制限時間のフォーマット（秒単位）
     func formattedPlaytimeLimit() -> String {
         if playtimeLimit == 0 {
             return "制限なし"
+        } else if playtimeLimit < 60 {
+            return "\(playtimeLimit)秒"
         } else {
-            return "\(playtimeLimit)分"
+            let minutes = playtimeLimit / 60
+            let seconds = playtimeLimit % 60
+            if seconds == 0 {
+                return "\(minutes)分"
+            } else {
+                return "\(minutes)分\(seconds)秒"
+            }
         }
     }
     
