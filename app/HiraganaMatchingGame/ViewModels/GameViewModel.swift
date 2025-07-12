@@ -76,7 +76,7 @@ class GameViewModel {
         
         // 時間制限の設定（テストモードでは無効）
         if !isTestMode, let settings = userSettings, settings.playtimeLimit > 0 {
-            timeRemaining = settings.playtimeLimit * 60 // 分を秒に変換
+            timeRemaining = settings.playtimeLimit // 既に秒単位
             startGameTimer()
         }
         
