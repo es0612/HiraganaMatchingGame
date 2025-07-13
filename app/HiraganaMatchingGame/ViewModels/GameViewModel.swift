@@ -20,6 +20,7 @@ class GameViewModel {
     var showFeedback: Bool = false
     var lastAnswerCorrect: Bool = false
     var earnedStars: Int = 0
+    var isProcessingAnswer: Bool = false
     
     private let gameLogicService: GameLogicService
     let audioService: AudioService
@@ -98,6 +99,9 @@ class GameViewModel {
     
     func selectAnswer(_ imageName: String) {
         guard currentQuestionIndex < currentQuestions.count else { return }
+        guard !isProcessingAnswer else { return } // Prevent rapid clicking
+        
+        isProcessingAnswer = true
         
         let currentGameQuestion = currentQuestions[currentQuestionIndex]
         let isCorrect = gameLogicService.isCorrectAnswer(hiragana: currentGameQuestion.hiragana, imageName: imageName)
@@ -140,6 +144,7 @@ class GameViewModel {
         
         // ゲーム完了判定
         if currentQuestionIndex >= currentQuestions.count {
+            isProcessingAnswer = false
             completeGame()
         } else {
             // 次の問題に進む
@@ -149,11 +154,13 @@ class GameViewModel {
             if isTestMode {
                 self.showFeedback = false
                 self.loadCurrentQuestion()
+                self.isProcessingAnswer = false
             } else {
                 let delay = userSettings?.autoAdvance == true ? 2.0 : 1.5
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                     self.showFeedback = false
                     self.loadCurrentQuestion()
+                    self.isProcessingAnswer = false
                 }
             }
         }
@@ -170,6 +177,10 @@ class GameViewModel {
         return gameLogicService.calculateStars(correctAnswers: score, totalQuestions: totalQuestions)
     }
     
+    func updateUserSettings(_ newSettings: UserSettings) {
+        userSettings = newSettings
+    }
+    
     func resetGame() {
         currentLevel = 1
         currentQuestion = 1
@@ -181,6 +192,7 @@ class GameViewModel {
         earnedStars = 0
         currentQuestions = []
         currentQuestionIndex = 0
+        isProcessingAnswer = false
     }
     
     func playHiraganaSound() {

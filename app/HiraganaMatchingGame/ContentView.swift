@@ -62,58 +62,31 @@ struct ContentView: View {
                 }
                 
             case .game(let level):
-                if let settings = userSettings {
-                    GameView(
-                        selectedLevel: level,
-                        levelProgressionService: levelSelectionViewModel.levelProgressionService,
-                        userSettings: settings,
-                        onGameComplete: { completedLevel, stars in
-                            // Level completion is handled by GameViewModel
-                            // Just save the progress - navigation handled by GameView
-                            levelSelectionViewModel.saveProgress()
-                        },
-                        onBackToLevelSelection: {
-                            currentScreen = .levelSelection
-                        },
-                        onRestart: {
-                            // 同じレベルを再開（画面状態は変更せず、ViewをリフレッシュするためにIDを更新）
+                GameView(
+                    selectedLevel: level,
+                    levelProgressionService: levelSelectionViewModel.levelProgressionService,
+                    userSettings: userSettings,
+                    onGameComplete: { completedLevel, stars in
+                        // Level completion is handled by GameViewModel
+                        // Just save the progress - navigation handled by GameView
+                        levelSelectionViewModel.saveProgress()
+                    },
+                    onBackToLevelSelection: {
+                        currentScreen = .levelSelection
+                    },
+                    onRestart: {
+                        // 同じレベルを再開（画面状態は変更せず、ViewをリフレッシュするためにIDを更新）
+                        gameViewId = UUID()
+                    },
+                    onNextLevel: {
+                        let nextLevel = level + 1
+                        if nextLevel <= levelSelectionViewModel.levelProgressionService.getTotalLevels() {
+                            currentScreen = .game(level: nextLevel)
                             gameViewId = UUID()
-                        },
-                        onNextLevel: {
-                            let nextLevel = level + 1
-                            if nextLevel <= levelSelectionViewModel.levelProgressionService.getTotalLevels() {
-                                currentScreen = .game(level: nextLevel)
-                                gameViewId = UUID()
-                            }
                         }
-                    )
-                    .id(gameViewId)
-                } else {
-                    GameView(
-                        selectedLevel: level,
-                        levelProgressionService: levelSelectionViewModel.levelProgressionService,
-                        onGameComplete: { completedLevel, stars in
-                            // Level completion is handled by GameViewModel
-                            // Just save the progress - navigation handled by GameView
-                            levelSelectionViewModel.saveProgress()
-                        },
-                        onBackToLevelSelection: {
-                            currentScreen = .levelSelection
-                        },
-                        onRestart: {
-                            // 同じレベルを再開（画面状態は変更せず、ViewをリフレッシュするためにIDを更新）
-                            gameViewId = UUID()
-                        },
-                        onNextLevel: {
-                            let nextLevel = level + 1
-                            if nextLevel <= levelSelectionViewModel.levelProgressionService.getTotalLevels() {
-                                currentScreen = .game(level: nextLevel)
-                                gameViewId = UUID()
-                            }
-                        }
-                    )
-                    .id(gameViewId)
-                }
+                    }
+                )
+                .id(gameViewId)
                 
             case .characterCollection:
                 CharacterCollectionView {

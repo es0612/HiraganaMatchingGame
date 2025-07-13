@@ -7,7 +7,7 @@ struct GameView: View {
     let onBackToLevelSelection: () -> Void
     let onRestart: () -> Void
     let onNextLevel: () -> Void
-    let userSettings: UserSettings?
+    @State var userSettings: UserSettings?
     
     @State private var gameViewModel: GameViewModel
     @State private var showHint = false
@@ -37,12 +37,14 @@ struct GameView: View {
         if let settings = userSettings {
             let audioService = AudioService.createWithSettings(settings, startBGM: false)
             let gameLogicService = GameLogicService(userSettings: settings)
-            self._gameViewModel = State(initialValue: GameViewModel(
+            let viewModel = GameViewModel(
                 gameLogicService: gameLogicService,
                 audioService: audioService,
                 starUnlockService: StarUnlockService(),
                 levelProgressionService: levelProgressionService
-            ))
+            )
+            viewModel.updateUserSettings(settings)
+            self._gameViewModel = State(initialValue: viewModel)
         } else {
             self._gameViewModel = State(initialValue: GameViewModel(
                 levelProgressionService: levelProgressionService
@@ -149,6 +151,16 @@ struct GameView: View {
             // ゲーム画面を離れる時にメニューBGMに切り替え
             gameViewModel.audioService.switchToMenuBGM()
         }
+        .onChange(of: userSettings) { newSettings in
+            if let settings = newSettings {
+                gameViewModel.updateUserSettings(settings)
+            }
+        }
+    }
+    
+    func updateUserSettings(_ newSettings: UserSettings) {
+        userSettings = newSettings
+        gameViewModel.updateUserSettings(newSettings)
     }
     
     private var headerView: some View {
@@ -422,6 +434,8 @@ struct GameView: View {
             }
         }
         .buttonStyle(PlainButtonStyle())
+        .disabled(gameViewModel.showFeedback || gameViewModel.isProcessingAnswer)
+        .opacity((gameViewModel.showFeedback || gameViewModel.isProcessingAnswer) ? 0.5 : 1.0)
         .scaleEffect(1.0)
         .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(Double.random(in: 0...0.3)), value: gameViewModel.currentHiragana)
         .onAppear {
