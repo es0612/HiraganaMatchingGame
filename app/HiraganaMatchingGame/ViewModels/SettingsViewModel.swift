@@ -116,14 +116,10 @@ class SettingsViewModel {
         
         if let settings = existingSettings?.first {
             self.userSettings = settings
-            // UserDefaultsから設定を読み込み
-            self.userSettings.load()
         } else {
             // 新しい設定を作成
             self.userSettings = UserSettings()
             modelContext.insert(self.userSettings)
-            // 初回起動時はデフォルト値をUserDefaultsに保存
-            self.userSettings.save()
             saveSettings()
         }
     }
@@ -167,8 +163,6 @@ class SettingsViewModel {
     }
     
     func saveSettings() {
-        userSettings.save()
-        
         if let context = modelContext {
             do {
                 try context.save()
@@ -178,9 +172,7 @@ class SettingsViewModel {
         }
     }
     
-    func loadSettings() {
-        userSettings.load()
-    }
+    func loadSettings() { }
     
     // 設定のバリデーション
     func validateAllSettings() -> Bool {

@@ -165,7 +165,6 @@ class UserSettingsManager: ObservableObject {
         
         do {
             try context.save()
-            settings?.save() // UserDefaultsへの保存も実行
         } catch {
             print("Error saving UserSettings: \(error)")
         }

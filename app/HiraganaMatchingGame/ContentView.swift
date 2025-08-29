@@ -106,11 +106,15 @@ struct ContentView: View {
                 }
             }
             .opacity(showLaunchScreen ? 0 : 1)
-            .sheet(isPresented: $showTutorial) {
+                .sheet(isPresented: $showTutorial) {
                 TutorialView(isPresented: $showTutorial)
                     .onDisappear {
                         userSettings?.markTutorialAsCompleted()
-                        userSettings?.save()
+                        do {
+                            try modelContext.save()
+                        } catch {
+                            print("Failed to persist tutorial completion: \(error)")
+                        }
                     }
             }
             
@@ -147,7 +151,6 @@ struct ContentView: View {
         
         if let settings = existingSettings?.first {
             userSettings = settings
-            settings.load() // UserDefaultsから最新設定を読み込み
         } else {
             let newSettings = UserSettings()
             modelContext.insert(newSettings)
