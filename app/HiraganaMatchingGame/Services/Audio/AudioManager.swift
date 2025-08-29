@@ -135,7 +135,7 @@ class AudioManager: ObservableObject {
     // Background music
     func startBackgroundMusic() {
         guard isMusicEnabled else { return }
-        bgmGenerator.startBackgroundMusic(volume: currentVolume * 0.3)
+        bgmGenerator.startBackgroundMusic(filename: "bgm", volume: currentVolume * 0.3)
     }
     
     func stopBackgroundMusic() {
@@ -144,6 +144,17 @@ class AudioManager: ObservableObject {
     
     func isBGMPlaying() -> Bool {
         return bgmGenerator.isBGMPlaying()
+    }
+
+    // MARK: - BGM switching
+    func switchToMenuBGM() {
+        guard isMusicEnabled else { return }
+        bgmGenerator.startBackgroundMusic(filename: "bgm", volume: currentVolume * 0.3)
+    }
+
+    func switchToGameplayBGM() {
+        guard isMusicEnabled else { return }
+        bgmGenerator.startBackgroundMusic(filename: "playingBgm", volume: currentVolume * 0.3)
     }
     
     // Control methods

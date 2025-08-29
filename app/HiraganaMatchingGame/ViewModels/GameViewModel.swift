@@ -43,6 +43,10 @@ class GameViewModel {
         self.starUnlockService = starUnlockService
         self.levelProgressionService = levelProgressionService
         self.isTestMode = isTestMode
+        // Provide total stars via LevelProgressionService to StarUnlockService
+        self.starUnlockService.totalStarsProvider = { [weak levelProgressionService] in
+            return levelProgressionService?.getTotalStars() ?? 0
+        }
     }
     
     convenience init(userSettings: UserSettings) {
@@ -117,8 +121,8 @@ class GameViewModel {
             // 正解音の再生完了後に選んだ単語をゆっくり読み上げる（テストモードでは無効）
             if !isTestMode {
                 Task {
-                    // 正解音の再生時間分待機（約0.5秒）
-                    try? await Task.sleep(nanoseconds: 600_000_000) // 0.6秒待機
+                    // 正解音の再生時間分待機
+                    try? await Task.sleep(nanoseconds: AppConstants.Timing.correctSoundDelay)
                     
                     // 選んだ画像に対応する日本語の単語を取得
                     if let japaneseWord = HiraganaDataManager.shared.getJapaneseWord(for: imageName) {
@@ -156,7 +160,7 @@ class GameViewModel {
                 self.loadCurrentQuestion()
                 self.isProcessingAnswer = false
             } else {
-                let delay = userSettings?.autoAdvance == true ? 2.0 : 1.5
+                let delay = userSettings?.autoAdvance == true ? AppConstants.Timing.autoAdvanceDelayEnabled : AppConstants.Timing.autoAdvanceDelayDisabled
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                     self.showFeedback = false
                     self.loadCurrentQuestion()

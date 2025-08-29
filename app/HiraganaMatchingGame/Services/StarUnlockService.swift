@@ -84,10 +84,13 @@ class StarUnlockService {
     
     var onCharacterUnlocked: (([String]) -> Void)?
     var onAchievementUnlocked: ((Achievement) -> Void)?
+    // Optional provider to read total stars from LevelProgressionService
+    var totalStarsProvider: (() -> Int)?
     
     // LevelProgressionServiceから総スター数を取得
     private func getTotalStars() -> Int {
-        // UserDefaultsから直接読み込んで一貫性を保つ
+        if let provider = totalStarsProvider { return provider() }
+        // Fallback to UserDefaults for backward compatibility
         return UserDefaults.standard.integer(forKey: "LevelProgression_TotalStars")
     }
     

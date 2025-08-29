@@ -15,7 +15,7 @@ class BGMGenerator {
         self.isTestMode = isTestMode
     }
     
-    func startBackgroundMusic(volume: Float = 0.3) {
+    func startBackgroundMusic(filename: String = "bgm", volume: Float = 0.3) {
         guard !isTestMode else { return }
         
         // Stop existing BGM
@@ -29,22 +29,22 @@ class BGMGenerator {
             }
             
             // Try to load custom BGM file first
-            if let bgmPath = Bundle.main.path(forResource: "bgm", ofType: "mp3") {
+            if let bgmPath = Bundle.main.path(forResource: filename, ofType: "mp3") {
                 let bgmURL = URL(fileURLWithPath: bgmPath)
                 bgmPlayer = try AVAudioPlayer(contentsOf: bgmURL)
-                print("🎵 SUCCESS: Loaded custom BGM file from: \(bgmPath)")
+                print("🎵 SUCCESS: Loaded BGM (\(filename)) from: \(bgmPath)")
             } else {
-                print("⚠️ bgm.mp3 not found in bundle, checking alternative paths...")
+                print("⚠️ \(filename).mp3 not found in bundle, checking alternative paths...")
                 
                 // Try alternative resource lookup
-                if let bgmURL = Bundle.main.url(forResource: "bgm", withExtension: "mp3") {
+                if let bgmURL = Bundle.main.url(forResource: filename, withExtension: "mp3") {
                     bgmPlayer = try AVAudioPlayer(contentsOf: bgmURL)
-                    print("🎵 SUCCESS: Loaded custom BGM via URL: \(bgmURL)")
+                    print("🎵 SUCCESS: Loaded BGM (\(filename)) via URL: \(bgmURL)")
                 } else {
                     // Fallback to generated BGM
                     let bgmData = generateBackgroundMusic()
                     bgmPlayer = try AVAudioPlayer(data: bgmData)
-                    print("🎵 FALLBACK: Using generated BGM")
+                    print("🎵 FALLBACK: Using generated BGM for \(filename)")
                 }
             }
             
@@ -52,7 +52,7 @@ class BGMGenerator {
             bgmPlayer?.numberOfLoops = -1 // Infinite loop
             bgmPlayer?.prepareToPlay()
             bgmPlayer?.play()
-            print("🎵 Background music started")
+            print("🎵 Background music started (\(filename))")
         } catch {
             print("Failed to start background music: \(error)")
         }

@@ -95,8 +95,8 @@ struct LaunchView: View {
         .onAppear {
             startAnimations()
             
-            // 3秒後に完了
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            // 一定時間後に完了
+            DispatchQueue.main.asyncAfter(deadline: .now() + AppConstants.Timing.launchDuration) {
                 withAnimation(.easeInOut(duration: 0.5)) {
                     onComplete()
                 }

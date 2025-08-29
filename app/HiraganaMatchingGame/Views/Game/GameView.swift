@@ -630,8 +630,8 @@ struct GameView: View {
             showHint = true
         }
         
-        // 5秒後に自動的にヒントを非表示にする
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+        // 一定時間後に自動的にヒントを非表示にする
+        DispatchQueue.main.asyncAfter(deadline: .now() + AppConstants.Timing.hintAutoHide) {
             withAnimation(.easeInOut(duration: 0.3)) {
                 showHint = false
             }
@@ -751,8 +751,8 @@ struct GameView: View {
                     showLevelUnlockNotification = true
                 }
                 
-                // 3秒後に自動で閉じる
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                // 一定時間後に自動で閉じる
+                DispatchQueue.main.asyncAfter(deadline: .now() + AppConstants.Timing.levelUnlockAutoHide) {
                     withAnimation(.easeOut(duration: 0.5)) {
                         showLevelUnlockNotification = false
                     }

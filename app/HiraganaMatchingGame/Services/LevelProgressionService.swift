@@ -23,14 +23,13 @@ class LevelProgressionService {
     private var levelStars: [Int: Int] = [:]
     private var totalStars: Int = 0
     private let totalLevels: Int = 10
+    private var boundProgress: GameProgress?
     
     init() {
-        loadFromUserDefaults()
-        
-        // 初期化時はレベル1のみ解放（初回起動時）
-        if levelStars.isEmpty {
-            levelStars[1] = 0
-        }
+        // SwiftData（GameProgress）を優先する設計に移行。
+        // ここでは初期値のみ設定し、呼び出し側でloadProgress(from:)を推奨。
+        levelStars = [1: 0]
+        totalStars = 0
     }
     
     // テスト用のクリーンな初期化
@@ -66,7 +65,6 @@ class LevelProgressionService {
         if calculatedTotal != totalStars {
             print("⚠️ Star count mismatch: stored=\(totalStars), calculated=\(calculatedTotal)")
             totalStars = calculatedTotal
-            saveToUserDefaults()
         }
         return totalStars
     }
@@ -105,14 +103,15 @@ class LevelProgressionService {
             let nextLevel = level + 1
             if nextLevel <= totalLevels {
                 let wasUnlocked = isLevelUnlocked(nextLevel)
-                saveToUserDefaults()
                 let nowUnlocked = isLevelUnlocked(nextLevel)
-                
                 if !wasUnlocked && nowUnlocked {
                     print("🎉 Level \(nextLevel) unlocked! Total stars: \(totalStars)")
                 }
-            } else {
-                saveToUserDefaults()
+            }
+
+            // SwiftDataへ自動保存（バインドされている場合）
+            if let progress = boundProgress {
+                saveProgress(to: progress)
             }
         } else {
             print("ℹ️ Level \(level) not updated (earned \(clampedStars) ≤ previous \(previousStars))")
@@ -257,65 +256,19 @@ class LevelProgressionService {
     
     // MARK: - データ永続化
     
-    private func saveToUserDefaults() {
-        UserDefaults.standard.set(totalStars, forKey: "LevelProgression_TotalStars")
-        
-        // レベルスター辞書を保存
-        var levelStarsDict: [String: Int] = [:]
-        for (level, stars) in levelStars {
-            levelStarsDict[String(level)] = stars
-        }
-        UserDefaults.standard.set(levelStarsDict, forKey: "LevelProgression_LevelStars")
-        
-        // 保存直後に確認
-        UserDefaults.standard.synchronize()
-        let savedTotal = UserDefaults.standard.integer(forKey: "LevelProgression_TotalStars")
-        let savedDict = UserDefaults.standard.dictionary(forKey: "LevelProgression_LevelStars") as? [String: Int]
-        
-        print("💾 Saved level progress: total_stars=\(totalStars), level_stars=\(levelStars)")
-        print("🔍 Verified saved data: total=\(savedTotal), dict=\(savedDict ?? [:])")
-        
-        // 解放状況をログ出力
-        for level in 1...min(5, totalLevels) {
-            let unlocked = isLevelUnlocked(level)
-            let required = getLevelConfiguration(level).requiredStars
-            let starsForLevel = getStarsForLevel(level)
-            print("📊 Level \(level): stars=\(starsForLevel), unlocked=\(unlocked), required=\(required), total=\(totalStars)")
-        }
-    }
+    private func saveToUserDefaults() { /* deprecated: no-op */ }
     
     // デバッグ用：進行データリセット
     func resetProgress() {
         levelStars = [1: 0] // レベル1のみ解放
         totalStars = 0
-        saveToUserDefaults()
         print("🔄 Level progress reset")
     }
     
-    private func loadFromUserDefaults() {
-        totalStars = UserDefaults.standard.integer(forKey: "LevelProgression_TotalStars")
-        
-        if let levelStarsDict = UserDefaults.standard.dictionary(forKey: "LevelProgression_LevelStars") as? [String: Int] {
-            levelStars.removeAll()
-            for (levelString, stars) in levelStarsDict {
-                if let level = Int(levelString) {
-                    levelStars[level] = stars
-                }
-            }
-        }
-        
-        // データの整合性チェック
-        let calculatedTotal = levelStars.values.reduce(0, +)
-        if calculatedTotal != totalStars {
-            print("⚠️ Loading: star count mismatch detected - stored=\(totalStars), calculated=\(calculatedTotal)")
-            totalStars = calculatedTotal
-            saveToUserDefaults()
-        }
-        
-        print("📖 Loaded level progress: total_stars=\(totalStars), level_stars=\(levelStars)")
-    }
+    private func loadFromUserDefaults() { /* deprecated: no-op */ }
     
     func loadProgress(from gameProgress: GameProgress) {
+        boundProgress = gameProgress
         // GameProgressから基本データを読み込み
         totalStars = gameProgress.totalStars
         
@@ -332,13 +285,13 @@ class LevelProgressionService {
                 print("📖 Loaded individual level stars from GameProgress")
             } catch {
                 print("⚠️ Failed to decode level stars data: \(error)")
-                // フォールバック：UserDefaultsから読み込み
-                loadFromUserDefaults()
+                // フォールバック：初期状態
+                levelStars = [1: 0]
             }
         } else {
-            // levelStarsDataが空の場合はUserDefaultsから読み込み
-            print("📖 No level stars data in GameProgress, loading from UserDefaults")
-            loadFromUserDefaults()
+            // levelStarsDataが空の場合は初期状態
+            print("📖 No level stars data in GameProgress, using defaults")
+            levelStars = [1: 0]
         }
         
         // データの整合性チェック
@@ -354,6 +307,7 @@ class LevelProgressionService {
     }
     
     func saveProgress(to gameProgress: GameProgress) {
+        boundProgress = gameProgress
         gameProgress.totalStars = totalStars
         gameProgress.currentLevel = getRecommendedNextLevel()
         
@@ -374,7 +328,6 @@ class LevelProgressionService {
         let config = getLevelConfiguration(maxLevel)
         gameProgress.unlockedCharacters = config.characters
         
-        // UserDefaultsにも保存（冗長だが確実性のため）
-        saveToUserDefaults()
+        // UserDefaultsへの保存は廃止（SwiftDataを正とする）
     }
 }

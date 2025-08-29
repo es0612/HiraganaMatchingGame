@@ -70,7 +70,7 @@ struct ParticleEffectView: View {
             return
         }
         
-        withAnimation(.easeOut(duration: 2.0)) {
+        withAnimation(.easeOut(duration: AppConstants.Timing.particlesFadeDuration)) {
             animationTrigger.toggle()
             
             for i in particles.indices {
@@ -83,7 +83,7 @@ struct ParticleEffectView: View {
         }
         
         // パーティクルをクリア
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + AppConstants.Timing.particlesFadeDuration) {
             particles.removeAll()
         }
     }
@@ -142,7 +142,7 @@ struct ConfettiView: View {
             return
         }
         
-        withAnimation(.easeOut(duration: 3.0)) {
+        withAnimation(.easeOut(duration: AppConstants.Timing.confettiFadeDuration)) {
             for i in particles.indices {
                 particles[i].y += CGFloat.random(in: 500...800)
                 particles[i].x += CGFloat.random(in: -100...100)
@@ -151,7 +151,7 @@ struct ConfettiView: View {
             }
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + AppConstants.Timing.confettiFadeDuration) {
             particles.removeAll()
         }
     }

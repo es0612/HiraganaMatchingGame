@@ -330,7 +330,15 @@ class AudioService: ObservableObject {
     // MARK: - BGM機能
     
     func startBackgroundMusic(filename: String = "bgm") {
-        if filename == "bgm", let manager = audioManager, isMusicEnabled, !isTestMode { manager.startBackgroundMusic(); return }
+        if let manager = audioManager, isMusicEnabled, !isTestMode {
+            if filename == "bgm" {
+                manager.startBackgroundMusic();
+                return
+            } else if filename == "playingBgm" {
+                manager.switchToGameplayBGM();
+                return
+            }
+        }
         guard !isTestMode else { return }
         guard isMusicEnabled else { 
             print("🎵 Music disabled, not starting BGM")
@@ -428,6 +436,11 @@ class AudioService: ObservableObject {
     }
     
     func switchToGameplayBGM() {
+        if let manager = audioManager, isMusicEnabled, !isTestMode {
+            currentBGMType = .gameplay
+            manager.switchToGameplayBGM()
+            return
+        }
         guard !isTestMode else { return }
         guard isMusicEnabled else { return }
         guard currentBGMType != .gameplay else { 
@@ -442,6 +455,11 @@ class AudioService: ObservableObject {
     }
     
     func switchToMenuBGM() {
+        if let manager = audioManager, isMusicEnabled, !isTestMode {
+            currentBGMType = .menu
+            manager.switchToMenuBGM()
+            return
+        }
         guard !isTestMode else { return }
         guard isMusicEnabled else { return }
         guard currentBGMType != .menu else { 
