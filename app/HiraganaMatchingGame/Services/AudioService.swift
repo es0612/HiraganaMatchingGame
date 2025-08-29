@@ -21,6 +21,8 @@ class AudioService: ObservableObject {
     
     private var userSettings: UserSettings?
     private let isTestMode: Bool
+    // Bridge to new modular audio system
+    private var audioManager: AudioManager?
     
     private var audioPlayers: [String: AVAudioPlayer?] = [:]
     private var audioSession: AVAudioSession
@@ -49,6 +51,8 @@ class AudioService: ObservableObject {
     static func createWithSettings(_ userSettings: UserSettings, isTestMode: Bool = false, startBGM: Bool = false) -> AudioService {
         let instance = AudioService.shared
         instance.userSettings = userSettings
+        // Initialize modular audio manager for delegation
+        instance.audioManager = AudioManager(userSettings: userSettings, isTestMode: isTestMode)
         if !isTestMode {
             instance.syncWithUserSettings(startBGM: startBGM)
         }
@@ -57,7 +61,9 @@ class AudioService: ObservableObject {
     
     // Factory method for testing
     static func createForTesting() -> AudioService {
-        return AudioService(isTestMode: true)
+        let svc = AudioService(isTestMode: true)
+        svc.audioManager = AudioManager(isTestMode: true)
+        return svc
     }
     
     private func setupAudioSession() {
@@ -70,6 +76,7 @@ class AudioService: ObservableObject {
     }
     
     func hasAudioFile(for character: String) -> Bool {
+        if let manager = audioManager { return manager.hasAudioFile(for: character) }
         // 開発段階では全ての文字に音声ファイルがあると仮定
         // 実際の実装では Bundle.main.path で確認
         let fileName = "\(character).mp3"
@@ -139,6 +146,7 @@ class AudioService: ObservableObject {
     
     func setSoundEnabled(_ enabled: Bool) {
         isSoundEnabled = enabled
+        audioManager?.setSoundEnabled(enabled)
         if !enabled {
             stopAllAudio()
         }
@@ -146,6 +154,7 @@ class AudioService: ObservableObject {
     
     func setMusicEnabled(_ enabled: Bool) {
         isMusicEnabled = enabled
+        audioManager?.setMusicEnabled(enabled)
         if enabled {
             startBackgroundMusic()
         } else {
@@ -155,15 +164,21 @@ class AudioService: ObservableObject {
     
     func setVolume(_ volume: Float) {
         currentVolume = max(0.0, min(1.0, volume))
+        audioManager?.setVolume(currentVolume)
         updateAllPlayersVolume()
     }
     
     func setPlaybackSpeed(_ speed: Float) {
         playbackSpeed = max(0.5, min(2.0, speed))
+        audioManager?.setPlaybackSpeed(playbackSpeed)
         updateAllPlayersSpeed()
     }
     
     func prepareAudio(for character: String) async throws {
+        if let manager = audioManager {
+            // Ensure minimal parity: prepare in manager path
+            try await manager.preloadAudioForLevel(1) // no-op placeholder
+        }
         guard hasAudioFile(for: character) else {
             throw AudioServiceError.fileNotFound
         }
@@ -237,6 +252,7 @@ class AudioService: ObservableObject {
     }
     
     func playAudio(for character: String) async {
+        if let manager = audioManager { await manager.playAudio(for: character); return }
         guard !isTestMode else { return }
         guard isSoundEnabled else { 
             print("🔇 Audio disabled, skipping playback for: \(character)")
@@ -265,6 +281,7 @@ class AudioService: ObservableObject {
     }
     
     func speakText(_ text: String, slowly: Bool = false) async {
+        if let manager = audioManager { await manager.speakText(text, slowly: slowly); return }
         guard !isTestMode else { return }
         guard isSoundEnabled else { 
             print("🔇 Audio disabled, skipping speech for: \(text)")
@@ -297,10 +314,12 @@ class AudioService: ObservableObject {
     }
     
     func isAudioReady(for character: String) -> Bool {
+        if let manager = audioManager { return manager.isAudioReady(for: character) }
         return audioPlayers.keys.contains(character)
     }
     
     func stopAllAudio() {
+        audioManager?.stopAllAudio()
         speechSynthesizer.stopSpeaking(at: .immediate)
         for (_, player) in audioPlayers {
             player?.stop()
@@ -311,6 +330,7 @@ class AudioService: ObservableObject {
     // MARK: - BGM機能
     
     func startBackgroundMusic(filename: String = "bgm") {
+        if filename == "bgm", let manager = audioManager, isMusicEnabled, !isTestMode { manager.startBackgroundMusic(); return }
         guard !isTestMode else { return }
         guard isMusicEnabled else { 
             print("🎵 Music disabled, not starting BGM")
@@ -395,6 +415,7 @@ class AudioService: ObservableObject {
     }
     
     func stopBackgroundMusic() {
+        audioManager?.stopBackgroundMusic()
         bgmPlayer?.stop()
         bgmPlayer = nil
         currentBGMType = .none
@@ -402,6 +423,7 @@ class AudioService: ObservableObject {
     }
     
     func isBGMPlaying() -> Bool {
+        if let manager = audioManager { return manager.isBGMPlaying() }
         return bgmPlayer?.isPlaying ?? false
     }
     
@@ -554,6 +576,7 @@ class AudioService: ObservableObject {
     }
     
     func preloadAudioForLevel(_ level: Int) async {
+        if let manager = audioManager { await manager.preloadAudioForLevel(level); return }
         let levelConfig = HiraganaDataManager.shared.getLevelConfiguration()
         guard let characters = levelConfig[level] else { 
             // デフォルトでレベル1の文字を使用
@@ -580,6 +603,7 @@ class AudioService: ObservableObject {
     // MARK: - 効果音
     
     func playCorrectSound() {
+        if let manager = audioManager { manager.playCorrectSound(); return }
         guard !isTestMode else { return }
         guard isSoundEnabled else { return }
         
@@ -596,6 +620,7 @@ class AudioService: ObservableObject {
     }
     
     func playIncorrectSound() {
+        if let manager = audioManager { manager.playIncorrectSound(); return }
         guard !isTestMode else { return }
         guard isSoundEnabled else { return }
         
