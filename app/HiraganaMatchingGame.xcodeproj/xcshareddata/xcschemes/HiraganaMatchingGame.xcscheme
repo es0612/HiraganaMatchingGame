@@ -102,19 +102,19 @@
                scriptText="set -euo pipefail
 
 # Prefer CI-provided build number if available (e.g., Xcode Cloud)
-if [[ -n \"${CI_BUILD_NUMBER:-}\" ]]; then
-  NEW_BUILD_NUMBER=\"${CI_BUILD_NUMBER}\"
+if [[ -n &quot;${CI_BUILD_NUMBER:-}&quot; ]]; then
+  NEW_BUILD_NUMBER=&quot;${CI_BUILD_NUMBER}&quot;
 else
   # Fallback to total git commit count
-  if command -v git >/dev/null 2>&1; then
-    NEW_BUILD_NUMBER=\"$(git rev-list --count HEAD || echo 1)\"
+  if command -v git >/dev/null 2>&amp;1; then
+    NEW_BUILD_NUMBER=&quot;$(git rev-list --count HEAD || echo 1)&quot;
   else
-    NEW_BUILD_NUMBER=\"$CURRENT_PROJECT_VERSION\"
+    NEW_BUILD_NUMBER=&quot;$CURRENT_PROJECT_VERSION&quot;
   fi
 fi
 
-echo \"Setting build number to ${NEW_BUILD_NUMBER}\"
-xcrun agvtool new-version -all \"${NEW_BUILD_NUMBER}\"
+echo &quot;Setting build number to ${NEW_BUILD_NUMBER}&quot;
+xcrun agvtool new-version -all &quot;${NEW_BUILD_NUMBER}&quot;
 " 
                shellToUse="/bin/sh">
                <EnvironmentBuildable>
@@ -131,4 +131,3 @@ xcrun agvtool new-version -all \"${NEW_BUILD_NUMBER}\"
       </PreActions>
    </ArchiveAction>
 </Scheme>
-
