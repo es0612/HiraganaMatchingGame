@@ -1,0 +1,31 @@
+name: Lint (Swift)
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install SwiftLint & SwiftFormat
+        run: |
+          brew update
+          brew install swiftlint swiftformat
+
+      - name: Show tool versions
+        run: |
+          swiftlint version || true
+          swiftformat --version || true
+
+      - name: SwiftFormat (lint only)
+        run: swiftformat --lint .
+        continue-on-error: true
+
+      - name: SwiftLint (warnings only)
+        run: swiftlint
+        continue-on-error: true
+

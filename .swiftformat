@@ -1,0 +1,18 @@
+# SwiftFormat 設定（差分最小・既存スタイル尊重）
+
+indent 4
+maxwidth 140
+linebreaks lf
+trimwhitespace always
+wraparguments preserve
+wrapparameters preserve
+wrapcollections preserve
+commas inline
+semicolons never
+sortimports true
+
+exclude app/HiraganaMatchingGame/Assets.xcassets
+exclude app/HiraganaMatchingGame.xcodeproj
+exclude docs
+exclude .github
+
