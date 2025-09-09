@@ -18,14 +18,23 @@ jobs:
 
       - name: Show tool versions
         run: |
-          swiftlint version || true
-          swiftformat --version || true
+          echo "SwiftLint: $(swiftlint version)"
+          echo "SwiftFormat: $(swiftformat --version)"
 
-      - name: SwiftFormat (lint only)
-        run: swiftformat --lint .
-        continue-on-error: true
+      - name: SwiftFormat Check
+        run: |
+          echo "🔧 Checking code formatting..."
+          swiftformat --lint . --verbose
+          echo "✅ Format check completed"
 
-      - name: SwiftLint (warnings only)
-        run: swiftlint
-        continue-on-error: true
+      - name: SwiftLint Analysis
+        run: |
+          echo "🧹 Running SwiftLint analysis..."
+          swiftlint --strict
+          echo "✅ Lint analysis completed"
+
+      - name: Quality Gate Summary
+        run: |
+          echo "🎯 Code quality checks completed successfully!"
+          echo "All formatting and linting rules have been enforced."
 

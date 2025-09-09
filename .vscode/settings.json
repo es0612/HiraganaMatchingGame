@@ -1,0 +1,79 @@
+{
+  // Editor settings
+  "editor.tabSize": 4,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "editor.trimAutoWhitespace": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "editor.rulers": [140],
+  "editor.wordWrap": "off",
+
+  // Files settings
+  "files.encoding": "utf8",
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+
+  // Swift specific settings
+  "swift.formatting.indentWidth": 4,
+  "swift.formatting.tabWidth": 4,
+  "swift.lsp.serverPath": "/usr/bin/sourcekit-lsp",
+
+  // SwiftFormat integration
+  "[swift]": {
+    "editor.defaultFormatter": "vknabel.vscode-swiftformat",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4
+  },
+
+  // File associations
+  "files.associations": {
+    "*.swift": "swift",
+    "*.swiftui": "swift",
+    ".swiftlint.yml": "yaml",
+    ".swiftformat": "properties"
+  },
+
+  // Search exclude patterns
+  "search.exclude": {
+    "**/build": true,
+    "**/*.xcodeproj": true,
+    "**/*.xcworkspace": true,
+    "**/DerivedData": true,
+    "**/.build": true,
+    "**/Pods": true
+  },
+
+  // File explorer exclude patterns
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/build": true,
+    "**/DerivedData": true,
+    "**/.build": true,
+    "**/Pods": true
+  },
+
+  // Git settings
+  "git.ignoreLimitWarning": true,
+  "git.autofetch": true,
+
+  // Terminal settings
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.cwd": "${workspaceFolder}",
+
+  // Extensions settings
+  "swiftlint.enable": true,
+  "swiftlint.configPath": ".swiftlint.yml",
+  "swiftformat.enable": true,
+  "swiftformat.configPath": ".swiftformat",
+
+  // Xcode integration
+  "swift.diagnostics.collection": "keepFocus",
+  "swift.buildSystem": "xcodebuild"
+}

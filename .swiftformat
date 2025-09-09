@@ -1,18 +1,40 @@
-# SwiftFormat 設定（差分最小・既存スタイル尊重）
+# SwiftFormat 設定 - 現代的 Swift スタイルガイド準拠
+# https://github.com/nicklockwood/SwiftFormat
 
-indent 4
-maxwidth 140
-linebreaks lf
-trimwhitespace always
-wraparguments preserve
-wrapparameters preserve
-wrapcollections preserve
-commas inline
-semicolons never
-sortimports true
+# Swift バージョン
+--swiftversion 6.0
 
-exclude app/HiraganaMatchingGame/Assets.xcassets
-exclude app/HiraganaMatchingGame.xcodeproj
-exclude docs
-exclude .github
+# 基本ルール
+--rules redundantSelf
+--rules redundantParens  
+--rules redundantReturn
+--rules trailingCommas
+--rules indent
+--rules linebreaks
+--rules spaceAroundOperators
+--rules spaceInsideBrackets
+--rules spaceInsideParens
+--rules consecutiveSpaces
+
+# 除外ルール
+--disable blankLinesAtEndOfScope
+--disable wrapMultilineStatementBraces
+
+# 設定オプション
+--indent 4
+--ifdef indent
+--maxwidth 140
+--commas inline
+--trimwhitespace always
+--insertlines true
+--removelines true
+--elseposition same-line
+--guardelse same-line
+
+# 除外パス  
+--exclude app/HiraganaMatchingGame/Assets.xcassets
+--exclude app/HiraganaMatchingGame.xcodeproj
+--exclude app/build
+--exclude docs
+--exclude .github
 

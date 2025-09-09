@@ -1,0 +1,69 @@
+# Pre-commit hooks configuration
+# Install with: brew install pre-commit && pre-commit install
+
+repos:
+  # Swift formatting with SwiftFormat
+  - repo: https://github.com/nicklockwood/SwiftFormat
+    rev: 0.54.6
+    hooks:
+      - id: swiftformat
+        args: [--config, .swiftformat]
+
+  # Swift linting with SwiftLint
+  - repo: https://github.com/realm/SwiftLint
+    rev: 0.57.0
+    hooks:
+      - id: swiftlint
+        args: [--config, .swiftlint.yml]
+
+  # General code quality
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: \.md$
+      - id: end-of-file-fixer
+        exclude: \.md$
+      - id: check-yaml
+        args: [--unsafe]
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: [--maxkb=1000]
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+  # Git hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0  
+    hooks:
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+
+  # Security scanning
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        exclude: \.md$
+
+# Configuration
+exclude: |
+  (?x)^(
+    app/HiraganaMatchingGame/Assets\.xcassets/.*|
+    app/.*\.xcodeproj/.*|
+    app/build/.*|
+    docs/.*|
+    \.github/.*|
+    scripts/.*
+  )$
+
+default_stages: [pre-commit]
+fail_fast: false
+
+# Command aliases for manual execution
+alias:
+  format: swiftformat .
+  lint: swiftlint
+  all: pre-commit run --all-files
