@@ -4,8 +4,8 @@
 //
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 
 enum AudioPlayerError: Error {
     case fileNotFound

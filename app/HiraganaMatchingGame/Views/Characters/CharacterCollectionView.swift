@@ -148,15 +148,15 @@ struct CharacterCollectionView: View {
         return VStack(spacing: 8) {
             ZStack {
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(isUnlocked ? 
-                        (colorScheme == .dark ? Color(.systemGray6) : Color.white) : 
+                    .fill(isUnlocked ?
+                        (colorScheme == .dark ? Color(.systemGray6) : Color.white) :
                         (colorScheme == .dark ? Color(.systemGray5).opacity(0.3) : Color.gray.opacity(0.3))
                     )
                     .frame(width: characterCardSize, height: characterCardSize)
                     .shadow(
-                        color: colorScheme == .dark ? 
-                            .white.opacity(isUnlocked ? 0.1 : 0.05) : 
-                            .black.opacity(isUnlocked ? 0.1 : 0.05), 
+                        color: colorScheme == .dark ?
+                            .white.opacity(isUnlocked ? 0.1 : 0.05) :
+                            .black.opacity(isUnlocked ? 0.1 : 0.05),
                         radius: 3
                     )
                     .overlay(
@@ -196,8 +196,8 @@ struct CharacterCollectionView: View {
             
             Text(getCharacterReading(character))
                 .font(.caption2)
-                .foregroundColor(isUnlocked ? 
-                    (colorScheme == .dark ? .white : .primary) : 
+                .foregroundColor(isUnlocked ?
+                    (colorScheme == .dark ? .white : .primary) :
                     (colorScheme == .dark ? .gray : .secondary)
                 )
                 .lineLimit(1)

@@ -128,7 +128,6 @@ struct LevelSelectionView: View {
         let config = levelProgressionService.getLevelConfiguration(level)
         let isRecommended = levelProgressionService.getRecommendedNextLevel() == level
         
-        
         return Button(action: {
             if isUnlocked {
                 // タップ時のハプティクスフィードバック
@@ -143,15 +142,15 @@ struct LevelSelectionView: View {
             VStack(spacing: 8) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 15)
-                        .fill(isUnlocked ? 
-                            (colorScheme == .dark ? Color(.systemGray6) : Color.white) : 
+                        .fill(isUnlocked ?
+                            (colorScheme == .dark ? Color(.systemGray6) : Color.white) :
                             (colorScheme == .dark ? Color(.systemGray5).opacity(0.3) : Color.gray.opacity(0.3))
                         )
                         .frame(width: levelButtonSize, height: levelButtonSize)
                         .shadow(
-                            color: colorScheme == .dark ? 
-                                Color.white.opacity(isUnlocked ? 0.1 : 0.05) : 
-                                Color.black.opacity(isUnlocked ? 0.1 : 0.05), 
+                            color: colorScheme == .dark ?
+                                Color.white.opacity(isUnlocked ? 0.1 : 0.05) :
+                                Color.black.opacity(isUnlocked ? 0.1 : 0.05),
                             radius: colorScheme == .dark ? 1 : 3
                         )
                         .overlay(
@@ -166,8 +165,8 @@ struct LevelSelectionView: View {
                             .font(.title2)
                             .fontWeight(.bold)
                             .foregroundColor(
-                                isUnlocked ? 
-                                    (colorScheme == .dark ? Color.white : Color.black) : 
+                                isUnlocked ?
+                                    (colorScheme == .dark ? Color.white : Color.black) :
                                     (colorScheme == .dark ? Color.gray : Color.secondary)
                             )
                         
@@ -185,8 +184,8 @@ struct LevelSelectionView: View {
                     .font(.caption)
                     .multilineTextAlignment(.center)
                     .foregroundColor(
-                        isUnlocked ? 
-                            (colorScheme == .dark ? Color.white : Color.primary) : 
+                        isUnlocked ?
+                            (colorScheme == .dark ? Color.white : Color.primary) :
                             (colorScheme == .dark ? Color.gray : Color.secondary)
                     )
                     .frame(height: 30)
@@ -219,7 +218,7 @@ struct LevelSelectionView: View {
                     .rotationEffect(.degrees(index < stars ? 360 : 0))
                     .animation(
                         .spring(response: 0.6, dampingFraction: 0.8)
-                        .delay(Double(index) * 0.1), 
+                        .delay(Double(index) * 0.1),
                         value: stars
                     )
             }
@@ -238,7 +237,6 @@ struct LevelSelectionView: View {
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }
-            
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 15) {

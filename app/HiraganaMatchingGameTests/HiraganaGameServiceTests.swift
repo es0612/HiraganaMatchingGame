@@ -1,5 +1,5 @@
-import Testing
 @testable import HiraganaMatchingGame
+import Testing
 
 @Test("HiraganaGameServiceレベル管理テスト")
 func hiraganaGameServiceLevelManagement() {

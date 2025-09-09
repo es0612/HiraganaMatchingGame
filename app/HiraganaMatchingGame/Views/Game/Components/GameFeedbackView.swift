@@ -220,7 +220,6 @@ struct GameFeedbackView: View {
     }
 }
 
-
 #Preview {
     VStack(spacing: 30) {
         // 正解フィードバック

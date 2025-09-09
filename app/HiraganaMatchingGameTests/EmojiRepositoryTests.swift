@@ -1,5 +1,5 @@
-import Testing
 @testable import HiraganaMatchingGame
+import Testing
 
 @Test("EmojiRepository基本機能テスト")
 func emojiRepositoryBasicFunctionality() {

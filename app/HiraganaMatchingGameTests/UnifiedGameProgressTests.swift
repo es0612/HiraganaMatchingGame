@@ -1,7 +1,7 @@
 import Foundation
-import Testing
-import SwiftData
 @testable import HiraganaMatchingGame
+import SwiftData
+import Testing
 
 @Suite("UnifiedGameProgressモデルテスト")
 struct UnifiedGameProgressTests {

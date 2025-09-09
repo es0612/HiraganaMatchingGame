@@ -1,5 +1,5 @@
-import Testing
 @testable import HiraganaMatchingGame
+import Testing
 
 @Test("HiraganaItemRepository基本データ取得テスト")
 func hiraganaItemRepositoryBasicDataRetrieval() {
@@ -22,7 +22,7 @@ func hiraganaItemRepositoryLevelBasedRetrieval() {
     
     // レベル1: あいうえお
     let level1Items = repository.getHiraganaForLevel(1)
-    #expect(level1Items.count > 0)
+    #expect(!level1Items.isEmpty)
     #expect(level1Items.allSatisfy { ["あ", "い", "う", "え", "お"].contains($0.character) })
     
     // レベル2: あいうえお + かきくけこ

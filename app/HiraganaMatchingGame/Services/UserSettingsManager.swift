@@ -1,6 +1,6 @@
+import Combine
 import Foundation
 import SwiftData
-import Combine
 
 @MainActor
 class UserSettingsManager: ObservableObject {
@@ -44,7 +44,7 @@ class UserSettingsManager: ObservableObject {
     // MARK: - Settings Access
     var soundEnabled: Bool {
         get { settings?.soundEnabled ?? true }
-        set { 
+        set {
             settings?.soundEnabled = newValue
             saveSettings()
         }
@@ -52,7 +52,7 @@ class UserSettingsManager: ObservableObject {
     
     var musicEnabled: Bool {
         get { settings?.musicEnabled ?? true }
-        set { 
+        set {
             settings?.musicEnabled = newValue
             saveSettings()
         }
@@ -60,7 +60,7 @@ class UserSettingsManager: ObservableObject {
     
     var soundVolume: Double {
         get { settings?.soundVolume ?? 0.8 }
-        set { 
+        set {
             settings?.setSoundVolume(newValue)
             saveSettings()
         }
@@ -68,7 +68,7 @@ class UserSettingsManager: ObservableObject {
     
     var gameSpeed: GameSpeed {
         get { settings?.gameSpeed ?? .normal }
-        set { 
+        set {
             settings?.setGameSpeed(newValue)
             saveSettings()
         }
@@ -76,7 +76,7 @@ class UserSettingsManager: ObservableObject {
     
     var difficulty: GameDifficulty {
         get { settings?.difficulty ?? .normal }
-        set { 
+        set {
             settings?.setDifficulty(newValue)
             saveSettings()
         }
@@ -84,7 +84,7 @@ class UserSettingsManager: ObservableObject {
     
     var autoAdvance: Bool {
         get { settings?.autoAdvance ?? false }
-        set { 
+        set {
             settings?.setAutoAdvance(newValue)
             saveSettings()
         }
@@ -92,7 +92,7 @@ class UserSettingsManager: ObservableObject {
     
     var showHints: Bool {
         get { settings?.showHints ?? true }
-        set { 
+        set {
             settings?.setShowHints(newValue)
             saveSettings()
         }
@@ -100,7 +100,7 @@ class UserSettingsManager: ObservableObject {
     
     var largeText: Bool {
         get { settings?.largeText ?? false }
-        set { 
+        set {
             settings?.setLargeText(newValue)
             saveSettings()
         }
@@ -108,7 +108,7 @@ class UserSettingsManager: ObservableObject {
     
     var reduceAnimations: Bool {
         get { settings?.reduceAnimations ?? false }
-        set { 
+        set {
             settings?.setReduceAnimations(newValue)
             saveSettings()
         }
@@ -116,7 +116,7 @@ class UserSettingsManager: ObservableObject {
     
     var hasSeenTutorial: Bool {
         get { settings?.hasSeenTutorial ?? false }
-        set { 
+        set {
             settings?.hasSeenTutorial = newValue
             saveSettings()
         }
@@ -124,7 +124,7 @@ class UserSettingsManager: ObservableObject {
     
     var voiceSpeed: Double {
         get { settings?.voiceSpeed ?? 1.0 }
-        set { 
+        set {
             settings?.setVoiceSpeed(newValue)
             saveSettings()
         }
@@ -132,7 +132,7 @@ class UserSettingsManager: ObservableObject {
     
     var playtimeLimit: Int {
         get { settings?.playtimeLimit ?? 0 }
-        set { 
+        set {
             settings?.playtimeLimit = newValue
             saveSettings()
         }
@@ -140,7 +140,7 @@ class UserSettingsManager: ObservableObject {
     
     var questionsPerSession: Int {
         get { settings?.questionsPerSession ?? 5 }
-        set { 
+        set {
             settings?.setQuestionsPerSession(newValue)
             saveSettings()
         }
@@ -148,7 +148,7 @@ class UserSettingsManager: ObservableObject {
     
     var questionsPerSessionEnum: QuestionsPerSession {
         get { settings?.questionsPerSessionEnum ?? .few }
-        set { 
+        set {
             settings?.setQuestionsPerSessionEnum(newValue)
             saveSettings()
         }

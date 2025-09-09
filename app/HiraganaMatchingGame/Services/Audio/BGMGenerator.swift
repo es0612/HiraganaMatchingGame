@@ -4,8 +4,8 @@
 //
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 
 class BGMGenerator {
     private let isTestMode: Bool
@@ -118,7 +118,7 @@ class BGMGenerator {
                 // ADSR エンベロープ（より柔らかく）
                 let attack = min(1.0, noteTime / 0.1)
                 let decay = noteTime < 0.2 ? 1.0 : 0.85
-                let release = noteTime > (duration - 0.15) ? 
+                let release = noteTime > (duration - 0.15) ?
                     max(0.0, (duration - noteTime) / 0.15) : 1.0
                 let envelope = attack * decay * release
                 

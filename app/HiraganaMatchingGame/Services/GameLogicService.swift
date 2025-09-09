@@ -6,7 +6,6 @@ struct GameQuestion {
     let correctAnswer: HiraganaItem
 }
 
-
 class GameLogicService {
     private let hiraganaDataManager = HiraganaDataManager.shared
     private var userSettings: UserSettings?
@@ -179,7 +178,6 @@ class GameLogicService {
         }
     }
     
-    
     func calculateGameStats(correctAnswers: Int, totalQuestions: Int, timeTaken: TimeInterval) -> GameStats {
         let accuracy = Double(correctAnswers) / Double(totalQuestions)
         let averageTime = timeTaken / Double(totalQuestions)
@@ -190,7 +188,6 @@ class GameLogicService {
             averageResponseTime: averageTime
         )
     }
-    
     
     func validateAnswer(_ answer: String, for hiragana: String) -> Bool {
         return isCorrectAnswer(hiragana: hiragana, imageName: answer)

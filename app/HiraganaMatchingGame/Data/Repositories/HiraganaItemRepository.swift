@@ -293,7 +293,7 @@ final class HiraganaItemRepository {
     /// - Parameter level: The level number (1-10)
     /// - Returns: Array of hiragana items available for that level
     func getHiraganaForLevel(_ level: Int) -> [HiraganaItem] {
-        let rows = ["あいうえお", "かきくけこ", "さしすせそ", "たちつてと", "なにぬねの", 
+        let rows = ["あいうえお", "かきくけこ", "さしすせそ", "たちつてと", "なにぬねの",
                    "はひふへほ", "まみむめも", "やゆよ", "らりるれろ", "わをん"]
         
         guard level > 0 && level <= rows.count else { return [] }

@@ -1,6 +1,6 @@
-import Testing
-import SwiftData
 @testable import HiraganaMatchingGame
+import SwiftData
+import Testing
 
 @Test("GameViewModel初期化テスト")
 func gameViewModelInitialization() {
@@ -72,7 +72,7 @@ func gameCompletionCheck() {
 
 @Test("星獲得計算テスト", arguments: [
     (3, 1),
-    (4, 2), 
+    (4, 2),
     (5, 3),
     (2, 0),
     (0, 0)

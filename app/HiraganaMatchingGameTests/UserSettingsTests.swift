@@ -1,6 +1,6 @@
-import Testing
-import SwiftData
 @testable import HiraganaMatchingGame
+import SwiftData
+import Testing
 
 @Test("UserSettingsモデル初期化テスト")
 func userSettingsInitialization() {

@@ -33,7 +33,7 @@ class GameViewModel {
     private var userSettings: UserSettings?
     private let isTestMode: Bool
     
-    init(gameLogicService: GameLogicService = GameLogicService(), 
+    init(gameLogicService: GameLogicService = GameLogicService(),
          audioService: AudioService = AudioService.createForTesting(),
          starUnlockService: StarUnlockService = StarUnlockService(),
          levelProgressionService: LevelProgressionService = LevelProgressionService(),
@@ -200,9 +200,9 @@ class GameViewModel {
     }
     
     func playHiraganaSound() {
-        guard !currentHiragana.isEmpty else { 
+        guard !currentHiragana.isEmpty else {
             print("⚠️ playHiraganaSound: currentHiragana is empty")
-            return 
+            return
         }
         
         print("🔊 Playing sound for: \(currentHiragana)")
@@ -212,11 +212,9 @@ class GameViewModel {
         }
     }
     
-    
     func getHint() -> String {
         return gameLogicService.generateHint(for: currentHiragana)
     }
-    
     
     private func loadCurrentQuestion() {
         guard currentQuestionIndex < currentQuestions.count else { return }

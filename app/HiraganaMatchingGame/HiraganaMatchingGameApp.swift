@@ -4,9 +4,8 @@
 //  
 //
 
-
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 @main
 struct HiraganaMatchingGameApp: App {
@@ -26,7 +25,7 @@ struct HiraganaMatchingGameApp: App {
         ])
         
         let modelConfiguration = ModelConfiguration(
-            schema: schema, 
+            schema: schema,
             isStoredInMemoryOnly: isTestEnvironment
         )
 

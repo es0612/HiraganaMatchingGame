@@ -13,7 +13,7 @@ final class WordMappingRepository {
         "duck": "あひる",
         "rain": "あめ",
         "red": "あか",
-        "dog": "いぬ", 
+        "dog": "いぬ",
         "strawberry": "いちご",
         "chair": "いす",
         "house": "いえ",

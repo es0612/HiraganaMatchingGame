@@ -52,7 +52,7 @@ final class UserSettings {
     // Computed properties for enum access
     var gameSpeed: GameSpeed {
         get { GameSpeed(rawValue: gameSpeedRaw) ?? .normal }
-        set { 
+        set {
             gameSpeedRaw = newValue.rawValue
             onSettingChanged?("gameSpeed")
         }
@@ -60,7 +60,7 @@ final class UserSettings {
     
     var difficulty: GameDifficulty {
         get { GameDifficulty(rawValue: difficultyRaw) ?? .normal }
-        set { 
+        set {
             difficultyRaw = newValue.rawValue
             onSettingChanged?("difficulty")
         }
@@ -68,7 +68,7 @@ final class UserSettings {
     
     var questionsPerSessionEnum: QuestionsPerSession {
         get { QuestionsPerSession(rawValue: questionsPerSession) ?? .normal }
-        set { 
+        set {
             questionsPerSession = newValue.rawValue
             onSettingChanged?("questionsPerSession")
         }

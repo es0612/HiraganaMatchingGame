@@ -1,5 +1,5 @@
-import Testing
 @testable import HiraganaMatchingGame
+import Testing
 
 @Test("WordMappingRepository基本機能テスト")
 func wordMappingRepositoryBasicFunctionality() {

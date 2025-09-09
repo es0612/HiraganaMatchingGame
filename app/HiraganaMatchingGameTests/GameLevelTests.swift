@@ -1,6 +1,6 @@
-import Testing
-import SwiftData
 @testable import HiraganaMatchingGame
+import SwiftData
+import Testing
 
 @Test("GameLevelモデル初期化テスト")
 func gameLevelInitialization() {

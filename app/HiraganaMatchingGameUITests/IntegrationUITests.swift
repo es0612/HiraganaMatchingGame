@@ -20,8 +20,8 @@ final class IntegrationUITests: XCTestCase {
         XCTAssertTrue(waitResult, "レベル選択画面が表示されませんでした")
         
         // Verify basic UI elements exist
-        XCTAssertTrue(app.buttons.count > 0, "UIボタンが存在します")
-        XCTAssertTrue(app.staticTexts.count > 0, "UIテキストが存在します")
+        XCTAssertTrue(!app.buttons.isEmpty, "UIボタンが存在します")
+        XCTAssertTrue(!app.staticTexts.isEmpty, "UIテキストが存在します")
     }
     
     func testAppStability() throws {

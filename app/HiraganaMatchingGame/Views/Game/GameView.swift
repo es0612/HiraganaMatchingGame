@@ -19,7 +19,7 @@ struct GameView: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @Environment(\.colorScheme) var colorScheme
     
-    init(selectedLevel: Int = 1, 
+    init(selectedLevel: Int = 1,
          levelProgressionService: LevelProgressionService = LevelProgressionService(),
          userSettings: UserSettings? = nil,
          onGameComplete: @escaping (Int, Int) -> Void = { _, _ in },
@@ -152,8 +152,8 @@ struct GameView: View {
                     .padding()
                     .padding(.bottom, max(geometry.safeAreaInsets.bottom, 10))
                     .background(
-                        colorScheme == .dark ? 
-                            Color(.systemBackground).opacity(0.9) : 
+                        colorScheme == .dark ?
+                            Color(.systemBackground).opacity(0.9) :
                             Color.white.opacity(0.9)
                     )
                 }

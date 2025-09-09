@@ -68,11 +68,11 @@ struct AnswerChoicesView: View {
                         )
                         .frame(width: choiceButtonSize, height: choiceButtonSize)
                         .shadow(
-                            color: colorScheme == .dark ? 
-                                Color.white.opacity(0.05) : 
-                                Color.black.opacity(0.1), 
-                            radius: colorScheme == .dark ? 2 : 4, 
-                            x: 0, 
+                            color: colorScheme == .dark ?
+                                Color.white.opacity(0.05) :
+                                Color.black.opacity(0.1),
+                            radius: colorScheme == .dark ? 2 : 4,
+                            x: 0,
                             y: 2
                         )
                     

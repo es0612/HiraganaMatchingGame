@@ -1,6 +1,6 @@
-import Testing
 import AVFoundation
 @testable import HiraganaMatchingGame
+import Testing
 
 @Test("AudioService初期化テスト")
 func audioServiceInitialization() {

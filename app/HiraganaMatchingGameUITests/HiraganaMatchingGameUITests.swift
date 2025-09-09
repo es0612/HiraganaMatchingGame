@@ -22,12 +22,12 @@ final class HiraganaMatchingGameUITests: XCTestCase {
         XCTAssertTrue(waitResult, "レベル選択画面が表示されませんでした")
         
         // 何らかのUI要素が存在することを確認
-        XCTAssertTrue(app.otherElements.count > 0, "UI要素が存在しません")
+        XCTAssertTrue(!app.otherElements.isEmpty, "UI要素が存在しません")
     }
     
     func testNavigationButtons() throws {
         // 基本的なボタンが存在することを確認
-        XCTAssertTrue(app.buttons.count > 0, "ボタンが存在しません")
+        XCTAssertTrue(!app.buttons.isEmpty, "ボタンが存在しません")
     }
     
     // MARK: - ゲーム画面への遷移テスト
@@ -39,7 +39,7 @@ final class HiraganaMatchingGameUITests: XCTestCase {
         
         // レベルボタンが存在することを確認
         let levelButtons = app.buttons.matching(NSPredicate(format: "label CONTAINS '1'"))
-        if levelButtons.count > 0 {
+        if !levelButtons.isEmpty {
             let firstLevelButton = levelButtons.firstMatch
             if firstLevelButton.exists {
                 firstLevelButton.tap()
@@ -73,7 +73,7 @@ final class HiraganaMatchingGameUITests: XCTestCase {
     
     func testSettingsScreenElements() throws {
         // 設定画面の基本要素存在確認
-        XCTAssertTrue(app.otherElements.count >= 0, "設定画面要素が存在します")
+        XCTAssertTrue(app.otherElements.isEmpty, "設定画面要素が存在します")
     }
     
     func testSettingsInteraction() throws {
@@ -87,7 +87,7 @@ final class HiraganaMatchingGameUITests: XCTestCase {
             XCTAssertTrue(app.staticTexts.element.waitForExistence(timeout: 3))
             
             // 設定画面の基本的な存在確認
-            XCTAssertTrue(app.staticTexts.count > 0, "設定画面の要素が存在します")
+            XCTAssertTrue(!app.staticTexts.isEmpty, "設定画面の要素が存在します")
         }
     }
     
@@ -104,7 +104,7 @@ final class HiraganaMatchingGameUITests: XCTestCase {
             XCTAssertTrue(app.staticTexts.element.waitForExistence(timeout: 3))
             
             // コレクション画面の基本的な存在確認
-            XCTAssertTrue(app.staticTexts.count > 0, "コレクション画面の要素が存在します")
+            XCTAssertTrue(!app.staticTexts.isEmpty, "コレクション画面の要素が存在します")
         }
     }
     
@@ -121,7 +121,7 @@ final class HiraganaMatchingGameUITests: XCTestCase {
             XCTAssertTrue(app.staticTexts.element.waitForExistence(timeout: 3))
             
             // 実績画面の基本的な存在確認
-            XCTAssertTrue(app.staticTexts.count > 0, "実績画面の要素が存在します")
+            XCTAssertTrue(!app.staticTexts.isEmpty, "実績画面の要素が存在します")
         }
     }
     
@@ -129,7 +129,7 @@ final class HiraganaMatchingGameUITests: XCTestCase {
     
     func testAccessibilityElements() throws {
         // アクセシビリティ基本テスト
-        XCTAssertTrue(app.buttons.count > 0, "ボタンが存在します")
+        XCTAssertTrue(!app.buttons.isEmpty, "ボタンが存在します")
     }
     
     // MARK: - パフォーマンステスト
@@ -141,14 +141,14 @@ final class HiraganaMatchingGameUITests: XCTestCase {
     
     func testNavigationPerformance() throws {
         // ナビゲーションパフォーマンスの基本テスト
-        XCTAssertTrue(app.otherElements.count >= 0, "ナビゲーションが機能しています")
+        XCTAssertTrue(app.otherElements.isEmpty, "ナビゲーションが機能しています")
     }
     
     // MARK: - エラーハンドリングテスト
     
     func testGameFlowWithoutData() throws {
         // ゲームフローの基本テスト
-        XCTAssertTrue(app.otherElements.count >= 0, "ゲームフローが機能しています")
+        XCTAssertTrue(app.otherElements.isEmpty, "ゲームフローが機能しています")
     }
     
     // MARK: - 回帰テスト

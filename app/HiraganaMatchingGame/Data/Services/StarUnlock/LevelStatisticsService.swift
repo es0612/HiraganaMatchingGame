@@ -94,9 +94,9 @@ final class LevelStatisticsService {
     /// Gets the most recently played level
     /// - Returns: Level number of most recently played level, or nil if no levels played
     func getMostRecentlyPlayedLevel() -> Int? {
-        return levelStatistics.values.max { 
+        return levelStatistics.values.max {
             guard let date1 = $0.lastPlayed, let date2 = $1.lastPlayed else { return false }
-            return date1 < date2 
+            return date1 < date2
         }?.level
     }
     

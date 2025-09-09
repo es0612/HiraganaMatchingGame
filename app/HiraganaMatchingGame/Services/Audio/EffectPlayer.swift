@@ -4,8 +4,8 @@
 //
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 
 enum SoundEffect {
     case correct
@@ -163,7 +163,7 @@ class EffectPlayer: ObservableObject {
         
         for i in 0..<samples {
             let time = Double(i) / sampleRate
-            let envelope = time < 0.1 ? time / 0.1 : 
+            let envelope = time < 0.1 ? time / 0.1 :
                           time > (duration - 0.1) ? (duration - time) / 0.1 : 1.0
             let sample = sin(2.0 * Double.pi * frequency * time) * envelope
             let scaledSample = Int16(sample * 16383.0) // Reduced amplitude
@@ -183,7 +183,7 @@ class EffectPlayer: ObservableObject {
         
         for i in 0..<samples {
             let time = Double(i) / sampleRate
-            let envelope = time < 0.1 ? time / 0.1 : 
+            let envelope = time < 0.1 ? time / 0.1 :
                           time > (duration - 0.1) ? (duration - time) / 0.1 : 1.0
             
             var mixedSample = 0.0

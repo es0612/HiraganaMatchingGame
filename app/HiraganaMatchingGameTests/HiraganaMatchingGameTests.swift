@@ -4,9 +4,8 @@
 //  
 //
 
-
-import Testing
 @testable import HiraganaMatchingGame
+import Testing
 
 struct HiraganaMatchingGameTests {
 

@@ -24,7 +24,8 @@ final class LevelStats {
     var averageStars: Double
     var lastPlayed: Date
     
-    init(level: Int, bestStars: Int = 0, bestAccuracy: Double = 0.0, bestTime: Double = 0.0, totalAttempts: Int = 0, averageStars: Double = 0.0, lastPlayed: Date = Date()) {
+    init(level: Int, bestStars: Int = 0, bestAccuracy: Double = 0.0, bestTime: Double = 0.0,
+         totalAttempts: Int = 0, averageStars: Double = 0.0, lastPlayed: Date = Date()) {
         self.level = level
         self.bestStars = bestStars
         self.bestAccuracy = bestAccuracy

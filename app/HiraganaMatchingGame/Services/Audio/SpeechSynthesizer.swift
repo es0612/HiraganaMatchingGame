@@ -4,8 +4,8 @@
 //
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 
 class SpeechSynthesizer: NSObject, ObservableObject {
     @Published var isEnabled: Bool = true

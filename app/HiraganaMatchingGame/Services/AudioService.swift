@@ -1,5 +1,5 @@
-import Foundation
 import AVFoundation
+import Foundation
 
 enum AudioServiceError: Error {
     case fileNotFound
@@ -60,7 +60,6 @@ class AudioService: ObservableObject {
             .assign(to: &$playbackSpeed)
     }
     
-    
     func hasAudioFile(for character: String) -> Bool {
         return audioManager.hasAudioFile(for: character)
     }
@@ -112,7 +111,6 @@ class AudioService: ObservableObject {
         }
     }
     
-    
     func setSoundEnabled(_ enabled: Bool) {
         isSoundEnabled = enabled
         audioManager.setSoundEnabled(enabled)
@@ -141,9 +139,6 @@ class AudioService: ObservableObject {
         audioManager.setPlaybackSpeed(playbackSpeed)
     }
     
-    
-    
-    
     func playAudio(for character: String) async {
         await audioManager.playAudio(for: character)
     }
@@ -164,9 +159,9 @@ class AudioService: ObservableObject {
     // MARK: - BGM機能
     
     func startBackgroundMusic(filename: String = "bgm") {
-        guard isMusicEnabled, !isTestMode else { 
+        guard isMusicEnabled, !isTestMode else {
             print("🎵 Music disabled or test mode, not starting BGM")
-            return 
+            return
         }
         
         if filename == "bgm" {
@@ -197,13 +192,6 @@ class AudioService: ObservableObject {
         audioManager.switchToMenuBGM()
     }
     
-
-    
-    
-    
-    
-    
-    
     func preloadAudioForLevel(_ level: Int) async {
         await audioManager.preloadAudioForLevel(level)
     }
@@ -217,9 +205,6 @@ class AudioService: ObservableObject {
     func playIncorrectSound() {
         audioManager.playIncorrectSound()
     }
-    
-    
-    
     
     deinit {
         stopAllAudio()

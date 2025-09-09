@@ -103,7 +103,7 @@ final class AchievementService {
         }
         
         // Streak achievement (requires external streak provider)
-        if let currentStreak = currentStreakProvider?(), 
+        if let currentStreak = currentStreakProvider?(),
            currentStreak >= 5 && !unlockedAchievements.contains(.streak) {
             unlockAchievement(.streak)
         }

@@ -180,14 +180,14 @@ struct AchievementsView: View {
         VStack(spacing: 12) {
             ZStack {
                 Circle()
-                    .fill(isUnlocked ? achievement.iconColor : 
+                    .fill(isUnlocked ? achievement.iconColor :
                         (colorScheme == .dark ? Color(.systemGray5).opacity(0.3) : Color.gray.opacity(0.3))
                     )
                     .frame(width: 60, height: 60)
                     .shadow(
-                        color: colorScheme == .dark ? 
-                            .white.opacity(isUnlocked ? 0.1 : 0.05) : 
-                            .black.opacity(isUnlocked ? 0.2 : 0.1), 
+                        color: colorScheme == .dark ?
+                            .white.opacity(isUnlocked ? 0.1 : 0.05) :
+                            .black.opacity(isUnlocked ? 0.2 : 0.1),
                         radius: 3
                     )
                 
@@ -200,8 +200,8 @@ struct AchievementsView: View {
                 Text(achievement.rawValue)
                     .font(.headline)
                     .fontWeight(.bold)
-                    .foregroundColor(isUnlocked ? 
-                        (colorScheme == .dark ? .white : .primary) : 
+                    .foregroundColor(isUnlocked ?
+                        (colorScheme == .dark ? .white : .primary) :
                         (colorScheme == .dark ? .gray : .gray)
                     )
                     .multilineTextAlignment(.center)
@@ -235,19 +235,19 @@ struct AchievementsView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .fill(isUnlocked ? 
-                    (colorScheme == .dark ? Color(.systemGray6) : Color.white) : 
+                .fill(isUnlocked ?
+                    (colorScheme == .dark ? Color(.systemGray6) : Color.white) :
                     (colorScheme == .dark ? Color(.systemGray5).opacity(0.1) : Color.gray.opacity(0.1))
                 )
                 .stroke(
-                    isUnlocked ? achievement.iconColor.opacity(0.5) : 
-                        (colorScheme == .dark ? Color(.systemGray4).opacity(0.3) : Color.gray.opacity(0.3)), 
+                    isUnlocked ? achievement.iconColor.opacity(0.5) :
+                        (colorScheme == .dark ? Color(.systemGray4).opacity(0.3) : Color.gray.opacity(0.3)),
                     lineWidth: 2
                 )
                 .shadow(
-                    color: colorScheme == .dark ? 
-                        .white.opacity(isUnlocked ? 0.1 : 0.05) : 
-                        .black.opacity(isUnlocked ? 0.1 : 0.05), 
+                    color: colorScheme == .dark ?
+                        .white.opacity(isUnlocked ? 0.1 : 0.05) :
+                        .black.opacity(isUnlocked ? 0.1 : 0.05),
                     radius: 3
                 )
         )

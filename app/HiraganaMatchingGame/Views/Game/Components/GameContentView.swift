@@ -17,7 +17,6 @@ struct GameContentView: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @Environment(\.colorScheme) var colorScheme
     
-    
     var body: some View {
         VStack(spacing: 20) {
             instructionText
@@ -71,11 +70,11 @@ struct GameContentView: View {
                     RoundedRectangle(cornerRadius: 20)
                         .fill(colorScheme == .dark ? Color.gray.opacity(0.3) : Color.white)
                         .shadow(
-                            color: colorScheme == .dark ? 
-                                Color.white.opacity(0.1) : 
-                                Color.black.opacity(0.15), 
-                            radius: 8, 
-                            x: 0, 
+                            color: colorScheme == .dark ?
+                                Color.white.opacity(0.1) :
+                                Color.black.opacity(0.15),
+                            radius: 8,
+                            x: 0,
                             y: 4
                         )
                 )
@@ -104,11 +103,11 @@ struct GameContentView: View {
                     RoundedRectangle(cornerRadius: 16)
                         .fill(colorScheme == .dark ? Color.gray.opacity(0.3) : Color.white)
                         .shadow(
-                            color: colorScheme == .dark ? 
-                                Color.white.opacity(0.05) : 
-                                Color.black.opacity(0.1), 
-                            radius: colorScheme == .dark ? 2 : 4, 
-                            x: 0, 
+                            color: colorScheme == .dark ?
+                                Color.white.opacity(0.05) :
+                                Color.black.opacity(0.1),
+                            radius: colorScheme == .dark ? 2 : 4,
+                            x: 0,
                             y: 2
                         )
                     

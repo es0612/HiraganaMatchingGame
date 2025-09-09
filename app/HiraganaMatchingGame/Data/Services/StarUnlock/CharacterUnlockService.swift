@@ -229,8 +229,8 @@ final class CharacterUnlockService {
     /// Gets total stars from external provider or UserDefaults fallback
     /// - Returns: Total star count
     private func getTotalStars() -> Int {
-        if let provider = totalStarsProvider { 
-            return provider() 
+        if let provider = totalStarsProvider {
+            return provider()
         }
         // Fallback to UserDefaults for backward compatibility
         return UserDefaults.standard.integer(forKey: "LevelProgression_TotalStars")

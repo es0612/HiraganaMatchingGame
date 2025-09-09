@@ -1,5 +1,5 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
@@ -88,7 +88,6 @@ struct SettingsView: View {
                         }
                     }
                 }
-                
                 
                 // リセット・その他セクション
                 SettingsSection(title: "その他") {

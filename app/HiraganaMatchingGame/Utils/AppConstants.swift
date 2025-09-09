@@ -12,4 +12,3 @@ struct AppConstants {
         static let confettiFadeDuration: TimeInterval = 3.0
     }
 }
-

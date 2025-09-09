@@ -19,7 +19,7 @@ class TestableUserSettings {
     
     var gameSpeed: GameSpeed {
         get { GameSpeed(rawValue: gameSpeedRaw) ?? .normal }
-        set { 
+        set {
             gameSpeedRaw = newValue.rawValue
             onSettingChanged?("gameSpeed")
         }
@@ -27,7 +27,7 @@ class TestableUserSettings {
     
     var difficulty: GameDifficulty {
         get { GameDifficulty(rawValue: difficultyRaw) ?? .normal }
-        set { 
+        set {
             difficultyRaw = newValue.rawValue
             onSettingChanged?("difficulty")
         }

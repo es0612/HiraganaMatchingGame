@@ -127,7 +127,6 @@ class LevelProgressionService {
         return starsForLevel >= 2 // 星2つ以上でレベル進行可能
     }
     
-    
     func getProgressionStats() -> ProgressionStats {
         let completedLevels = levelStars.values.filter { $0 > 0 }.count
         let averageStars = completedLevels > 0 ? Double(totalStars) / Double(completedLevels) : 0.0
@@ -252,7 +251,6 @@ class LevelProgressionService {
         
         return configurations[level]!
     }
-    
     
     // MARK: - データ永続化
     

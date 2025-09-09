@@ -1,7 +1,7 @@
 import Foundation
-import Testing
-import SwiftData
 @testable import HiraganaMatchingGame
+import SwiftData
+import Testing
 
 @Suite("データマイグレーションシステムテスト")
 struct DataMigrationServiceTests {
@@ -47,7 +47,7 @@ struct DataMigrationServiceTests {
         let keysToClean = [
             "StarUnlock_UnlockedCharacters",
             "StarUnlock_TotalTimePlayed",
-            "StarUnlock_TotalAccuracy", 
+            "StarUnlock_TotalAccuracy",
             "StarUnlock_CompletedLevelsCount",
             "StarUnlock_CurrentStreak",
             "StarUnlock_HighestStreak",
@@ -173,7 +173,7 @@ struct DataMigrationServiceTests {
         cleanupTestUserDefaults()
     }
     
-    @Test("SwiftDataマージ整合性テスト") @MainActor  
+    @Test("SwiftDataマージ整合性テスト") @MainActor
     func swiftDataMergeIntegrity() async throws {
         cleanupTestUserDefaults()
         setupTestUserDefaults()
@@ -250,7 +250,7 @@ struct DataMigrationServiceTests {
         setupTestUserDefaults()
         
         let container = try createTestModelContainer()
-        let context = container.mainContext  
+        let context = container.mainContext
         let service = DataMigrationService()
         
         try await service.performMigration(modelContext: context)
@@ -263,7 +263,7 @@ struct DataMigrationServiceTests {
         let descriptor = FetchDescriptor<UnifiedGameProgress>()
         let progress = try context.fetch(descriptor).first!
         
-        #expect(progress.getUnlockedCharacters().count > 0)
+        #expect(!progress.getUnlockedCharacters().isEmpty)
         #expect(progress.totalStars >= 0)
         #expect(progress.currentLevel >= 1)
         

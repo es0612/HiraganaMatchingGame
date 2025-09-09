@@ -1,5 +1,5 @@
-import Testing
 @testable import HiraganaMatchingGame
+import Testing
 
 @Test("GameLogicService正解判定テスト", arguments: [
     ("ね", "cat", true),

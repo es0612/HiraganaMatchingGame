@@ -1,5 +1,5 @@
-import SwiftUI
 import Foundation
+import SwiftUI
 
 struct LaunchView: View {
     @State private var scale = 0.5

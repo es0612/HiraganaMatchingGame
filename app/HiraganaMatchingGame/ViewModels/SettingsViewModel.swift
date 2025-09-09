@@ -12,7 +12,7 @@ class SettingsViewModel {
     // 設定項目へのバインディング
     var soundEnabled: Bool {
         get { userSettings.soundEnabled }
-        set { 
+        set {
             userSettings.soundEnabled = newValue
             saveSettings()
         }
@@ -20,7 +20,7 @@ class SettingsViewModel {
     
     var musicEnabled: Bool {
         get { userSettings.musicEnabled }
-        set { 
+        set {
             userSettings.musicEnabled = newValue
             userSettings.onSettingChanged?("musicEnabled")
             saveSettings()
@@ -29,7 +29,7 @@ class SettingsViewModel {
     
     var soundVolume: Double {
         get { userSettings.soundVolume }
-        set { 
+        set {
             userSettings.setSoundVolume(newValue)
             saveSettings()
         }
@@ -37,7 +37,7 @@ class SettingsViewModel {
     
     var gameSpeed: GameSpeed {
         get { userSettings.gameSpeed }
-        set { 
+        set {
             userSettings.setGameSpeed(newValue)
             saveSettings()
         }
@@ -45,7 +45,7 @@ class SettingsViewModel {
     
     var difficulty: GameDifficulty {
         get { userSettings.difficulty }
-        set { 
+        set {
             userSettings.setDifficulty(newValue)
             saveSettings()
         }
@@ -53,7 +53,7 @@ class SettingsViewModel {
     
     var autoAdvance: Bool {
         get { userSettings.autoAdvance }
-        set { 
+        set {
             userSettings.setAutoAdvance(newValue)
             saveSettings()
         }
@@ -61,7 +61,7 @@ class SettingsViewModel {
     
     var showHints: Bool {
         get { userSettings.showHints }
-        set { 
+        set {
             userSettings.setShowHints(newValue)
             saveSettings()
         }
@@ -69,7 +69,7 @@ class SettingsViewModel {
     
     var largeText: Bool {
         get { userSettings.largeText }
-        set { 
+        set {
             userSettings.setLargeText(newValue)
             saveSettings()
         }
@@ -77,7 +77,7 @@ class SettingsViewModel {
     
     var reduceAnimations: Bool {
         get { userSettings.reduceAnimations }
-        set { 
+        set {
             userSettings.setReduceAnimations(newValue)
             saveSettings()
         }
@@ -85,7 +85,7 @@ class SettingsViewModel {
     
     var voiceSpeed: Double {
         get { userSettings.voiceSpeed }
-        set { 
+        set {
             userSettings.setVoiceSpeed(newValue)
             saveSettings()
         }
@@ -93,7 +93,7 @@ class SettingsViewModel {
     
     var playtimeLimit: Int {
         get { userSettings.playtimeLimit }
-        set { 
+        set {
             userSettings.playtimeLimit = newValue
             saveSettings()
         }
@@ -101,7 +101,7 @@ class SettingsViewModel {
     
     var questionsPerSession: QuestionsPerSession {
         get { userSettings.questionsPerSessionEnum }
-        set { 
+        set {
             userSettings.setQuestionsPerSessionEnum(newValue)
             saveSettings()
         }

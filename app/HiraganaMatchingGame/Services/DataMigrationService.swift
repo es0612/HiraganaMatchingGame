@@ -177,11 +177,11 @@ class DataMigrationService {
         // Remove old UserDefaults data
         let keysToRemove = [
             "StarUnlock_UnlockedCharacters",
-            "StarUnlock_TotalTimePlayed", 
+            "StarUnlock_TotalTimePlayed",
             "StarUnlock_TotalAccuracy",
             "StarUnlock_CompletedLevelsCount",
             "StarUnlock_CurrentStreak",
-            "StarUnlock_HighestStreak", 
+            "StarUnlock_HighestStreak",
             "StarUnlock_Achievements",
             "StarUnlock_LevelStars",
             "LevelProgression_TotalStars" // Legacy fallback key

@@ -1,4 +1,4 @@
-# SwiftLint 基本設定（段階導入・警告中心）
+# SwiftLint 設定 - フォーマットと品質重視
 
 included:
   - app/HiraganaMatchingGame
@@ -14,49 +14,12 @@ excluded:
 
 reporter: "xcode"
 
-disabled_rules:
-  # 過剰検出を避ける初期無効化
-  - identifier_name
-  - type_name
-  - file_length
-  - function_body_length
-  - cyclomatic_complexity
-  - function_parameter_count
-  - nesting
-
-opt_in_rules:
-  - anyobject_protocol
-  - array_init
-  - attributes
-  - block_based_kvo
-  - closure_end_indentation
-  - closure_spacing
-  - collection_alignment
-  - contains_over_first_not_nil
-  - discouraged_optional_boolean
-  - empty_count
-  - empty_string
-  - explicit_init
-  - fatal_error_message
-  - first_where
-  - force_unwrapping
-  - implicit_return
-  - joined_default_parameter
-  - let_var_whitespace
-  - multiline_arguments
-  - multiline_parameters
-  - redundant_nil_coalescing
-  - sorted_imports
-  - switch_case_on_newline
-  - trailing_newline
-  - trailing_semicolon
-  - unneeded_parentheses_in_closure_argument
-
-whitelist_rules: # まずは最小限で警告を出す
+# 主要ルールのみを有効化
+only_rules:
   - line_length
   - trailing_whitespace
   - vertical_whitespace
-  - todo
+  - trailing_newline
   - empty_count
   - force_cast
   - force_try
