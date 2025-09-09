@@ -195,8 +195,8 @@ struct GameView: View {
             
             gameViewModel.startNewGame(level: selectedLevel)
         }
-        .onChange(of: gameViewModel.isGameCompleted) { completed in
-            if completed {
+        .onChange(of: gameViewModel.isGameCompleted) {
+            if gameViewModel.isGameCompleted {
                 // ゲーム完了をContentViewに通知
                 onGameComplete(selectedLevel, gameViewModel.earnedStars)
                 
@@ -210,8 +210,8 @@ struct GameView: View {
             // ゲーム画面を離れる時にメニューBGMに切り替え
             gameViewModel.audioService.switchToMenuBGM()
         }
-        .onChange(of: userSettings) { newSettings in
-            if let settings = newSettings {
+        .onChange(of: userSettings) {
+            if let settings = userSettings {
                 gameViewModel.updateUserSettings(settings)
             }
         }

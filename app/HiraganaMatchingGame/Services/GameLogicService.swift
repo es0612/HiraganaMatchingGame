@@ -41,7 +41,7 @@ class GameLogicService {
         let choiceCount = getChoiceCountForDifficulty()
         
         // 各文字を最低1回は出題するようにする
-        var allCharacters = charactersForLevel.shuffled()
+        let allCharacters = charactersForLevel.shuffled()
         var remainingQuestions = questionCount
         
         // 各文字を最低1回ずつ出題

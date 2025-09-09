@@ -52,7 +52,7 @@ struct ContentView: View {
                     levelSelectionViewModel.loadProgress(from: modelContext)
                     loadUserSettings()
                 }
-                .onChange(of: currentScreen) { _ in
+                .onChange(of: currentScreen) {
                     if currentScreen == .levelSelection {
                         loadUserSettings()
                         // レベル選択画面に戻った時はメニューBGMを確保

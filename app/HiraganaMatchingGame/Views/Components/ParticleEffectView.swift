@@ -38,7 +38,7 @@ struct ParticleEffectView: View {
             createParticles()
             animateParticles()
         }
-        .onChange(of: isCorrect) { _ in
+        .onChange(of: isCorrect) {
             particles.removeAll()
             createParticles()
             animateParticles()
