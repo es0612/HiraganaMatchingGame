@@ -1,4 +1,0 @@
-Target dependency graph (2 targets)
-Target 'HiraganaMatchingGameTests' in project 'HiraganaMatchingGame'
-➜ Explicit dependency on target 'HiraganaMatchingGame' in project 'HiraganaMatchingGame'
-Target 'HiraganaMatchingGame' in project 'HiraganaMatchingGame' (no dependencies)

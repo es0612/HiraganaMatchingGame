@@ -95,7 +95,7 @@ struct QuickTestRunner {
     }
     
     private static func testAudioServiceTestMode() -> Bool {
-        let audioService = RefactoredAudioService(isTestMode: true)
+        let audioService = AudioService.createForTesting()
         
         // テストモードでオーディオファイルチェック
         let hasAudio = audioService.hasAudioFile(for: "あ")

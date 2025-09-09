@@ -25,6 +25,8 @@ struct ContentView: View {
     @State private var audioService: AudioService?
     @State private var showTutorial = false
     @State private var gameViewId = UUID()
+    @State private var migrationService = DataMigrationService()
+    @State private var isMigrating = false
     
     var body: some View {
         ZStack {
@@ -135,6 +137,8 @@ struct ContentView: View {
                 }
                 .transition(.opacity)
                 .onAppear {
+                    // データマイグレーション実行
+                    performDataMigrationIfNeeded()
                     // スプラッシュ画面表示開始時にBGMを開始
                     loadUserSettings()
                     if let settings = userSettings {
@@ -170,6 +174,37 @@ struct ContentView: View {
         // 初回起動時でチュートリアルを見たことがない場合に表示
         if !settings.hasSeenTutorial {
             showTutorial = true
+        }
+    }
+    
+    private func performDataMigrationIfNeeded() {
+        guard migrationService.isMigrationNeeded() else {
+            return
+        }
+        
+        isMigrating = true
+        
+        Task {
+            do {
+                try await migrationService.performMigration(modelContext: modelContext)
+                
+                // Validate migration
+                let isValid = try migrationService.validateMigration(modelContext: modelContext)
+                if isValid {
+                    // Clean up old data after successful migration
+                    try migrationService.cleanupOldData(modelContext: modelContext)
+                    print("✅ Data migration completed and validated successfully")
+                } else {
+                    print("⚠️ Migration validation failed")
+                }
+            } catch {
+                print("❌ Migration failed: \(error)")
+                // In production, you might want to show an error alert to the user
+            }
+            
+            await MainActor.run {
+                isMigrating = false
+            }
         }
     }
 }

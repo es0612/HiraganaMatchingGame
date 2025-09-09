@@ -38,10 +38,10 @@ class LevelProgressionService {
             levelStars = [1: 0]
             totalStars = 0
         } else {
-            loadFromUserDefaults()
-            if levelStars.isEmpty {
-                levelStars[1] = 0
-            }
+            // Non-test initialization - start with defaults
+            levelStars = [1: 0]
+            totalStars = 0
+            print("🎮 LevelProgressionService initialized with defaults")
         }
     }
     

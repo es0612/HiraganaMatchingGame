@@ -74,6 +74,11 @@ class AudioManager: ObservableObject {
         playbackSpeed = Float(settings.voiceSpeed)
     }
     
+    func updateUserSettings(_ newSettings: UserSettings) {
+        self.userSettings = newSettings
+        syncWithUserSettings()
+    }
+    
     // MARK: - Public Interface
     
     // Audio file playback
