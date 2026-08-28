@@ -62,7 +62,7 @@ func gameCompletionCheck() {
     let viewModel = GameViewModel(isTestMode: true)
     viewModel.startNewGame(level: 1)
     
-    for _ in 1...5 {
+    for _ in 1 ... 5 {
         let correctAnswer = viewModel.getCorrectAnswer()
         viewModel.selectAnswer(correctAnswer.imageName)
     }
@@ -92,7 +92,7 @@ func progressReachesFullOnGameCompletion() {
 
     #expect(viewModel.getCurrentProgress() == 0.0)
 
-    for answered in 1...5 {
+    for answered in 1 ... 5 {
         let correctAnswer = viewModel.getCorrectAnswer()
         viewModel.selectAnswer(correctAnswer.imageName)
         #expect(viewModel.getCurrentProgress() == Double(answered) / 5.0)
