@@ -257,7 +257,7 @@ class GameViewModel {
     }
     
     func getCurrentProgress() -> Double {
-        return Double(currentQuestion - 1) / Double(totalQuestions)
+        return Double(currentQuestionIndex) / Double(totalQuestions)
     }
     
     func getScorePercentage() -> Double {

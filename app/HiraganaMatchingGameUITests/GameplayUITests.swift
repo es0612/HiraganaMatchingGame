@@ -33,7 +33,7 @@ final class GameplayUITests: XCTestCase {
         
         // Try to find and tap level 1 button
         let levelButtons = app.buttons.matching(NSPredicate(format: "label CONTAINS '1'"))
-        if !levelButtons.isEmpty {
+        if levelButtons.count > 0 {
             let firstLevelButton = levelButtons.firstMatch
             if firstLevelButton.exists && firstLevelButton.isEnabled {
                 firstLevelButton.tap()
@@ -74,7 +74,7 @@ final class GameplayUITests: XCTestCase {
         
         measure {
             // Measure basic app responsiveness
-            XCTAssertTrue(!app.buttons.isEmpty, "アプリが応答しています")
+            XCTAssertTrue(app.buttons.count > 0, "アプリが応答しています")
         }
     }
     
