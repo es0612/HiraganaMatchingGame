@@ -337,8 +337,8 @@ struct DataMigrationServiceTests {
         #expect(service.isMigrationNeeded() == true)
     }
 
-    @Test("旧データクリーンアップテスト") @MainActor
-    func oldDataCleanup() async throws {
+    @Test("クリーンアップは複数回呼んでも安全でマイグレーション完了フラグを保持する") @MainActor
+    func cleanupIsIdempotentAndKeepsMigrationFlag() async throws {
         let isolated = try IsolatedDefaults()
         defer { isolated.tearDown() }
         setupLegacyData(in: isolated.defaults)
