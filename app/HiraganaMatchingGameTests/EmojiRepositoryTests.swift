@@ -118,7 +118,4 @@ func emojiRepositorySpecialCharacterEmojis() {
     #expect(repository.getEmojiForImageName("man") == "👨") // をとこ
     #expect(repository.getEmojiForImageName("antenna") == "📡") // あんてな (ん)
     
-    // 歴史的仮名遣い
-    #expect(repository.getEmojiForImageName("wi") == "🔤") // ゐ
-    #expect(repository.getEmojiForImageName("we") == "🔡") // ゑ
 }

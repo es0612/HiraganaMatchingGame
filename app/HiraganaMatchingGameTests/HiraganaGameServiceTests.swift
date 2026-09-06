@@ -10,7 +10,7 @@ func hiraganaGameServiceLevelManagement() {
     #expect(configuration.count == 10)
     #expect(configuration[1]?.count == 5) // あいうえお
     #expect(configuration[2]?.count == 10) // あいうえお + かきくけこ
-    #expect(configuration[10]?.count == 47) // 全ひらがな
+    #expect(configuration[10]?.count == 46) // 現代の全ひらがな（旧仮名ゐ・ゑは除外）
     
     // レベル別文字取得テスト
     let level1Characters = service.getCharactersForLevel(1)

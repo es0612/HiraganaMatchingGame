@@ -70,7 +70,7 @@ final class EmojiRepository {
         "candle": "🕯️", "robot": "🤖", "rocket": "🚀", "rope": "🪢",
         
         // わ行
-        "ring": "💍", "wi": "🔤", "we": "🔡", "cotton": "☁️", "young": "👶", "japanese": "🇯🇵",
+        "ring": "💍", "cotton": "☁️", "young": "👶", "japanese": "🇯🇵",
         "man": "👨", "dance": "💃", "woman": "👩", "antenna": "📡",
         "bread": "🍞", "engine": "⚙️", "pen": "🖊️"
     ]

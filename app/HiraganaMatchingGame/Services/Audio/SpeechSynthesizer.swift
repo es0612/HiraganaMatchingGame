@@ -126,7 +126,7 @@ class SpeechSynthesizer: NSObject, ObservableObject {
             "ま": "ま", "み": "み", "む": "む", "め": "め", "も": "も",
             "や": "や", "ゆ": "ゆ", "よ": "よ",
             "ら": "ら", "り": "り", "る": "る", "れ": "れ", "ろ": "ろ",
-            "わ": "わ", "ゐ": "ゐ", "ゑ": "ゑ", "を": "を", "ん": "ん"
+            "わ": "わ", "を": "を", "ん": "ん"
         ]
         
         return pronunciations[character] ?? character

@@ -42,7 +42,7 @@ final class CharacterUnlockService {
         "ま行": ["ま", "み", "む", "め", "も"],
         "や行": ["や", "ゆ", "よ"],
         "ら行": ["ら", "り", "る", "れ", "ろ"],
-        "わ行": ["わ", "ゐ", "ゑ", "を", "ん"]
+        "わ行": ["わ", "を", "ん"]
     ]
     
     /// Star requirements for unlocking each character group
