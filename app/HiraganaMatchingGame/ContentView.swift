@@ -67,7 +67,7 @@ struct ContentView: View {
                         selectedLevel: level,
                         levelProgressionService: levelSelectionViewModel.levelProgressionService,
                         userSettings: userSettings,
-                        onGameComplete: { completedLevel, stars in
+                        onGameComplete: { _, _ in
                             // Level completion is handled by GameViewModel
                             // Just save the progress - navigation handled by GameView
                             levelSelectionViewModel.saveProgress()

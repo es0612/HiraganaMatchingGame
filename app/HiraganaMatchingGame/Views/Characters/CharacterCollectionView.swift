@@ -9,7 +9,7 @@ struct CharacterCollectionView: View {
     let onBackPressed: () -> Void
     
     var body: some View {
-        GeometryReader { geometry in
+        GeometryReader { _ in
             ZStack {
                 LinearGradient(
                     colors: [

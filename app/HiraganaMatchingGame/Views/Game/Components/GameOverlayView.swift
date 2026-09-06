@@ -131,9 +131,8 @@ struct GameOverlayView: View {
                 isGameCompleted: false,
                 earnedStars: 0,
                 showLevelUnlockNotification: false,
-                unlockedLevel: 0,
-                onNotificationDismissed: {}
-            )
+                unlockedLevel: 0
+            ) {}
             
             // レベル解放通知のプレビュー
             GameOverlayView(
@@ -142,9 +141,8 @@ struct GameOverlayView: View {
                 isGameCompleted: false,
                 earnedStars: 0,
                 showLevelUnlockNotification: true,
-                unlockedLevel: 3,
-                onNotificationDismissed: { print("Notification dismissed") }
-            )
+                unlockedLevel: 3
+            ) { print("Notification dismissed") }
         }
     }
 }

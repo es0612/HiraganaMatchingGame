@@ -137,12 +137,12 @@ final class CharacterUnlockService {
         case .allLevelsCompleted:
             // This would need to be injected from external service
             return false // Placeholder - needs external dependency
-        case .perfectStreak(_):
+        case .perfectStreak:
             // This would need to be injected from external service
             return false // Placeholder - needs external dependency
         case .totalStars(let count):
             return getTotalStars() >= count
-        case .timeRecord(_):
+        case .timeRecord:
             // This would need to be injected from external service
             return false // Placeholder - needs external dependency
         }
