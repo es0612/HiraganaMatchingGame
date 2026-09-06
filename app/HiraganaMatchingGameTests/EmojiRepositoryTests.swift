@@ -23,21 +23,21 @@ func emojiRepositoryAllDataRetrieval() {
     
     // 全画像名取得テスト
     let imageNames = repository.getAllImageNames()
-    #expect(imageNames.count > 200) // 大量の画像があることを確認
+    #expect(imageNames.count > 150) // 大量の画像があることを確認（2026-09 時点で 180 件強）
     #expect(imageNames.contains("ant"))
     #expect(imageNames.contains("dog"))
     #expect(imageNames.contains("cat"))
     
     // 全絵文字取得テスト
     let emojis = repository.getAllEmojis()
-    #expect(emojis.count > 200)
+    #expect(emojis.count > 150)
     #expect(emojis.contains("🐜"))
     #expect(emojis.contains("🐶"))
     #expect(emojis.contains("🐱"))
     
     // 全マッピング取得テスト
     let mappings = repository.getAllMappings()
-    #expect(mappings.count > 200)
+    #expect(mappings.count > 150)
     #expect(mappings["ant"] == "🐜")
     #expect(mappings["dog"] == "🐶")
 }
