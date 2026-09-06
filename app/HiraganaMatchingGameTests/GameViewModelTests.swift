@@ -31,7 +31,7 @@ func startNewGame() {
 
 @Test("正解選択テスト")
 func selectCorrectAnswer() {
-    let viewModel = GameViewModel()
+    let viewModel = GameViewModel(isTestMode: true) // 実 Audio / asyncAfter をテスト後に残さない
     viewModel.startNewGame(level: 1)
     
     let correctAnswer = viewModel.getCorrectAnswer()
@@ -44,7 +44,7 @@ func selectCorrectAnswer() {
 
 @Test("不正解選択テスト")
 func selectIncorrectAnswer() {
-    let viewModel = GameViewModel()
+    let viewModel = GameViewModel(isTestMode: true) // 実 Audio / asyncAfter をテスト後に残さない
     viewModel.startNewGame(level: 1)
     
     let correctAnswer = viewModel.getCorrectAnswer()
@@ -78,7 +78,7 @@ func gameCompletionCheck() {
     (0, 0)
 ])
 func starCalculation(score: Int, expectedStars: Int) {
-    let viewModel = GameViewModel()
+    let viewModel = GameViewModel(isTestMode: true) // 実 Audio / asyncAfter をテスト後に残さない
     
     let stars = viewModel.calculateStars(for: score)
     
@@ -104,7 +104,7 @@ func progressReachesFullOnGameCompletion() {
 
 @Test("次の問題への進行テスト")
 func nextQuestionProgression() {
-    let viewModel = GameViewModel()
+    let viewModel = GameViewModel(isTestMode: true) // 実 Audio / asyncAfter をテスト後に残さない
     viewModel.startNewGame(level: 1)
     
     let initialQuestion = viewModel.currentQuestion
