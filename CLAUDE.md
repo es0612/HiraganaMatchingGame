@@ -8,6 +8,8 @@
 - zsh では `PIPESTATUS` は使えない。パイプせずログファイルへ出力して `$?` を読む。
 - `GameViewModel` をテストで生成するときは `GameViewModel(isTestMode: true)`（実 Audio と asyncAfter を残さない）。
 - `DataMigrationService` は `init(userDefaults:)` で UserDefaults を注入できる。テストは `UserDefaults(suiteName: UUID)` を渡し、`UserDefaults.standard` を触らない。
+- アップグレード経路（旧 `StarUnlock_*` キーが起動後も残るか）は `scripts/verify-upgrade-path.sh <UDID>` で確認できる（#18）。
+- シミュレータに UserDefaults を仕込むときは **アプリコンテナ内の plist** に直接書く。`xcrun simctl spawn <UDID> defaults write <bundle id>` はシミュレータ全体の Preferences に書かれ、アプリからは見えない。
 
 ## Lint
 - `.swiftformat` / `.swiftlint.yml` はリポジトリルート。**swiftlint はルートから実行**（`app/` から実行すると既定ルールになる）。
