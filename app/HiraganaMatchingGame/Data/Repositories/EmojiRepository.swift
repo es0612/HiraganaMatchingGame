@@ -79,31 +79,31 @@ final class EmojiRepository {
     /// - Parameter imageName: The image name to look up
     /// - Returns: The corresponding emoji, or "❓" if not found
     func getEmojiForImageName(_ imageName: String) -> String {
-        return emojiMap[imageName] ?? "❓"
+        emojiMap[imageName] ?? "❓"
     }
     
     /// Gets all available image names that have emoji mappings
     /// - Returns: Array of all image names with emoji representations
     func getAllImageNames() -> [String] {
-        return Array(emojiMap.keys)
+        Array(emojiMap.keys)
     }
     
     /// Gets all available emojis
     /// - Returns: Array of all emoji representations
     func getAllEmojis() -> [String] {
-        return Array(emojiMap.values)
+        Array(emojiMap.values)
     }
     
     /// Gets all emoji mappings
     /// - Returns: Dictionary containing all image name to emoji mappings
     func getAllMappings() -> [String: String] {
-        return emojiMap
+        emojiMap
     }
     
     /// Checks if an emoji mapping exists for the given image name
     /// - Parameter imageName: The image name to check
     /// - Returns: True if mapping exists, false otherwise
     func hasEmojiMapping(for imageName: String) -> Bool {
-        return emojiMap[imageName] != nil
+        emojiMap[imageName] != nil
     }
 }

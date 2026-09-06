@@ -80,7 +80,7 @@ struct GameHeaderView: View {
     
     private var starsView: some View {
         HStack(spacing: 4) {
-            ForEach(0..<3, id: \.self) { index in
+            ForEach(0 ..< 3, id: \.self) { index in
                 Image(systemName: "star.fill")
                     .foregroundColor(index < currentPotentialStars ? .yellow : .gray.opacity(0.3))
                     .font(.title2)

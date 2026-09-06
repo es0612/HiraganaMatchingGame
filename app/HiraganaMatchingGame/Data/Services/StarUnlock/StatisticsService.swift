@@ -62,31 +62,31 @@ final class StatisticsService {
     /// Gets current streak count
     /// - Returns: Current consecutive successful levels
     func getCurrentStreak() -> Int {
-        return currentStreak
+        currentStreak
     }
     
     /// Gets highest streak achieved
     /// - Returns: Highest consecutive successful levels achieved
     func getHighestStreak() -> Int {
-        return highestStreak
+        highestStreak
     }
     
     /// Gets total time played across all levels
     /// - Returns: Total time in seconds
     func getTotalTimePlayed() -> Double {
-        return totalTimePlayed
+        totalTimePlayed
     }
     
     /// Gets average accuracy across all completions
     /// - Returns: Average accuracy (0.0 to 1.0)
     func getAverageAccuracy() -> Double {
-        return totalAccuracy
+        totalAccuracy
     }
     
     /// Gets total number of level completions (including retries)
     /// - Returns: Total completion count
     func getTotalCompletions() -> Int {
-        return totalCompletions
+        totalCompletions
     }
     
     // MARK: - Comprehensive Statistics
@@ -122,9 +122,9 @@ final class StatisticsService {
         switch accuracy {
         case 1.0:
             baseStars = 3
-        case 0.8...0.99:
+        case 0.8 ... 0.99:
             baseStars = 2
-        case 0.6...0.79:
+        case 0.6 ... 0.79:
             baseStars = 1
         default:
             baseStars = 0

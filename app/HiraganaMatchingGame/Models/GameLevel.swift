@@ -11,8 +11,8 @@ final class GameLevel {
     init(levelNumber: Int, hiraganaSet: [String]) {
         self.levelNumber = levelNumber
         self.hiraganaSet = hiraganaSet
-        self.isCompleted = false
-        self.bestScore = 0
+        isCompleted = false
+        bestScore = 0
     }
     
     func completeLevel(withScore score: Int) {

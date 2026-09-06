@@ -47,16 +47,16 @@ final class CharacterUnlockService {
     
     /// Star requirements for unlocking each character group
     private let groupUnlockRequirements: [String: Int] = [
-        "あ行": 0,   // Always available
-        "か行": 2,   // 2 stars required
-        "さ行": 4,   // 4 stars required
-        "た行": 6,   // 6 stars required
-        "な行": 8,   // 8 stars required
-        "は行": 10,  // 10 stars required
-        "ま行": 12,  // 12 stars required
-        "や行": 14,  // 14 stars required
-        "ら行": 16,  // 16 stars required
-        "わ行": 18   // 18 stars required
+        "あ行": 0, // Always available
+        "か行": 2, // 2 stars required
+        "さ行": 4, // 4 stars required
+        "た行": 6, // 6 stars required
+        "な行": 8, // 8 stars required
+        "は行": 10, // 10 stars required
+        "ま行": 12, // 12 stars required
+        "や行": 14, // 14 stars required
+        "ら行": 16, // 16 stars required
+        "わ行": 18 // 18 stars required
     ]
     
     private init() {
@@ -68,26 +68,26 @@ final class CharacterUnlockService {
     /// Gets all currently unlocked characters
     /// - Returns: Sorted array of unlocked characters
     func getUnlockedCharacters() -> [String] {
-        return Array(unlockedCharacters).sorted()
+        Array(unlockedCharacters).sorted()
     }
     
     /// Checks if a specific character is unlocked
     /// - Parameter character: The hiragana character to check
     /// - Returns: True if the character is unlocked
     func isCharacterUnlocked(_ character: String) -> Bool {
-        return unlockedCharacters.contains(character)
+        unlockedCharacters.contains(character)
     }
     
     /// Gets all character groups
     /// - Returns: Dictionary of group names to character arrays
     func getCharacterGroups() -> [String: [String]] {
-        return characterGroups
+        characterGroups
     }
     
     /// Gets unlock requirements for each group
     /// - Returns: Dictionary of group names to required star counts
     func getGroupUnlockRequirements() -> [String: Int] {
-        return groupUnlockRequirements
+        groupUnlockRequirements
     }
     
     // MARK: - Unlock Logic

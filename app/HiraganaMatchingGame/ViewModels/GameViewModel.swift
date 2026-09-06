@@ -45,7 +45,7 @@ class GameViewModel {
         self.isTestMode = isTestMode
         // Provide total stars via LevelProgressionService to StarUnlockService
         self.starUnlockService.totalStarsProvider = { [weak levelProgressionService] in
-            return levelProgressionService?.getTotalStars() ?? 0
+            levelProgressionService?.getTotalStars() ?? 0
         }
     }
     

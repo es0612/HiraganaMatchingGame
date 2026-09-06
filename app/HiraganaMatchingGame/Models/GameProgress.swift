@@ -12,9 +12,9 @@ final class GameProgress {
     init(currentLevel: Int = 1, totalStars: Int = 0) {
         self.currentLevel = currentLevel
         self.totalStars = totalStars
-        self.unlockedCharacters = []
-        self.lastPlayedDate = Date()
-        self.levelStarsData = Data() // 空のデータで初期化
+        unlockedCharacters = []
+        lastPlayedDate = Date()
+        levelStarsData = Data() // 空のデータで初期化
     }
     
     func addStars(_ stars: Int) {

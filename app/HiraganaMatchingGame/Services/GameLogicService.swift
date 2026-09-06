@@ -23,11 +23,11 @@ class GameLogicService {
     }
     
     func generateChoices(for hiragana: String, count: Int) -> [HiraganaItem] {
-        return hiraganaDataManager.getRandomChoices(for: hiragana, count: count)
+        hiraganaDataManager.getRandomChoices(for: hiragana, count: count)
     }
     
     func generateChoicesWithCorrectAnswer(_ correctAnswer: HiraganaItem, count: Int) -> [HiraganaItem] {
-        return hiraganaDataManager.getRandomChoicesWithCorrectAnswer(correctAnswer, count: count)
+        hiraganaDataManager.getRandomChoicesWithCorrectAnswer(correctAnswer, count: count)
     }
     
     func generateQuestionsForLevel(_ level: Int, questionCount: Int) -> [GameQuestion] {
@@ -91,11 +91,11 @@ class GameLogicService {
         var shuffled = questions.shuffled()
         let maxAttempts = 10
         
-        for _ in 0..<maxAttempts {
+        for _ in 0 ..< maxAttempts {
             var hasConsecutiveDuplicates = false
             
             // 連続する同じ答えがあるかチェック
-            for i in 0..<(shuffled.count - 1) {
+            for i in 0 ..< (shuffled.count - 1) {
                 if shuffled[i].correctAnswer.imageName == shuffled[i + 1].correctAnswer.imageName {
                     hasConsecutiveDuplicates = true
                     break
@@ -118,11 +118,11 @@ class GameLogicService {
         
         switch settings.difficulty {
         case .easy:
-            return 2  // 2択
+            return 2 // 2択
         case .normal:
-            return 3  // 3択
+            return 3 // 3択
         case .hard:
-            return 4  // 4択
+            return 4 // 4択
         }
     }
     
@@ -144,9 +144,9 @@ class GameLogicService {
             switch accuracy {
             case 1.0:
                 return 3
-            case 0.9...0.99:
+            case 0.9 ... 0.99:
                 return 2
-            case 0.8...0.89:
+            case 0.8 ... 0.89:
                 return 1
             default:
                 return 0
@@ -156,9 +156,9 @@ class GameLogicService {
             switch accuracy {
             case 1.0:
                 return 3
-            case 0.8...0.99:
+            case 0.8 ... 0.99:
                 return 2
-            case 0.6...0.79:
+            case 0.6 ... 0.79:
                 return 1
             default:
                 return 0
@@ -168,9 +168,9 @@ class GameLogicService {
             switch accuracy {
             case 1.0:
                 return 3
-            case 0.75...0.99:
+            case 0.75 ... 0.99:
                 return 2
-            case 0.5...0.74:
+            case 0.5 ... 0.74:
                 return 1
             default:
                 return 0
@@ -190,7 +190,7 @@ class GameLogicService {
     }
     
     func validateAnswer(_ answer: String, for hiragana: String) -> Bool {
-        return isCorrectAnswer(hiragana: hiragana, imageName: answer)
+        isCorrectAnswer(hiragana: hiragana, imageName: answer)
     }
     
     func generateHint(for hiragana: String) -> String {
@@ -204,7 +204,7 @@ class GameLogicService {
     }
     
     private func getDetailedHints() -> [String: String] {
-        return [
+        [
             // あ行
             "あ": "「あり」の「あ」だよ！小さくて働き者の虫の絵を探してね。",
             "い": "「いぬ」の「い」だよ！人間の一番の友達、しっぽを振る動物の絵を探してね。",

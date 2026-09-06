@@ -44,9 +44,9 @@ struct GameView: View {
                 levelProgressionService: levelProgressionService
             )
             viewModel.updateUserSettings(settings)
-            self._gameViewModel = State(initialValue: viewModel)
+            _gameViewModel = State(initialValue: viewModel)
         } else {
-            self._gameViewModel = State(initialValue: GameViewModel(
+            _gameViewModel = State(initialValue: GameViewModel(
                 levelProgressionService: levelProgressionService
             ))
         }

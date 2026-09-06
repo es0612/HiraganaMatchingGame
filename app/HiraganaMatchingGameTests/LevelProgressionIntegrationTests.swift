@@ -143,7 +143,7 @@ struct LevelProgressionIntegrationTests {
             GameProgress.self,
             GameLevel.self,
             UserSettings.self,
-            Character.self,
+            Character.self
         ])
         let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
         let container = try! ModelContainer(for: schema, configurations: [config])

@@ -75,21 +75,21 @@ final class UserSettings {
     }
     
     init() {
-        self.soundEnabled = true
-        self.musicEnabled = true
-        self.playtimeLimit = 0
-        self.voiceSpeed = 1.0
+        soundEnabled = true
+        musicEnabled = true
+        playtimeLimit = 0
+        voiceSpeed = 1.0
         
         // 新しい設定項目の初期値
-        self.soundVolume = 0.5
-        self.gameSpeedRaw = GameSpeed.normal.rawValue
-        self.difficultyRaw = GameDifficulty.normal.rawValue
-        self.autoAdvance = false
-        self.showHints = true
-        self.largeText = false
-        self.reduceAnimations = false
-        self.hasSeenTutorial = false
-        self.questionsPerSession = 5
+        soundVolume = 0.5
+        gameSpeedRaw = GameSpeed.normal.rawValue
+        difficultyRaw = GameDifficulty.normal.rawValue
+        autoAdvance = false
+        showHints = true
+        largeText = false
+        reduceAnimations = false
+        hasSeenTutorial = false
+        questionsPerSession = 5
     }
     
     func updateSettings(
@@ -250,10 +250,10 @@ final class UserSettings {
     
     // 設定の検証
     func validateSettings() -> Bool {
-        return soundVolume >= 0.0 && soundVolume <= 1.0 &&
-               voiceSpeed >= 0.5 && voiceSpeed <= 2.0 &&
-               playtimeLimit >= 0 &&
-               questionsPerSession >= 5 && questionsPerSession <= 20
+        soundVolume >= 0.0 && soundVolume <= 1.0 &&
+            voiceSpeed >= 0.5 && voiceSpeed <= 2.0 &&
+            playtimeLimit >= 0 &&
+            questionsPerSession >= 5 && questionsPerSession <= 20
     }
     
     // チュートリアル完了設定
@@ -275,6 +275,6 @@ final class UserSettings {
     
     // 問題数のフォーマット済み表示
     func formattedQuestionsPerSession() -> String {
-        return "\(questionsPerSession)問"
+        "\(questionsPerSession)問"
     }
 }

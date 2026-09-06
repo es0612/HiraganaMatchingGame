@@ -14,7 +14,7 @@ struct AppIconView: View {
             LinearGradient(
                 colors: [
                     Color(red: 1.0, green: 0.4, blue: 0.6), // ピンク
-                    Color(red: 1.0, green: 0.6, blue: 0.2)  // オレンジ
+                    Color(red: 1.0, green: 0.6, blue: 0.2) // オレンジ
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -85,7 +85,7 @@ struct AppIconDarkView: View {
             LinearGradient(
                 colors: [
                     Color(red: 0.3, green: 0.2, blue: 0.8), // 深い紫
-                    Color(red: 0.8, green: 0.3, blue: 0.6)  // ピンク
+                    Color(red: 0.8, green: 0.3, blue: 0.6) // ピンク
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing

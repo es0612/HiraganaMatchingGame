@@ -13,7 +13,7 @@ class DataMigrationService {
     private let migrationKey = "UnifiedDataMigration_v1_completed"
     
     func isMigrationNeeded() -> Bool {
-        return !UserDefaults.standard.bool(forKey: migrationKey)
+        !UserDefaults.standard.bool(forKey: migrationKey)
     }
     
     func performMigration(modelContext: ModelContext) async throws {

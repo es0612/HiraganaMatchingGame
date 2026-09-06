@@ -22,148 +22,148 @@ struct SettingsView: View {
         NavigationStack {
             ScrollView {
                 LazyVStack(spacing: 20) {
-                // 音声設定セクション
-                SettingsSection(title: "音声設定") {
-                    VStack(spacing: 16) {
-                        HStack {
-                            Toggle("効果音", isOn: $viewModel.soundEnabled)
-                            Spacer(minLength: 50)
-                            Toggle("BGM", isOn: $viewModel.musicEnabled)
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 12) {
+                    // 音声設定セクション
+                    SettingsSection(title: "音声設定") {
+                        VStack(spacing: 16) {
                             HStack {
-                                Text("音量")
-                                Spacer()
-                                Text(viewModel.formattedSoundVolume())
-                                    .foregroundStyle(.secondary)
+                                Toggle("効果音", isOn: $viewModel.soundEnabled)
+                                Spacer(minLength: 50)
+                                Toggle("BGM", isOn: $viewModel.musicEnabled)
                             }
-                            Slider(value: $viewModel.soundVolume, in: 0...1)
-                        }
                         
-                    }
-                }
-                
-                // ゲーム設定セクション
-                SettingsSection(title: "ゲーム設定") {
-                    VStack(spacing: 16) {
-                        VStack(alignment: .leading) {
-                            Text("難易度")
-                                .font(.subheadline)
-                            Picker("難易度", selection: $viewModel.difficulty) {
-                                ForEach(GameDifficulty.allCases, id: \.self) { difficulty in
-                                    Text(difficulty.rawValue).tag(difficulty)
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack {
+                                    Text("音量")
+                                    Spacer()
+                                    Text(viewModel.formattedSoundVolume())
+                                        .foregroundStyle(.secondary)
                                 }
+                                Slider(value: $viewModel.soundVolume, in: 0 ... 1)
                             }
-                            .pickerStyle(.segmented)
-                        }
                         
-                        Toggle("ヒント表示", isOn: $viewModel.showHints)
-                        
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack {
-                                Text("プレイ時間制限")
-                                Spacer()
-                                Text(viewModel.formattedPlaytimeLimit())
-                                    .foregroundStyle(.secondary)
-                            }
-                            Stepper(
-                                value: $viewModel.playtimeLimit,
-                                in: 0...180,
-                                step: 10
-                            ) {
-                                EmptyView()
-                            }
-                        }
-                        
-                        VStack(alignment: .leading) {
-                            Text("1セッションの問題数")
-                                .font(.subheadline)
-                            Picker("1セッションの問題数", selection: $viewModel.questionsPerSession) {
-                                ForEach(QuestionsPerSession.allCases, id: \.self) { questionCount in
-                                    Text(questionCount.displayName).tag(questionCount)
-                                }
-                            }
-                            .pickerStyle(.segmented)
                         }
                     }
-                }
                 
-                // リセット・その他セクション
-                SettingsSection(title: "その他") {
-                    VStack(spacing: 16) {
-                        Button(action: {
-                            showResetAlert = true
-                        }) {
-                            HStack {
-                                Image(systemName: "trash.circle.fill")
-                                Text("設定をリセット")
-                                Spacer()
-                            }
-                            .foregroundStyle(.red)
-                            .padding()
-                            .background(Color.red.opacity(0.1))
-                            .cornerRadius(10)
-                        }
-                        
-                        Button(action: {
-                            showPlayDataResetAlert = true
-                        }) {
-                            HStack {
-                                Image(systemName: "arrow.counterclockwise.circle.fill")
-                                Text("プレイデータをリセット")
-                                Spacer()
-                            }
-                            .foregroundStyle(.orange)
-                            .padding()
-                            .background(Color.orange.opacity(0.1))
-                            .cornerRadius(10)
-                        }
-                        
-                        VStack(spacing: 12) {
-                            NavigationLink(destination: LicenseView()) {
-                                HStack {
-                                    Image(systemName: "doc.text")
-                                    Text("ライセンス情報")
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
+                    // ゲーム設定セクション
+                    SettingsSection(title: "ゲーム設定") {
+                        VStack(spacing: 16) {
+                            VStack(alignment: .leading) {
+                                Text("難易度")
+                                    .font(.subheadline)
+                                Picker("難易度", selection: $viewModel.difficulty) {
+                                    ForEach(GameDifficulty.allCases, id: \.self) { difficulty in
+                                        Text(difficulty.rawValue).tag(difficulty)
+                                    }
                                 }
-                                .padding()
-                                .background(Color.blue.opacity(0.1))
-                                .cornerRadius(10)
+                                .pickerStyle(.segmented)
                             }
-                            .buttonStyle(PlainButtonStyle())
-                            
-                            NavigationLink(destination: AboutView()) {
+                        
+                            Toggle("ヒント表示", isOn: $viewModel.showHints)
+                        
+                            VStack(alignment: .leading, spacing: 12) {
                                 HStack {
-                                    Image(systemName: "info.circle")
-                                    Text("アプリについて")
+                                    Text("プレイ時間制限")
                                     Spacer()
-                                    Image(systemName: "chevron.right")
+                                    Text(viewModel.formattedPlaytimeLimit())
+                                        .foregroundStyle(.secondary)
                                 }
-                                .padding()
-                                .background(Color.green.opacity(0.1))
-                                .cornerRadius(10)
+                                Stepper(
+                                    value: $viewModel.playtimeLimit,
+                                    in: 0 ... 180,
+                                    step: 10
+                                ) {
+                                    EmptyView()
+                                }
                             }
-                            .buttonStyle(PlainButtonStyle())
-                            
+                        
+                            VStack(alignment: .leading) {
+                                Text("1セッションの問題数")
+                                    .font(.subheadline)
+                                Picker("1セッションの問題数", selection: $viewModel.questionsPerSession) {
+                                    ForEach(QuestionsPerSession.allCases, id: \.self) { questionCount in
+                                        Text(questionCount.displayName).tag(questionCount)
+                                    }
+                                }
+                                .pickerStyle(.segmented)
+                            }
+                        }
+                    }
+                
+                    // リセット・その他セクション
+                    SettingsSection(title: "その他") {
+                        VStack(spacing: 16) {
                             Button(action: {
-                                showTutorial = true
+                                showResetAlert = true
                             }) {
                                 HStack {
-                                    Image(systemName: "questionmark.circle")
-                                    Text("チュートリアルを見る")
+                                    Image(systemName: "trash.circle.fill")
+                                    Text("設定をリセット")
                                     Spacer()
-                                    Image(systemName: "chevron.right")
                                 }
+                                .foregroundStyle(.red)
                                 .padding()
-                                .background(Color.purple.opacity(0.1))
+                                .background(Color.red.opacity(0.1))
                                 .cornerRadius(10)
                             }
-                            .buttonStyle(PlainButtonStyle())
+                        
+                            Button(action: {
+                                showPlayDataResetAlert = true
+                            }) {
+                                HStack {
+                                    Image(systemName: "arrow.counterclockwise.circle.fill")
+                                    Text("プレイデータをリセット")
+                                    Spacer()
+                                }
+                                .foregroundStyle(.orange)
+                                .padding()
+                                .background(Color.orange.opacity(0.1))
+                                .cornerRadius(10)
+                            }
+                        
+                            VStack(spacing: 12) {
+                                NavigationLink(destination: LicenseView()) {
+                                    HStack {
+                                        Image(systemName: "doc.text")
+                                        Text("ライセンス情報")
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                    }
+                                    .padding()
+                                    .background(Color.blue.opacity(0.1))
+                                    .cornerRadius(10)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            
+                                NavigationLink(destination: AboutView()) {
+                                    HStack {
+                                        Image(systemName: "info.circle")
+                                        Text("アプリについて")
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                    }
+                                    .padding()
+                                    .background(Color.green.opacity(0.1))
+                                    .cornerRadius(10)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            
+                                Button(action: {
+                                    showTutorial = true
+                                }) {
+                                    HStack {
+                                        Image(systemName: "questionmark.circle")
+                                        Text("チュートリアルを見る")
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                    }
+                                    .padding()
+                                    .background(Color.purple.opacity(0.1))
+                                    .cornerRadius(10)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
                         }
                     }
-                }
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 20)

@@ -13,7 +13,7 @@ struct UnifiedGameProgressTests {
         let schema = Schema([
             UnifiedGameProgress.self,
             AchievementRecord.self,
-            LevelStats.self,
+            LevelStats.self
         ])
         return try ModelContainer(
             for: schema,
@@ -420,34 +420,34 @@ struct UnifiedGameProgressTests {
         let progress = UnifiedGameProgress()
         
         // 大量キャラクターデータ
-        let largeCharacterSet: Set<String> = Set((1...1000).map { "char_\($0)" })
+        let largeCharacterSet: Set<String> = Set((1 ... 1000).map { "char_\($0)" })
         let startCharacterTime = Date()
         progress.setUnlockedCharacters(largeCharacterSet)
         let characterEncodeTime = Date().timeIntervalSince(startCharacterTime)
         
         // 大量レベルスターデータ
-        let largeLevelStars = Dictionary(uniqueKeysWithValues: (1...100).map { ($0, Int.random(in: 0...3)) })
+        let largeLevelStars = Dictionary(uniqueKeysWithValues: (1 ... 100).map { ($0, Int.random(in: 0 ... 3)) })
         let startLevelTime = Date()
         progress.setLevelStars(largeLevelStars)
         let levelEncodeTime = Date().timeIntervalSince(startLevelTime)
         
         // 大量実績データ
         let achievementStartTime = Date()
-        for i in 1...50 {
+        for i in 1 ... 50 {
             progress.addAchievement("achievement_\(i)")
         }
         let achievementTime = Date().timeIntervalSince(achievementStartTime)
         
         // 大量レベル統計データ
         let statisticsStartTime = Date()
-        for i in 1...50 {
+        for i in 1 ... 50 {
             progress.updateLevelStatistic(
                 level: i,
-                bestStars: Int.random(in: 1...3),
-                bestAccuracy: Double.random(in: 0.5...1.0),
-                bestTime: Double.random(in: 20...60),
-                totalAttempts: Int.random(in: 1...10),
-                averageStars: Double.random(in: 1.0...3.0)
+                bestStars: Int.random(in: 1 ... 3),
+                bestAccuracy: Double.random(in: 0.5 ... 1.0),
+                bestTime: Double.random(in: 20 ... 60),
+                totalAttempts: Int.random(in: 1 ... 10),
+                averageStars: Double.random(in: 1.0 ... 3.0)
             )
         }
         let statisticsTime = Date().timeIntervalSince(statisticsStartTime)

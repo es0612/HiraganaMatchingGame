@@ -24,7 +24,7 @@ class AudioPlayer: ObservableObject {
     
     init(isTestMode: Bool = false) {
         self.isTestMode = isTestMode
-        self.audioSession = AVAudioSession.sharedInstance()
+        audioSession = AVAudioSession.sharedInstance()
         
         if !isTestMode {
             setupAudioSession()
@@ -99,7 +99,7 @@ class AudioPlayer: ObservableObject {
     }
     
     func isAudioReady(for identifier: String) -> Bool {
-        return audioPlayers[identifier] != nil
+        audioPlayers[identifier] != nil
     }
     
     func setEnabled(_ enabled: Bool) {
@@ -148,7 +148,7 @@ class AudioPlayer: ObservableObject {
         let samples = Int(sampleRate * duration)
         var audioData = Data()
         
-        for i in 0..<samples {
+        for i in 0 ..< samples {
             let time = Double(i) / sampleRate
             let sample = sin(2.0 * Double.pi * frequency * time)
             let scaledSample = Int16(sample * 32767.0)

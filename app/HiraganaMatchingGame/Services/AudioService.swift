@@ -26,8 +26,8 @@ class AudioService: ObservableObject {
     
     private init(isTestMode: Bool = false) {
         self.isTestMode = isTestMode
-        self.audioManager = AudioManager(isTestMode: isTestMode)
-        self.isSharedInstance = true
+        audioManager = AudioManager(isTestMode: isTestMode)
+        isSharedInstance = true
         setupAudioManagerBindings()
     }
     
@@ -45,7 +45,7 @@ class AudioService: ObservableObject {
     
     // Factory method for testing
     static func createForTesting() -> AudioService {
-        return AudioService(isTestMode: true)
+        AudioService(isTestMode: true)
     }
     
     private func setupAudioManagerBindings() {
@@ -61,7 +61,7 @@ class AudioService: ObservableObject {
     }
     
     func hasAudioFile(for character: String) -> Bool {
-        return audioManager.hasAudioFile(for: character)
+        audioManager.hasAudioFile(for: character)
     }
     
     private func syncWithUserSettings(startBGM: Bool = false) {
@@ -103,7 +103,7 @@ class AudioService: ObservableObject {
             }
         case "soundVolume":
             setVolume(Float(settings.soundVolume))
-            // BGM volume update is handled by AudioManager
+        // BGM volume update is handled by AudioManager
         case "voiceSpeed":
             setPlaybackSpeed(Float(settings.voiceSpeed))
         default:
@@ -148,7 +148,7 @@ class AudioService: ObservableObject {
     }
     
     func isAudioReady(for character: String) -> Bool {
-        return audioManager.isAudioReady(for: character)
+        audioManager.isAudioReady(for: character)
     }
     
     func stopAllAudio() {
@@ -179,7 +179,7 @@ class AudioService: ObservableObject {
     }
     
     func isBGMPlaying() -> Bool {
-        return audioManager.isBGMPlaying()
+        audioManager.isBGMPlaying()
     }
     
     func switchToGameplayBGM() {

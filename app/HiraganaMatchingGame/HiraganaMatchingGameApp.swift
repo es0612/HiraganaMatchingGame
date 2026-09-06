@@ -21,7 +21,7 @@ struct HiraganaMatchingGameApp: App {
             // New unified data models
             UnifiedGameProgress.self,
             AchievementRecord.self,
-            LevelStats.self,
+            LevelStats.self
         ])
         
         let modelConfiguration = ModelConfiguration(
@@ -64,7 +64,7 @@ func createTestModelContainer() throws -> ModelContainer {
         // New unified data models
         UnifiedGameProgress.self,
         AchievementRecord.self,
-        LevelStats.self,
+        LevelStats.self
     ])
     
     let modelConfiguration = ModelConfiguration(isStoredInMemoryOnly: true)

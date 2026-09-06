@@ -46,12 +46,12 @@ class LevelProgressionService {
     }
     
     func getCurrentLevel() -> Int {
-        return getRecommendedNextLevel()
+        getRecommendedNextLevel()
     }
     
     func getMaxUnlockedLevel() -> Int {
         var maxLevel = 1
-        for level in 1...totalLevels {
+        for level in 1 ... totalLevels {
             if isLevelUnlocked(level) {
                 maxLevel = level
             }
@@ -119,7 +119,7 @@ class LevelProgressionService {
     }
     
     func getStarsForLevel(_ level: Int) -> Int {
-        return levelStars[level] ?? 0
+        levelStars[level] ?? 0
     }
     
     func canProgressToNextLevel(_ level: Int) -> Bool {
@@ -142,7 +142,7 @@ class LevelProgressionService {
     }
     
     func getRecommendedNextLevel() -> Int {
-        for level in 1...totalLevels {
+        for level in 1 ... totalLevels {
             if getStarsForLevel(level) == 0 && isLevelUnlocked(level) {
                 return level
             }
@@ -151,7 +151,7 @@ class LevelProgressionService {
     }
     
     func getTotalLevels() -> Int {
-        return totalLevels
+        totalLevels
     }
     
     func getLevelConfiguration(_ level: Int) -> LevelConfiguration {

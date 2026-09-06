@@ -71,7 +71,7 @@ class BGMGenerator {
     }
     
     func isBGMPlaying() -> Bool {
-        return bgmPlayer?.isPlaying == true
+        bgmPlayer?.isPlaying == true
     }
     
     // MARK: - BGM Generation
@@ -93,7 +93,7 @@ class BGMGenerator {
             (659.25, 0.6), // E5 - Mi
             (587.33, 0.6), // D5 - Re
             (587.33, 0.6), // D5 - Re
-            (523.25, 1.2), // C5 - Do (終わり)
+            (523.25, 1.2) // C5 - Do (終わり)
         ]
         
         let sampleRate = 44100.0
@@ -102,7 +102,7 @@ class BGMGenerator {
         for (frequency, duration) in melodyNotes {
             let samples = Int(sampleRate * duration)
             
-            for i in 0..<samples {
+            for i in 0 ..< samples {
                 let noteTime = Double(i) / sampleRate
                 
                 // メイン音

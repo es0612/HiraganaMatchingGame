@@ -31,83 +31,83 @@ struct ContentView: View {
         ZStack {
             NavigationStack {
                 switch currentScreen {
-            case .levelSelection:
-                LevelSelectionView(
-                    levelSelectionViewModel: levelSelectionViewModel,
-                    onLevelSelected: { selectedLevel in
-                        currentScreen = .game(level: selectedLevel)
-                    },
-                    onCharacterCollectionPressed: {
-                        currentScreen = .characterCollection
-                    },
-                    onAchievementsPressed: {
-                        currentScreen = .achievements
-                    },
-                    onSettingsPressed: {
-                        currentScreen = .settings
-                    }
-                )
-                .onAppear {
-                    levelSelectionViewModel.loadProgress(from: modelContext)
-                    loadUserSettings()
-                }
-                .onChange(of: currentScreen) {
-                    if currentScreen == .levelSelection {
+                case .levelSelection:
+                    LevelSelectionView(
+                        levelSelectionViewModel: levelSelectionViewModel,
+                        onLevelSelected: { selectedLevel in
+                            currentScreen = .game(level: selectedLevel)
+                        },
+                        onCharacterCollectionPressed: {
+                            currentScreen = .characterCollection
+                        },
+                        onAchievementsPressed: {
+                            currentScreen = .achievements
+                        },
+                        onSettingsPressed: {
+                            currentScreen = .settings
+                        }
+                    )
+                    .onAppear {
+                        levelSelectionViewModel.loadProgress(from: modelContext)
                         loadUserSettings()
-                        // レベル選択画面に戻った時はメニューBGMを確保
-                        if let settings = userSettings, settings.musicEnabled {
-                            audioService = AudioService.createWithSettings(settings, startBGM: false)
-                            audioService?.switchToMenuBGM()
+                    }
+                    .onChange(of: currentScreen) {
+                        if currentScreen == .levelSelection {
+                            loadUserSettings()
+                            // レベル選択画面に戻った時はメニューBGMを確保
+                            if let settings = userSettings, settings.musicEnabled {
+                                audioService = AudioService.createWithSettings(settings, startBGM: false)
+                                audioService?.switchToMenuBGM()
+                            }
                         }
                     }
-                }
                 
-            case .game(let level):
-                GameView(
-                    selectedLevel: level,
-                    levelProgressionService: levelSelectionViewModel.levelProgressionService,
-                    userSettings: userSettings,
-                    onGameComplete: { completedLevel, stars in
-                        // Level completion is handled by GameViewModel
-                        // Just save the progress - navigation handled by GameView
-                        levelSelectionViewModel.saveProgress()
-                    },
-                    onBackToLevelSelection: {
-                        currentScreen = .levelSelection
-                    },
-                    onRestart: {
-                        // 同じレベルを再開（画面状態は変更せず、ViewをリフレッシュするためにIDを更新）
-                        gameViewId = UUID()
-                    },
-                    onNextLevel: {
-                        let nextLevel = level + 1
-                        if nextLevel <= levelSelectionViewModel.levelProgressionService.getTotalLevels() {
-                            currentScreen = .game(level: nextLevel)
+                case .game(let level):
+                    GameView(
+                        selectedLevel: level,
+                        levelProgressionService: levelSelectionViewModel.levelProgressionService,
+                        userSettings: userSettings,
+                        onGameComplete: { completedLevel, stars in
+                            // Level completion is handled by GameViewModel
+                            // Just save the progress - navigation handled by GameView
+                            levelSelectionViewModel.saveProgress()
+                        },
+                        onBackToLevelSelection: {
+                            currentScreen = .levelSelection
+                        },
+                        onRestart: {
+                            // 同じレベルを再開（画面状態は変更せず、ViewをリフレッシュするためにIDを更新）
                             gameViewId = UUID()
+                        },
+                        onNextLevel: {
+                            let nextLevel = level + 1
+                            if nextLevel <= levelSelectionViewModel.levelProgressionService.getTotalLevels() {
+                                currentScreen = .game(level: nextLevel)
+                                gameViewId = UUID()
+                            }
                         }
+                    )
+                    .id(gameViewId)
+                
+                case .characterCollection:
+                    CharacterCollectionView {
+                        currentScreen = .levelSelection
                     }
-                )
-                .id(gameViewId)
                 
-            case .characterCollection:
-                CharacterCollectionView {
-                    currentScreen = .levelSelection
-                }
+                case .achievements:
+                    AchievementsView {
+                        currentScreen = .levelSelection
+                    }
                 
-            case .achievements:
-                AchievementsView {
-                    currentScreen = .levelSelection
-                }
-                
-            case .settings:
-                SettingsView(modelContext: modelContext) {
-                    loadUserSettings()
-                    currentScreen = .levelSelection
-                }
+                case .settings:
+                    SettingsView(modelContext: modelContext) {
+                        loadUserSettings()
+                        currentScreen = .levelSelection
+                    }
                 }
             }
             .opacity(showLaunchScreen ? 0 : 1)
-                .sheet(isPresented: $showTutorial) {
+            .sheet(isPresented: $showTutorial) {
                 TutorialView(isPresented: $showTutorial)
                     .onDisappear {
                         userSettings?.markTutorialAsCompleted()

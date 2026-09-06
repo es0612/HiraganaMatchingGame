@@ -128,7 +128,7 @@ struct GameContentView: View {
         }
         .buttonStyle(PlainButtonStyle())
         .scaleEffect(1.0)
-        .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(Double.random(in: 0...0.3)), value: currentHiragana)
+        .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(Double.random(in: 0 ... 0.3)), value: currentHiragana)
         .accessibilityLabel("\(getReadingForImageName(choice.imageName))の絵")
         .accessibilityHint("タップして\(choice.character)の文字に合う絵として選択します")
     }
@@ -136,11 +136,11 @@ struct GameContentView: View {
     // MARK: - Helper Functions
     
     private func getEmojiForImageName(_ imageName: String) -> String {
-        return HiraganaDataManager.shared.getEmojiForImageName(imageName)
+        HiraganaDataManager.shared.getEmojiForImageName(imageName)
     }
     
     private func getReadingForImageName(_ imageName: String) -> String {
-        return HiraganaDataManager.shared.getJapaneseWord(for: imageName) ?? imageName
+        HiraganaDataManager.shared.getJapaneseWord(for: imageName) ?? imageName
     }
 }
 

@@ -42,29 +42,29 @@ class StarUnlockService {
     private func setupServiceDependencies() {
         // Set up achievement service dependencies
         achievementService.unlockedCharacterCountProvider = { [weak self] in
-            return self?.characterUnlockService.getUnlockedCharacters().count ?? 0
+            self?.characterUnlockService.getUnlockedCharacters().count ?? 0
         }
         achievementService.completedLevelsCountProvider = { [weak self] in
-            return self?.levelStatisticsService.getCompletedLevelsCount() ?? 0
+            self?.levelStatisticsService.getCompletedLevelsCount() ?? 0
         }
         achievementService.currentStreakProvider = { [weak self] in
-            return self?.statisticsService.getCurrentStreak() ?? 0
+            self?.statisticsService.getCurrentStreak() ?? 0
         }
         
         // Set up statistics service dependencies
         statisticsService.completedLevelsCountProvider = { [weak self] in
-            return self?.levelStatisticsService.getCompletedLevelsCount() ?? 0
+            self?.levelStatisticsService.getCompletedLevelsCount() ?? 0
         }
     }
     
     // MARK: - Character Unlocking (Delegated to CharacterUnlockService)
     
     func getUnlockedCharacters() -> [String] {
-        return characterUnlockService.getUnlockedCharacters()
+        characterUnlockService.getUnlockedCharacters()
     }
     
     func isCharacterUnlocked(_ character: String) -> Bool {
-        return characterUnlockService.isCharacterUnlocked(character)
+        characterUnlockService.isCharacterUnlocked(character)
     }
     
     func updateUnlockedCharacters() {
@@ -80,12 +80,12 @@ class StarUnlockService {
     // MARK: - Statistics (Delegated to StatisticsService)
     
     func calculateStars(correctAnswers: Int, totalQuestions: Int, timeTaken: Double) -> Int {
-        return statisticsService.calculateStars(correctAnswers: correctAnswers, totalQuestions: totalQuestions, timeTaken: timeTaken)
+        statisticsService.calculateStars(correctAnswers: correctAnswers, totalQuestions: totalQuestions, timeTaken: timeTaken)
     }
     
     /// StarUnlockServiceはスター管理しない（LevelProgressionServiceが管理）
     func getTotalStarsFromService() -> Int {
-        return statisticsService.getTotalStars()
+        statisticsService.getTotalStars()
     }
     
     // MARK: - Level Completion (Coordinated across services)
@@ -110,29 +110,29 @@ class StarUnlockService {
     // MARK: - Level Statistics (Delegated to LevelStatisticsService)
     
     func getLevelStatistics(level: Int) -> LevelStatistics? {
-        return levelStatisticsService.getLevelStatistics(level: level)
+        levelStatisticsService.getLevelStatistics(level: level)
     }
     
     // MARK: - Overall Statistics (Delegated to StatisticsService)
     
     func getStarStatistics() -> StarStatistics {
-        return statisticsService.getStarStatistics()
+        statisticsService.getStarStatistics()
     }
     
     // MARK: - Progress Information (Delegated to CharacterUnlockService)
     
     func getUnlockProgress() -> UnlockProgress {
-        return characterUnlockService.getUnlockProgress()
+        characterUnlockService.getUnlockProgress()
     }
     
     func getNextUnlockInfo() -> NextUnlockInfo? {
-        return characterUnlockService.getNextUnlockInfo()
+        characterUnlockService.getNextUnlockInfo()
     }
     
     // MARK: - Achievements (Delegated to AchievementService)
     
     func getUnlockedAchievements() -> Set<Achievement> {
-        return achievementService.getUnlockedAchievements()
+        achievementService.getUnlockedAchievements()
     }
     
     // MARK: - Data Management (Coordinated across services)

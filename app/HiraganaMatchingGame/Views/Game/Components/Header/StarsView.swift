@@ -5,7 +5,7 @@ struct StarsView: View {
     
     var body: some View {
         HStack(spacing: 4) {
-            ForEach(0..<3, id: \.self) { index in
+            ForEach(0 ..< 3, id: \.self) { index in
                 Image(systemName: "star.fill")
                     .foregroundColor(index < earnedStars ? .yellow : .gray.opacity(0.3))
                     .font(.title2)

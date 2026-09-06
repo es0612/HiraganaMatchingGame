@@ -16,15 +16,15 @@ class SpeechSynthesizer: NSObject, ObservableObject {
     private var speechSynthesizer: AVSpeechSynthesizer
     
     override init() {
-        self.isTestMode = false
-        self.speechSynthesizer = AVSpeechSynthesizer()
+        isTestMode = false
+        speechSynthesizer = AVSpeechSynthesizer()
         super.init()
         speechSynthesizer.delegate = self
     }
     
     init(isTestMode: Bool) {
         self.isTestMode = isTestMode
-        self.speechSynthesizer = AVSpeechSynthesizer()
+        speechSynthesizer = AVSpeechSynthesizer()
         super.init()
         if !isTestMode {
             speechSynthesizer.delegate = self
@@ -95,7 +95,7 @@ class SpeechSynthesizer: NSObject, ObservableObject {
     }
     
     func isSpeaking() -> Bool {
-        return speechSynthesizer.isSpeaking
+        speechSynthesizer.isSpeaking
     }
     
     func setEnabled(_ enabled: Bool) {

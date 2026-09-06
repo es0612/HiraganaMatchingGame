@@ -24,10 +24,10 @@ class AudioManager: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     init(isTestMode: Bool = false) {
-        self.audioPlayer = AudioPlayer(isTestMode: isTestMode)
-        self.bgmGenerator = BGMGenerator(isTestMode: isTestMode)
-        self.speechSynthesizer = SpeechSynthesizer(isTestMode: isTestMode)
-        self.effectPlayer = EffectPlayer(isTestMode: isTestMode)
+        audioPlayer = AudioPlayer(isTestMode: isTestMode)
+        bgmGenerator = BGMGenerator(isTestMode: isTestMode)
+        speechSynthesizer = SpeechSynthesizer(isTestMode: isTestMode)
+        effectPlayer = EffectPlayer(isTestMode: isTestMode)
         
         setupBindings()
     }
@@ -75,7 +75,7 @@ class AudioManager: ObservableObject {
     }
     
     func updateUserSettings(_ newSettings: UserSettings) {
-        self.userSettings = newSettings
+        userSettings = newSettings
         syncWithUserSettings()
     }
     
@@ -83,7 +83,7 @@ class AudioManager: ObservableObject {
     
     // Audio file playback
     func hasAudioFile(for character: String) -> Bool {
-        return audioPlayer.hasAudioFile(for: character)
+        audioPlayer.hasAudioFile(for: character)
     }
     
     func preloadAudioForLevel(_ level: Int) async {
@@ -104,7 +104,7 @@ class AudioManager: ObservableObject {
     }
     
     func isAudioReady(for character: String) -> Bool {
-        return audioPlayer.isAudioReady(for: character)
+        audioPlayer.isAudioReady(for: character)
     }
     
     // Speech synthesis
@@ -148,7 +148,7 @@ class AudioManager: ObservableObject {
     }
     
     func isBGMPlaying() -> Bool {
-        return bgmGenerator.isBGMPlaying()
+        bgmGenerator.isBGMPlaying()
     }
 
     // MARK: - BGM switching
@@ -221,6 +221,6 @@ class AudioManager: ObservableObject {
         ]
         
         let levelIndex = max(0, min(level - 1, allCharacters.count - 1))
-        return Array(allCharacters[0...levelIndex].flatMap { $0 })
+        return Array(allCharacters[0 ... levelIndex].flatMap { $0 })
     }
 }
