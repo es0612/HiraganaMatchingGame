@@ -154,6 +154,120 @@ class LevelProgressionService {
         totalLevels
     }
     
+    /// レベル定義テーブル（データのみ。#16 で関数本体から型スコープへ移動）
+    private static let levelConfigurations: [Int: LevelConfiguration] = [
+        1: LevelConfiguration(
+            level: 1,
+            title: "あ行をおぼえよう",
+            characters: ["あ", "い", "う", "え", "お"],
+            requiredStars: 0,
+            questionsCount: 18,
+            description: "ひらがなの基本、あ行をマスターしよう！"
+        ),
+        2: LevelConfiguration(
+            level: 2,
+            title: "か行をおぼえよう",
+            characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ"],
+            requiredStars: 2,
+            questionsCount: 22,
+            description: "か行を覚えて、ひらがなの世界を広げよう！"
+        ),
+        3: LevelConfiguration(
+            level: 3,
+            title: "さ行をおぼえよう",
+            characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ"],
+            requiredStars: 4,
+            questionsCount: 14,
+            description: "さ行をマスターして、更にレベルアップ！"
+        ),
+        4: LevelConfiguration(
+            level: 4,
+            title: "た行をおぼえよう",
+            characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と"],
+            requiredStars: 6,
+            questionsCount: 14,
+            description: "た行も仲間に加えて、どんどん上達！"
+        ),
+        5: LevelConfiguration(
+            level: 5,
+            title: "な行をおぼえよう",
+            characters: [
+                "あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ",
+                "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と",
+                "な", "に", "ぬ", "ね", "の"
+            ],
+            requiredStars: 8,
+            questionsCount: 16,
+            description: "な行を覚えて、ひらがなマスターに近づこう！"
+        ),
+        6: LevelConfiguration(
+            level: 6,
+            title: "は行をおぼえよう",
+            characters: [
+                "あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ",
+                "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と",
+                "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ"
+            ],
+            requiredStars: 10,
+            questionsCount: 16,
+            description: "は行をマスターして、さらなる高みを目指そう！"
+        ),
+        7: LevelConfiguration(
+            level: 7,
+            title: "ま行をおぼえよう",
+            characters: [
+                "あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ",
+                "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と",
+                "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ",
+                "ま", "み", "む", "め", "も"
+            ],
+            requiredStars: 12,
+            questionsCount: 18,
+            description: "ま行も覚えて、ひらがなの達人に！"
+        ),
+        8: LevelConfiguration(
+            level: 8,
+            title: "や行をおぼえよう",
+            characters: [
+                "あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ",
+                "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と",
+                "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ",
+                "ま", "み", "む", "め", "も", "や", "ゆ", "よ"
+            ],
+            requiredStars: 14,
+            questionsCount: 18,
+            description: "や行をマスターして、ゴールが見えてきた！"
+        ),
+        9: LevelConfiguration(
+            level: 9,
+            title: "ら行をおぼえよう",
+            characters: [
+                "あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ",
+                "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と",
+                "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ",
+                "ま", "み", "む", "め", "も", "や", "ゆ", "よ", "ら", "り",
+                "る", "れ", "ろ"
+            ],
+            requiredStars: 16,
+            questionsCount: 20,
+            description: "ら行をクリアして、最終ステージへ！"
+        ),
+        10: LevelConfiguration(
+            level: 10,
+            title: "すべてのひらがな",
+            characters: [
+                "あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ",
+                "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と",
+                "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ",
+                "ま", "み", "む", "め", "も", "や", "ゆ", "よ", "ら", "り",
+                "る", "れ", "ろ", "わ", "ゐ", "ゑ", "を", "ん"
+            ],
+            requiredStars: 18,
+            questionsCount: 22,
+            description: "全てのひらがなをマスターして、真のひらがな博士になろう！"
+        )
+    ]
+
     func getLevelConfiguration(_ level: Int) -> LevelConfiguration {
         guard level >= 1 && level <= totalLevels else {
             return LevelConfiguration(
@@ -166,90 +280,7 @@ class LevelProgressionService {
             )
         }
         
-        let configurations: [Int: LevelConfiguration] = [
-            1: LevelConfiguration(
-                level: 1,
-                title: "あ行をおぼえよう",
-                characters: ["あ", "い", "う", "え", "お"],
-                requiredStars: 0,
-                questionsCount: 18,
-                description: "ひらがなの基本、あ行をマスターしよう！"
-            ),
-            2: LevelConfiguration(
-                level: 2,
-                title: "か行をおぼえよう",
-                characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ"],
-                requiredStars: 2,
-                questionsCount: 22,
-                description: "か行を覚えて、ひらがなの世界を広げよう！"
-            ),
-            3: LevelConfiguration(
-                level: 3,
-                title: "さ行をおぼえよう",
-                characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ"],
-                requiredStars: 4,
-                questionsCount: 14,
-                description: "さ行をマスターして、更にレベルアップ！"
-            ),
-            4: LevelConfiguration(
-                level: 4,
-                title: "た行をおぼえよう",
-                characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と"],
-                requiredStars: 6,
-                questionsCount: 14,
-                description: "た行も仲間に加えて、どんどん上達！"
-            ),
-            5: LevelConfiguration(
-                level: 5,
-                title: "な行をおぼえよう",
-                characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の"],
-                requiredStars: 8,
-                questionsCount: 16,
-                description: "な行を覚えて、ひらがなマスターに近づこう！"
-            ),
-            6: LevelConfiguration(
-                level: 6,
-                title: "は行をおぼえよう",
-                characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ"],
-                requiredStars: 10,
-                questionsCount: 16,
-                description: "は行をマスターして、さらなる高みを目指そう！"
-            ),
-            7: LevelConfiguration(
-                level: 7,
-                title: "ま行をおぼえよう",
-                characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ", "ま", "み", "む", "め", "も"],
-                requiredStars: 12,
-                questionsCount: 18,
-                description: "ま行も覚えて、ひらがなの達人に！"
-            ),
-            8: LevelConfiguration(
-                level: 8,
-                title: "や行をおぼえよう",
-                characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ", "ま", "み", "む", "め", "も", "や", "ゆ", "よ"],
-                requiredStars: 14,
-                questionsCount: 18,
-                description: "や行をマスターして、ゴールが見えてきた！"
-            ),
-            9: LevelConfiguration(
-                level: 9,
-                title: "ら行をおぼえよう",
-                characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ", "ま", "み", "む", "め", "も", "や", "ゆ", "よ", "ら", "り", "る", "れ", "ろ"],
-                requiredStars: 16,
-                questionsCount: 20,
-                description: "ら行をクリアして、最終ステージへ！"
-            ),
-            10: LevelConfiguration(
-                level: 10,
-                title: "すべてのひらがな",
-                characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ", "ま", "み", "む", "め", "も", "や", "ゆ", "よ", "ら", "り", "る", "れ", "ろ", "わ", "ゐ", "ゑ", "を", "ん"],
-                requiredStars: 18,
-                questionsCount: 22,
-                description: "全てのひらがなをマスターして、真のひらがな博士になろう！"
-            )
-        ]
-        
-        return configurations[level]!
+        return Self.levelConfigurations[level]!
     }
     
     // MARK: - データ永続化
