@@ -156,9 +156,9 @@ class GameViewModel {
             
             // 自動進行設定に基づいて次の問題を表示（テストモードでは即座に実行）
             if isTestMode {
-                self.showFeedback = false
-                self.loadCurrentQuestion()
-                self.isProcessingAnswer = false
+                showFeedback = false
+                loadCurrentQuestion()
+                isProcessingAnswer = false
             } else {
                 let delay = userSettings?.autoAdvance == true ? AppConstants.Timing.autoAdvanceDelayEnabled : AppConstants.Timing.autoAdvanceDelayDisabled
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
@@ -178,7 +178,7 @@ class GameViewModel {
     }
     
     func calculateStars(for score: Int) -> Int {
-        return gameLogicService.calculateStars(correctAnswers: score, totalQuestions: totalQuestions)
+        gameLogicService.calculateStars(correctAnswers: score, totalQuestions: totalQuestions)
     }
     
     func updateUserSettings(_ newSettings: UserSettings) {
@@ -213,7 +213,7 @@ class GameViewModel {
     }
     
     func getHint() -> String {
-        return gameLogicService.generateHint(for: currentHiragana)
+        gameLogicService.generateHint(for: currentHiragana)
     }
     
     private func loadCurrentQuestion() {
@@ -257,15 +257,15 @@ class GameViewModel {
     }
     
     func getCurrentProgress() -> Double {
-        return Double(currentQuestion - 1) / Double(totalQuestions)
+        Double(currentQuestionIndex) / Double(totalQuestions)
     }
     
     func getScorePercentage() -> Double {
-        return Double(score) / Double(totalQuestions)
+        Double(score) / Double(totalQuestions)
     }
     
     func getTimeElapsed() -> TimeInterval {
-        return Date().timeIntervalSince(gameStartTime)
+        Date().timeIntervalSince(gameStartTime)
     }
     
     func getGameStats() -> GameStats {
@@ -310,11 +310,11 @@ class GameViewModel {
     }
     
     func getTimeRemaining() -> Int {
-        return timeRemaining
+        timeRemaining
     }
     
     func isTimeLimitEnabled() -> Bool {
-        return userSettings?.playtimeLimit ?? 0 > 0
+        userSettings?.playtimeLimit ?? 0 > 0
     }
     
     // テスト用：リソースのクリーンアップ

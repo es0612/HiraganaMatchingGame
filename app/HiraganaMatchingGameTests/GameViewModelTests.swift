@@ -59,10 +59,10 @@ func selectIncorrectAnswer() {
 
 @Test("ゲーム完了判定テスト")
 func gameCompletionCheck() {
-    let viewModel = GameViewModel()
+    let viewModel = GameViewModel(isTestMode: true)
     viewModel.startNewGame(level: 1)
     
-    for _ in 1...5 {
+    for _ in 1 ... 5 {
         let correctAnswer = viewModel.getCorrectAnswer()
         viewModel.selectAnswer(correctAnswer.imageName)
     }
@@ -83,6 +83,23 @@ func starCalculation(score: Int, expectedStars: Int) {
     let stars = viewModel.calculateStars(for: score)
     
     #expect(stars == expectedStars)
+}
+
+@Test("進捗バーがゲーム完了時に100%になるテスト")
+func progressReachesFullOnGameCompletion() {
+    let viewModel = GameViewModel(isTestMode: true)
+    viewModel.startNewGame(level: 1)
+
+    #expect(viewModel.getCurrentProgress() == 0.0)
+
+    for answered in 1 ... 5 {
+        let correctAnswer = viewModel.getCorrectAnswer()
+        viewModel.selectAnswer(correctAnswer.imageName)
+        #expect(viewModel.getCurrentProgress() == Double(answered) / 5.0)
+    }
+
+    #expect(viewModel.isGameCompleted == true)
+    #expect(viewModel.getCurrentProgress() == 1.0)
 }
 
 @Test("次の問題への進行テスト")
