@@ -153,14 +153,18 @@ final class CharacterUnlockService {
     /// Gets current unlock progress information
     /// - Returns: Progress information including counts and percentages
     func getUnlockProgress() -> UnlockProgress {
-        let totalCharacters = characterGroups.values.flatMap { $0 }.count
-        let progressPercentage = Double(unlockedCharacters.count) / Double(totalCharacters)
+        let allCharacters = Set(characterGroups.values.flatMap { $0 })
+        let totalCharacters = allCharacters.count
+        // 保存済みデータに現在の定義にない文字（旧仮名ゐ・ゑなど）が残っていても
+        // 「48 / 46」や 100% 超えにならないよう、定義内の文字だけを数える
+        let knownUnlockedCount = unlockedCharacters.intersection(allCharacters).count
+        let progressPercentage = Double(knownUnlockedCount) / Double(totalCharacters)
         
         let currentGroup = getCurrentUnlockGroup()
         let nextGroup = getNextUnlockGroup()
         
         return UnlockProgress(
-            unlockedCount: unlockedCharacters.count,
+            unlockedCount: knownUnlockedCount,
             totalCount: totalCharacters,
             progressPercentage: progressPercentage,
             currentGroup: currentGroup,
