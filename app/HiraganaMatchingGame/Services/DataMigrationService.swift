@@ -195,30 +195,17 @@ class DataMigrationService {
         return true
     }
 
-    // Cleanup old data after successful migration and validation
+    /// マイグレーション後の後始末。
+    ///
+    /// **旧 UserDefaults キー（`StarUnlock_*` / `LevelProgression_TotalStars`）は削除しない。**
+    /// 実行時に画面が使う `AchievementService` / `LevelStatisticsService` / `StatisticsService` /
+    /// `CharacterUnlockService` は初回生成時にこれらの旧キーから遅延移行する設計で、
+    /// `UnifiedGameProgress` はまだ実行時に参照されていない。起動直後にここで旧キーを消すと、
+    /// v1.0.1 からアップデートしたユーザーの実績・連続記録・レベル別統計が消失する（#18）。
+    /// 旧キーの削除は、4 サービスが SwiftData（UnifiedGameProgress）を正として読むようになった後に行う。
     func cleanupOldData(modelContext: ModelContext) throws {
-        print("🧹 Cleaning up old data after migration...")
-
-        // Remove old UserDefaults data
-        let keysToRemove = [
-            "StarUnlock_UnlockedCharacters",
-            "StarUnlock_TotalTimePlayed",
-            "StarUnlock_TotalAccuracy",
-            "StarUnlock_CompletedLevelsCount",
-            "StarUnlock_CurrentStreak",
-            "StarUnlock_HighestStreak",
-            "StarUnlock_Achievements",
-            "StarUnlock_LevelStars",
-            legacyTotalStarsKey
-        ]
-
-        for key in keysToRemove {
-            defaults.removeObject(forKey: key)
-        }
-
+        print("🧹 Post-migration cleanup: legacy UserDefaults keys are intentionally kept (#18)")
         // Note: We keep old GameProgress for now as backup until fully tested
         // In production, you may want to delete old GameProgress records after validation
-
-        print("✅ Old UserDefaults data cleaned up")
     }
 }

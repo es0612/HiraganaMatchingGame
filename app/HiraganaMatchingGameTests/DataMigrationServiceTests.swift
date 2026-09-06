@@ -354,16 +354,43 @@ struct DataMigrationServiceTests {
         let isValid = try service.validateMigration(modelContext: context)
         #expect(isValid == true)
 
-        // クリーンアップ実行
+        // クリーンアップ実行（旧キーは #18 のため削除しない。削除しないことの検証は
+        // cleanupKeepsLegacyKeysConsumedByRuntimeServices を参照）
         try service.cleanupOldData(modelContext: context)
 
-        // UserDefaultsの旧データが削除されている
-        #expect(isolated.defaults.array(forKey: "StarUnlock_UnlockedCharacters") == nil)
-        #expect(isolated.defaults.object(forKey: "StarUnlock_TotalTimePlayed") == nil)
-        #expect(isolated.defaults.object(forKey: "StarUnlock_LevelStars") == nil)
-        #expect(isolated.defaults.object(forKey: "LevelProgression_TotalStars") == nil)
+        // クリーンアップは何度呼んでも安全
+        try service.cleanupOldData(modelContext: context)
 
         // マイグレーション完了フラグは残存
+        #expect(isolated.defaults.bool(forKey: "UnifiedDataMigration_v1_completed") == true)
+    }
+
+
+    @Test("クリーンアップ後も実行時サービスが遅延移行に使う旧キーは残る (#18)") @MainActor
+    func cleanupKeepsLegacyKeysConsumedByRuntimeServices() async throws {
+        let isolated = try IsolatedDefaults()
+        defer { isolated.tearDown() }
+        setupLegacyData(in: isolated.defaults)
+
+        let container = try createTestModelContainer()
+        let context = container.mainContext
+        let service = DataMigrationService(userDefaults: isolated.defaults)
+
+        // ContentView.performDataMigrationIfNeeded() と同じ順序で実行
+        try await service.performMigration(modelContext: context)
+        #expect(try service.validateMigration(modelContext: context))
+        try service.cleanupOldData(modelContext: context)
+
+        // AchievementService / LevelStatisticsService / StatisticsService / CharacterUnlockService は
+        // 初回生成時にこれらの旧キーから遅延移行する。起動直後に消すと実績・統計が消失する（#18）
+        #expect(isolated.defaults.array(forKey: "StarUnlock_Achievements") != nil)
+        #expect(isolated.defaults.dictionary(forKey: "StarUnlock_LevelStars") != nil)
+        #expect(isolated.defaults.object(forKey: "StarUnlock_TotalTimePlayed") != nil)
+        #expect(isolated.defaults.object(forKey: "StarUnlock_CurrentStreak") != nil)
+        #expect(isolated.defaults.object(forKey: "StarUnlock_HighestStreak") != nil)
+        #expect(isolated.defaults.object(forKey: "LevelProgression_TotalStars") != nil)
+
+        // マイグレーション完了フラグは残る
         #expect(isolated.defaults.bool(forKey: "UnifiedDataMigration_v1_completed") == true)
     }
 
