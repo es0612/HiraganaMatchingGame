@@ -177,7 +177,7 @@ struct StarUnlockSystemTests {
         #expect(achievements3.contains(.speedRun) == true)
         
         // 連続クリア実績
-        for level in 4...7 {
+        for level in 4 ... 7 {
             service.recordLevelCompletion(level: level, stars: 2, accuracy: 0.8, time: 40.0)
         }
         let achievements4 = service.getUnlockedAchievements()

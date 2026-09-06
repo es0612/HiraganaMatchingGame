@@ -24,20 +24,20 @@ class UserSettingsManager: ObservableObject {
             let existingSettings = try context.fetch(descriptor)
             
             if let existing = existingSettings.first {
-                self.settings = existing
+                settings = existing
             } else {
                 // 新しいUserSettingsを作成
                 let newSettings = UserSettings()
                 context.insert(newSettings)
                 try context.save()
-                self.settings = newSettings
+                settings = newSettings
             }
         } catch {
             print("Error loading UserSettings: \(error)")
             // フォールバック：新しい設定を作成
             let newSettings = UserSettings()
             context.insert(newSettings)
-            self.settings = newSettings
+            settings = newSettings
         }
     }
     

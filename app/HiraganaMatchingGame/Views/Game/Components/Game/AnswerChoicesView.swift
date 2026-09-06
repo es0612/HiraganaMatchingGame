@@ -95,10 +95,10 @@ struct AnswerChoicesView: View {
         .disabled(showFeedback || isProcessingAnswer)
         .opacity((showFeedback || isProcessingAnswer) ? 0.5 : 1.0)
         .scaleEffect(1.0)
-        .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(Double.random(in: 0...0.3)), value: currentHiragana)
+        .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(Double.random(in: 0 ... 0.3)), value: currentHiragana)
         .onAppear {
             // 選択肢ボタンが表示される時の楽しいアニメーション
-            withAnimation(.spring(response: 0.8, dampingFraction: 0.7).delay(Double.random(in: 0...0.5))) {
+            withAnimation(.spring(response: 0.8, dampingFraction: 0.7).delay(Double.random(in: 0 ... 0.5))) {
                 // 小さな跳ねるアニメーション
             }
         }
@@ -107,11 +107,11 @@ struct AnswerChoicesView: View {
     // MARK: - Helper Functions
     
     private func getEmojiForImageName(_ imageName: String) -> String {
-        return HiraganaDataManager.shared.getEmojiForImageName(imageName)
+        HiraganaDataManager.shared.getEmojiForImageName(imageName)
     }
     
     private func getReadingForImageName(_ imageName: String) -> String {
-        return HiraganaDataManager.shared.getJapaneseWord(for: imageName) ?? imageName
+        HiraganaDataManager.shared.getJapaneseWord(for: imageName) ?? imageName
     }
 }
 

@@ -286,7 +286,7 @@ final class HiraganaItemRepository {
     /// Gets all hiragana items
     /// - Returns: Array of all available hiragana items
     func getAllHiraganaData() -> [HiraganaItem] {
-        return allHiraganaData
+        allHiraganaData
     }
     
     /// Gets hiragana items for a specific level
@@ -294,12 +294,12 @@ final class HiraganaItemRepository {
     /// - Returns: Array of hiragana items available for that level
     func getHiraganaForLevel(_ level: Int) -> [HiraganaItem] {
         let rows = ["あいうえお", "かきくけこ", "さしすせそ", "たちつてと", "なにぬねの",
-                   "はひふへほ", "まみむめも", "やゆよ", "らりるれろ", "わをん"]
+                    "はひふへほ", "まみむめも", "やゆよ", "らりるれろ", "わをん"]
         
         guard level > 0 && level <= rows.count else { return [] }
         
         var characters: [String] = []
-        for i in 0..<level {
+        for i in 0 ..< level {
             characters.append(contentsOf: Array(rows[i]).map(String.init))
         }
         
@@ -310,27 +310,27 @@ final class HiraganaItemRepository {
     /// - Parameter hiragana: The hiragana character
     /// - Returns: Array of all hiragana items with that character
     func getQuestionVariations(for hiragana: String) -> [HiraganaItem] {
-        return allHiraganaData.filter { $0.character == hiragana }
+        allHiraganaData.filter { $0.character == hiragana }
     }
     
     /// Gets the first item for a specific character (for consistency)
     /// - Parameter character: The hiragana character
     /// - Returns: The first hiragana item with that character, or nil
     func getItem(for character: String) -> HiraganaItem? {
-        return allHiraganaData.first { $0.character == character }
+        allHiraganaData.first { $0.character == character }
     }
     
     /// Gets all unique characters available in the repository
     /// - Returns: Array of unique hiragana characters
     func getAllCharacters() -> [String] {
-        return Array(Set(allHiraganaData.map { $0.character }))
+        Array(Set(allHiraganaData.map { $0.character }))
     }
     
     /// Gets reading text for a hiragana character
     /// - Parameter character: The hiragana character
     /// - Returns: The reading text, or the character itself if not found
     func getReadingForCharacter(_ character: String) -> String {
-        return readingMap[character] ?? character
+        readingMap[character] ?? character
     }
     
     /// Gets random choices for a game question

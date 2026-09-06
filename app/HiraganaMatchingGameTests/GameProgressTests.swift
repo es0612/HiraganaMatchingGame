@@ -48,7 +48,7 @@ func gameProgressPersistence() throws {
         GameProgress.self,
         GameLevel.self,
         UserSettings.self,
-        Character.self,
+        Character.self
     ])
     let container = try ModelContainer(
         for: schema,

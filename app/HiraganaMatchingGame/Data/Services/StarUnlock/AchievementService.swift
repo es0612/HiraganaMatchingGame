@@ -53,20 +53,20 @@ final class AchievementService {
     /// Gets all unlocked achievements
     /// - Returns: Set of unlocked achievements
     func getUnlockedAchievements() -> Set<Achievement> {
-        return unlockedAchievements
+        unlockedAchievements
     }
     
     /// Checks if a specific achievement is unlocked
     /// - Parameter achievement: The achievement to check
     /// - Returns: True if the achievement is unlocked
     func isAchievementUnlocked(_ achievement: Achievement) -> Bool {
-        return unlockedAchievements.contains(achievement)
+        unlockedAchievements.contains(achievement)
     }
     
     /// Gets all available achievements (for UI display)
     /// - Returns: Array of all possible achievements
     func getAllAchievements() -> [Achievement] {
-        return Achievement.allCases
+        Achievement.allCases
     }
     
     /// Gets progress percentage for achievements
@@ -178,7 +178,7 @@ final class AchievementService {
     func getRecentlyUnlockedAchievements() -> [Achievement] {
         // Simplified implementation - returns all unlocked achievements
         // In a full implementation, this would filter by unlock timestamp
-        return Array(unlockedAchievements)
+        Array(unlockedAchievements)
     }
     
     // MARK: - Persistence

@@ -142,8 +142,8 @@ class TestableUserSettings {
     }
     
     func validateSettings() -> Bool {
-        return soundVolume >= 0.0 && soundVolume <= 1.0 &&
-               voiceSpeed >= 0.5 && voiceSpeed <= 2.0 &&
-               playtimeLimit >= 0
+        soundVolume >= 0.0 && soundVolume <= 1.0 &&
+            voiceSpeed >= 0.5 && voiceSpeed <= 2.0 &&
+            playtimeLimit >= 0
     }
 }

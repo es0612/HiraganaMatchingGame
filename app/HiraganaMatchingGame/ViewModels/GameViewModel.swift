@@ -16,7 +16,7 @@ class GameViewModel {
     var isGameCompleted: Bool = false
     var currentHiragana: String = ""
     var answerChoices: [HiraganaItem] = []
-    var gameStartTime: Date = Date()
+    var gameStartTime = Date()
     var showFeedback: Bool = false
     var lastAnswerCorrect: Bool = false
     var earnedStars: Int = 0
@@ -45,7 +45,7 @@ class GameViewModel {
         self.isTestMode = isTestMode
         // Provide total stars via LevelProgressionService to StarUnlockService
         self.starUnlockService.totalStarsProvider = { [weak levelProgressionService] in
-            return levelProgressionService?.getTotalStars() ?? 0
+            levelProgressionService?.getTotalStars() ?? 0
         }
     }
     

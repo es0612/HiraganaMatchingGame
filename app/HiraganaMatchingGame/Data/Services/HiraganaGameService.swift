@@ -54,34 +54,34 @@ final class HiraganaGameService {
     /// Gets the level configuration
     /// - Returns: Dictionary mapping level numbers to arrays of available characters
     func getLevelConfiguration() -> [Int: [String]] {
-        return levelConfiguration
+        levelConfiguration
     }
     
     /// Gets characters available for a specific level
     /// - Parameter level: The level number (1-10)
     /// - Returns: Array of characters available at that level, or empty array if invalid level
     func getCharactersForLevel(_ level: Int) -> [String] {
-        return levelConfiguration[level] ?? []
+        levelConfiguration[level] ?? []
     }
     
     /// Gets hiragana items available for a specific level
     /// - Parameter level: The level number (1-10)
     /// - Returns: Array of hiragana items available for that level
     func getHiraganaForLevel(_ level: Int) -> [HiraganaItem] {
-        return hiraganaItemRepository.getHiraganaForLevel(level)
+        hiraganaItemRepository.getHiraganaForLevel(level)
     }
     
     /// Checks if a level is valid
     /// - Parameter level: The level to validate
     /// - Returns: True if level is between 1-10, false otherwise
     func isValidLevel(_ level: Int) -> Bool {
-        return level >= 1 && level <= levelConfiguration.count
+        level >= 1 && level <= levelConfiguration.count
     }
     
     /// Gets the maximum available level
     /// - Returns: The highest level number available
     func getMaxLevel() -> Int {
-        return levelConfiguration.count
+        levelConfiguration.count
     }
     
     // MARK: - Game Question Generation
@@ -92,7 +92,7 @@ final class HiraganaGameService {
     ///   - count: Number of choices to generate (default 3)
     /// - Returns: Array of shuffled hiragana items including the correct answer
     func getRandomChoices(for hiragana: String, count: Int = 3) -> [HiraganaItem] {
-        return hiraganaItemRepository.getRandomChoices(for: hiragana, count: count)
+        hiraganaItemRepository.getRandomChoices(for: hiragana, count: count)
     }
     
     /// Generates random choices with a specific correct answer item
@@ -101,14 +101,14 @@ final class HiraganaGameService {
     ///   - count: Number of choices to generate (default 3)
     /// - Returns: Array of shuffled hiragana items including the specified correct answer
     func getRandomChoicesWithCorrectAnswer(_ correctAnswer: HiraganaItem, count: Int = 3) -> [HiraganaItem] {
-        return hiraganaItemRepository.getRandomChoicesWithCorrectAnswer(correctAnswer, count: count)
+        hiraganaItemRepository.getRandomChoicesWithCorrectAnswer(correctAnswer, count: count)
     }
     
     /// Gets all possible question variations for a hiragana character
     /// - Parameter hiragana: The hiragana character
     /// - Returns: Array of all hiragana items with that character
     func getQuestionVariations(for hiragana: String) -> [HiraganaItem] {
-        return hiraganaItemRepository.getQuestionVariations(for: hiragana)
+        hiraganaItemRepository.getQuestionVariations(for: hiragana)
     }
     
     // MARK: - Game Data Access
@@ -117,26 +117,26 @@ final class HiraganaGameService {
     /// - Parameter character: The hiragana character
     /// - Returns: The first hiragana item with that character, or nil
     func getItem(for character: String) -> HiraganaItem? {
-        return hiraganaItemRepository.getItem(for: character)
+        hiraganaItemRepository.getItem(for: character)
     }
     
     /// Gets all available hiragana data
     /// - Returns: Array of all hiragana items
     func getAllHiraganaData() -> [HiraganaItem] {
-        return hiraganaItemRepository.getAllHiraganaData()
+        hiraganaItemRepository.getAllHiraganaData()
     }
     
     /// Gets all unique characters available in the game
     /// - Returns: Array of unique hiragana characters
     func getAllCharacters() -> [String] {
-        return hiraganaItemRepository.getAllCharacters()
+        hiraganaItemRepository.getAllCharacters()
     }
     
     /// Gets reading text for a hiragana character
     /// - Parameter character: The hiragana character
     /// - Returns: The reading text, or the character itself if not found
     func getReadingForCharacter(_ character: String) -> String {
-        return hiraganaItemRepository.getReadingForCharacter(character)
+        hiraganaItemRepository.getReadingForCharacter(character)
     }
     
     // MARK: - Word and Emoji Mappings
@@ -145,14 +145,14 @@ final class HiraganaGameService {
     /// - Parameter imageName: The image name to look up
     /// - Returns: The corresponding Japanese word, or nil if not found
     func getJapaneseWord(for imageName: String) -> String? {
-        return wordMappingRepository.getJapaneseWord(for: imageName)
+        wordMappingRepository.getJapaneseWord(for: imageName)
     }
     
     /// Gets the emoji representation for an image name
     /// - Parameter imageName: The image name to look up
     /// - Returns: The corresponding emoji, or "❓" if not found
     func getEmojiForImageName(_ imageName: String) -> String {
-        return emojiRepository.getEmojiForImageName(imageName)
+        emojiRepository.getEmojiForImageName(imageName)
     }
     
     // MARK: - Game Progression Logic
@@ -212,15 +212,15 @@ final class HiraganaGameService {
     /// - Returns: Difficulty rating from 1 (easy) to 5 (very hard)
     func getDifficultyRating(for level: Int) -> Int {
         switch level {
-        case 1...2:
+        case 1 ... 2:
             return 1 // Very Easy - Basic vowels and first consonants
-        case 3...4:
+        case 3 ... 4:
             return 2 // Easy - Adding more basic consonants
-        case 5...6:
+        case 5 ... 6:
             return 3 // Medium - Mid-range hiragana
-        case 7...8:
+        case 7 ... 8:
             return 4 // Hard - Complex hiragana including や行
-        case 9...10:
+        case 9 ... 10:
             return 5 // Very Hard - All hiragana including rare characters
         default:
             return 1

@@ -62,16 +62,16 @@ final class UnifiedGameProgress {
     init(currentLevel: Int = 1, totalStars: Int = 0) {
         self.currentLevel = currentLevel
         self.totalStars = totalStars
-        self.lastPlayedDate = Date()
-        self.levelStarsData = Data()
-        self.unlockedCharactersData = Data()
-        self.totalTimePlayed = 0.0
-        self.totalAccuracy = 0.0
-        self.completedLevelsCount = 0
-        self.currentStreak = 0
-        self.highestStreak = 0
-        self.achievements = []
-        self.levelStatistics = []
+        lastPlayedDate = Date()
+        levelStarsData = Data()
+        unlockedCharactersData = Data()
+        totalTimePlayed = 0.0
+        totalAccuracy = 0.0
+        completedLevelsCount = 0
+        currentStreak = 0
+        highestStreak = 0
+        achievements = []
+        levelStatistics = []
     }
     
     // MARK: - Convenience Methods
@@ -143,7 +143,7 @@ final class UnifiedGameProgress {
     // MARK: - Achievement Management
     
     func hasAchievement(_ achievementType: String) -> Bool {
-        return achievements.contains { $0.achievementType == achievementType }
+        achievements.contains { $0.achievementType == achievementType }
     }
     
     func addAchievement(_ achievementType: String) {
@@ -154,13 +154,13 @@ final class UnifiedGameProgress {
     }
     
     func getAchievements() -> Set<String> {
-        return Set(achievements.map { $0.achievementType })
+        Set(achievements.map { $0.achievementType })
     }
     
     // MARK: - Level Statistics Management
     
     func getLevelStatistic(for level: Int) -> LevelStats? {
-        return levelStatistics.first { $0.level == level }
+        levelStatistics.first { $0.level == level }
     }
     
     func updateLevelStatistic(level: Int, bestStars: Int, bestAccuracy: Double, bestTime: Double, totalAttempts: Int, averageStars: Double) {

@@ -44,9 +44,9 @@ struct GameView: View {
                 levelProgressionService: levelProgressionService
             )
             viewModel.updateUserSettings(settings)
-            self._gameViewModel = State(initialValue: viewModel)
+            _gameViewModel = State(initialValue: viewModel)
         } else {
-            self._gameViewModel = State(initialValue: GameViewModel(
+            _gameViewModel = State(initialValue: GameViewModel(
                 levelProgressionService: levelProgressionService
             ))
         }
@@ -96,20 +96,18 @@ struct GameView: View {
                                     HiraganaCardView(
                                         currentHiragana: gameViewModel.currentHiragana,
                                         showFeedback: gameViewModel.showFeedback,
-                                        score: gameViewModel.score,
-                                        onSoundButtonTapped: { gameViewModel.playHiraganaSound() }
-                                    )
+                                        score: gameViewModel.score
+                                    ) { gameViewModel.playHiraganaSound() }
                                     
                                     // ヒント表示
                                     if showHint {
                                         HintView(
-                                            hintText: hintText,
-                                            onClose: {
-                                                withAnimation(.easeInOut(duration: 0.3)) {
-                                                    showHint = false
-                                                }
+                                            hintText: hintText
+                                        ) {
+                                            withAnimation(.easeInOut(duration: 0.3)) {
+                                                showHint = false
                                             }
-                                        )
+                                        }
                                     }
                                     
                                     AnswerChoicesView(
@@ -117,11 +115,10 @@ struct GameView: View {
                                         showFeedback: gameViewModel.showFeedback,
                                         isProcessingAnswer: gameViewModel.isProcessingAnswer,
                                         currentHiragana: gameViewModel.currentHiragana,
-                                        isLandscape: isLandscape,
-                                        onAnswerSelected: { selectedAnswer in
-                                            gameViewModel.selectAnswer(selectedAnswer)
-                                        }
-                                    )
+                                        isLandscape: isLandscape
+                                    ) { selectedAnswer in
+                                        gameViewModel.selectAnswer(selectedAnswer)
+                                    }
                                 }
                                 .accessibilityIdentifier("ゲームエリア")
                             }
@@ -178,13 +175,12 @@ struct GameView: View {
             if showLevelUnlockNotification {
                 LevelUnlockNotificationView(
                     unlockedLevel: unlockedLevel,
-                    showNotification: showLevelUnlockNotification,
-                    onDismiss: {
-                        withAnimation(.easeOut(duration: 0.5)) {
-                            showLevelUnlockNotification = false
-                        }
+                    showNotification: showLevelUnlockNotification
+                ) {
+                    withAnimation(.easeOut(duration: 0.5)) {
+                        showLevelUnlockNotification = false
                     }
-                )
+                }
                 .zIndex(100)
             }
         }

@@ -43,11 +43,11 @@ class TestableStarUnlockService {
     ]
     
     func getUnlockedCharacters() -> [String] {
-        return Array(unlockedCharacters)
+        Array(unlockedCharacters)
     }
     
     func isCharacterUnlocked(_ character: String) -> Bool {
-        return unlockedCharacters.contains(character)
+        unlockedCharacters.contains(character)
     }
     
     func addStars(_ stars: Int) {
@@ -55,7 +55,7 @@ class TestableStarUnlockService {
     }
     
     func getTotalStars() -> Int {
-        return totalStars
+        totalStars
     }
     
     func updateUnlockedCharacters() {
@@ -189,7 +189,7 @@ class TestableStarUnlockService {
     }
     
     func getLevelStatistics(level: Int) -> LevelStatistics? {
-        return levelStatistics[level]
+        levelStatistics[level]
     }
     
     func getUnlockProgress() -> UnlockProgress {
@@ -242,7 +242,7 @@ class TestableStarUnlockService {
     }
     
     func getUnlockedAchievements() -> Set<Achievement> {
-        return unlockedAchievements
+        unlockedAchievements
     }
     
     private func checkAchievements(level: Int, stars: Int, accuracy: Double, time: Double) {

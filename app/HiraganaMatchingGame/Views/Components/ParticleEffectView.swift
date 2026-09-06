@@ -49,13 +49,13 @@ struct ParticleEffectView: View {
         let particleCount = isCorrect ? 15 : 8
         let emojis = isCorrect ? ["⭐", "✨", "🎉", "🌟", "💫"] : ["❌", "💔", "😢"]
         
-        particles = (0..<particleCount).map { _ in
+        particles = (0 ..< particleCount).map { _ in
             Particle(
-                x: 200,  // 中央から開始
+                x: 200, // 中央から開始
                 y: 200,
-                velocityX: Double.random(in: -100...100),
-                velocityY: Double.random(in: -150...(-50)),
-                scale: Double.random(in: 0.5...1.5),
+                velocityX: Double.random(in: -100 ... 100),
+                velocityY: Double.random(in: -150 ... -50),
+                scale: Double.random(in: 0.5 ... 1.5),
                 opacity: 1.0,
                 rotation: 0,
                 emoji: emojis.randomElement() ?? "⭐"
@@ -78,7 +78,7 @@ struct ParticleEffectView: View {
                 particles[i].y += particles[i].velocityY * 2
                 particles[i].opacity = 0
                 particles[i].scale *= 0.3
-                particles[i].rotation = Double.random(in: 0...360)
+                particles[i].rotation = Double.random(in: 0 ... 360)
             }
         }
         
@@ -124,13 +124,13 @@ struct ConfettiView: View {
     private func createConfetti(in size: CGSize) {
         let colors: [Color] = [.red, .blue, .green, .yellow, .pink, .purple, .orange]
         
-        particles = (0..<50).map { _ in
+        particles = (0 ..< 50).map { _ in
             ConfettiParticle(
-                x: CGFloat.random(in: 0...size.width),
+                x: CGFloat.random(in: 0 ... size.width),
                 y: -10,
                 color: colors.randomElement() ?? .blue,
-                scale: CGFloat.random(in: 0.5...1.5),
-                rotation: Double.random(in: 0...360)
+                scale: CGFloat.random(in: 0.5 ... 1.5),
+                rotation: Double.random(in: 0 ... 360)
             )
         }
     }
@@ -144,9 +144,9 @@ struct ConfettiView: View {
         
         withAnimation(.easeOut(duration: AppConstants.Timing.confettiFadeDuration)) {
             for i in particles.indices {
-                particles[i].y += CGFloat.random(in: 500...800)
-                particles[i].x += CGFloat.random(in: -100...100)
-                particles[i].rotation += Double.random(in: 180...720)
+                particles[i].y += CGFloat.random(in: 500 ... 800)
+                particles[i].x += CGFloat.random(in: -100 ... 100)
+                particles[i].rotation += Double.random(in: 180 ... 720)
                 particles[i].scale *= 0.1
             }
         }

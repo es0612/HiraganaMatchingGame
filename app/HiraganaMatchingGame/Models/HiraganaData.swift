@@ -11,7 +11,7 @@ struct HiraganaItem: Identifiable, Hashable {
         self.character = character
         self.imageName = imageName
         self.category = category
-        self.soundFileName = "\(character).mp3"
+        soundFileName = "\(character).mp3"
     }
 }
 
@@ -30,13 +30,13 @@ class HiraganaDataManager {
     /// - Parameter level: The level number (1-10)
     /// - Returns: Array of hiragana items available for that level
     func getHiraganaForLevel(_ level: Int) -> [HiraganaItem] {
-        return gameService.getHiraganaForLevel(level)
+        gameService.getHiraganaForLevel(level)
     }
     
     /// Gets the level configuration
     /// - Returns: Dictionary mapping level numbers to arrays of available characters
     func getLevelConfiguration() -> [Int: [String]] {
-        return gameService.getLevelConfiguration()
+        gameService.getLevelConfiguration()
     }
     
     // MARK: - Game Question Generation
@@ -47,7 +47,7 @@ class HiraganaDataManager {
     ///   - count: Number of choices to generate (default 3)
     /// - Returns: Array of shuffled hiragana items including the correct answer
     func getRandomChoices(for hiragana: String, count: Int = 3) -> [HiraganaItem] {
-        return gameService.getRandomChoices(for: hiragana, count: count)
+        gameService.getRandomChoices(for: hiragana, count: count)
     }
     
     /// Generates random choices with a specific correct answer item
@@ -56,14 +56,14 @@ class HiraganaDataManager {
     ///   - count: Number of choices to generate (default 3)
     /// - Returns: Array of shuffled hiragana items including the specified correct answer
     func getRandomChoicesWithCorrectAnswer(_ correctAnswer: HiraganaItem, count: Int = 3) -> [HiraganaItem] {
-        return gameService.getRandomChoicesWithCorrectAnswer(correctAnswer, count: count)
+        gameService.getRandomChoicesWithCorrectAnswer(correctAnswer, count: count)
     }
     
     /// Gets all possible question variations for a hiragana character
     /// - Parameter hiragana: The hiragana character
     /// - Returns: Array of all hiragana items with that character
     func getQuestionVariations(for hiragana: String) -> [HiraganaItem] {
-        return gameService.getQuestionVariations(for: hiragana)
+        gameService.getQuestionVariations(for: hiragana)
     }
     
     // MARK: - Data Access
@@ -72,33 +72,33 @@ class HiraganaDataManager {
     /// - Parameter imageName: The image name to look up
     /// - Returns: The corresponding Japanese word, or nil if not found
     func getJapaneseWord(for imageName: String) -> String? {
-        return gameService.getJapaneseWord(for: imageName)
+        gameService.getJapaneseWord(for: imageName)
     }
     
     /// Gets all unique characters available in the game
     /// - Returns: Array of unique hiragana characters
     func getAllCharacters() -> [String] {
-        return gameService.getAllCharacters()
+        gameService.getAllCharacters()
     }
     
     /// Gets all available hiragana data
     /// - Returns: Array of all hiragana items
     func getAllHiraganaData() -> [HiraganaItem] {
-        return gameService.getAllHiraganaData()
+        gameService.getAllHiraganaData()
     }
     
     /// Gets the first item for a specific character (for consistency)
     /// - Parameter character: The hiragana character
     /// - Returns: The first hiragana item with that character, or nil
     func getItem(for character: String) -> HiraganaItem? {
-        return gameService.getItem(for: character)
+        gameService.getItem(for: character)
     }
     
     /// Gets reading text for a hiragana character
     /// - Parameter character: The hiragana character
     /// - Returns: The reading text, or the character itself if not found
     func getReadingForCharacter(_ character: String) -> String {
-        return gameService.getReadingForCharacter(character)
+        gameService.getReadingForCharacter(character)
     }
     
     // MARK: - Emoji Support
@@ -107,7 +107,7 @@ class HiraganaDataManager {
     /// - Parameter imageName: The image name to look up
     /// - Returns: The corresponding emoji, or "❓" if not found
     func getEmojiForImageName(_ imageName: String) -> String {
-        return gameService.getEmojiForImageName(imageName)
+        gameService.getEmojiForImageName(imageName)
     }
     
     // MARK: - Game Progression (Enhanced functionality)
@@ -119,7 +119,7 @@ class HiraganaDataManager {
     ///   - totalQuestions: Total questions in the level
     /// - Returns: True if the next level should be unlocked
     func shouldUnlockNextLevel(currentLevel: Int, score: Int, totalQuestions: Int) -> Bool {
-        return gameService.shouldUnlockNextLevel(currentLevel: currentLevel, score: score, totalQuestions: totalQuestions)
+        gameService.shouldUnlockNextLevel(currentLevel: currentLevel, score: score, totalQuestions: totalQuestions)
     }
     
     /// Calculates stars earned based on performance
@@ -128,7 +128,7 @@ class HiraganaDataManager {
     ///   - totalQuestions: Total questions in the level
     /// - Returns: Number of stars earned (0-3)
     func calculateStarsEarned(score: Int, totalQuestions: Int) -> Int {
-        return gameService.calculateStarsEarned(score: score, totalQuestions: totalQuestions)
+        gameService.calculateStarsEarned(score: score, totalQuestions: totalQuestions)
     }
     
     /// Determines if performance is considered "excellent"
@@ -137,20 +137,20 @@ class HiraganaDataManager {
     ///   - totalQuestions: Total questions in the level
     /// - Returns: True if performance is excellent (90%+ accuracy)
     func isExcellentPerformance(score: Int, totalQuestions: Int) -> Bool {
-        return gameService.isExcellentPerformance(score: score, totalQuestions: totalQuestions)
+        gameService.isExcellentPerformance(score: score, totalQuestions: totalQuestions)
     }
     
     /// Gets a random hiragana character for a specific level
     /// - Parameter level: The level to get a character from
     /// - Returns: A random character available at that level, or nil if invalid level
     func getRandomCharacterForLevel(_ level: Int) -> String? {
-        return gameService.getRandomCharacterForLevel(level)
+        gameService.getRandomCharacterForLevel(level)
     }
     
     /// Gets difficulty rating for a level
     /// - Parameter level: The level to evaluate
     /// - Returns: Difficulty rating from 1 (easy) to 5 (very hard)
     func getDifficultyRating(for level: Int) -> Int {
-        return gameService.getDifficultyRating(for: level)
+        gameService.getDifficultyRating(for: level)
     }
 }

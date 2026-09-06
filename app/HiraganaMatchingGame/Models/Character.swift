@@ -13,8 +13,8 @@ final class Character {
         self.name = name
         self.imageName = imageName
         self.unlockRequirement = unlockRequirement
-        self.isUnlocked = false
-        self.unlockedDate = nil
+        isUnlocked = false
+        unlockedDate = nil
     }
     
     func unlock() {
@@ -25,7 +25,7 @@ final class Character {
     }
     
     func canUnlock(withStars stars: Int) -> Bool {
-        return stars >= unlockRequirement
+        stars >= unlockRequirement
     }
     
     func reset() {

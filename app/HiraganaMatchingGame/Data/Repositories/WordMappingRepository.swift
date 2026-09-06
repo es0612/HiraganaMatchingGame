@@ -218,24 +218,24 @@ final class WordMappingRepository {
     /// - Parameter imageName: The image name to look up
     /// - Returns: The corresponding Japanese word, or nil if not found
     func getJapaneseWord(for imageName: String) -> String? {
-        return imageNameToJapaneseWord[imageName]
+        imageNameToJapaneseWord[imageName]
     }
     
     /// Gets all available image names
     /// - Returns: Array of all image names in the mapping
     func getAllImageNames() -> [String] {
-        return Array(imageNameToJapaneseWord.keys)
+        Array(imageNameToJapaneseWord.keys)
     }
     
     /// Gets all available Japanese words
     /// - Returns: Array of all Japanese words in the mapping
     func getAllJapaneseWords() -> [String] {
-        return Array(imageNameToJapaneseWord.values)
+        Array(imageNameToJapaneseWord.values)
     }
     
     /// Gets all image-to-word mappings
     /// - Returns: Dictionary containing all mappings
     func getAllMappings() -> [String: String] {
-        return imageNameToJapaneseWord
+        imageNameToJapaneseWord
     }
 }

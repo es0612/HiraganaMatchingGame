@@ -115,11 +115,11 @@ class SettingsViewModel {
         let existingSettings = try? modelContext.fetch(descriptor)
         
         if let settings = existingSettings?.first {
-            self.userSettings = settings
+            userSettings = settings
         } else {
             // 新しい設定を作成
-            self.userSettings = UserSettings()
-            modelContext.insert(self.userSettings)
+            userSettings = UserSettings()
+            modelContext.insert(userSettings)
             saveSettings()
         }
     }
@@ -127,7 +127,7 @@ class SettingsViewModel {
     // 便利な初期化（テスト用）
     init(userSettings: UserSettings = UserSettings()) {
         self.userSettings = userSettings
-        self.modelContext = nil
+        modelContext = nil
     }
     
     func resetToDefaults() {
@@ -176,12 +176,12 @@ class SettingsViewModel {
     
     // 設定のバリデーション
     func validateAllSettings() -> Bool {
-        return userSettings.validateSettings()
+        userSettings.validateSettings()
     }
     
     // 音量のフォーマット（パーセンテージ表示用）
     func formattedSoundVolume() -> String {
-        return "\(Int(soundVolume * 100))%"
+        "\(Int(soundVolume * 100))%"
     }
     
     // 制限時間のフォーマット（秒単位）
@@ -203,17 +203,17 @@ class SettingsViewModel {
     
     // 音声速度のフォーマット
     func formattedVoiceSpeed() -> String {
-        return String(format: "%.1fx", voiceSpeed)
+        String(format: "%.1fx", voiceSpeed)
     }
     
     // 問題数のフォーマット
     func formattedQuestionsPerSession() -> String {
-        return questionsPerSession.displayName
+        questionsPerSession.displayName
     }
     
     // デバッグ用の設定情報表示
     func debugDescription() -> String {
-        return """
+        """
         設定情報:
         - 音声: \(soundEnabled ? "有効" : "無効")
         - 音楽: \(musicEnabled ? "有効" : "無効")

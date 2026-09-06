@@ -91,15 +91,13 @@ struct LevelUnlockNotificationView: View {
         VStack(spacing: 40) {
             LevelUnlockNotificationView(
                 unlockedLevel: 5,
-                showNotification: true,
-                onDismiss: { print("Dismissed") }
-            )
+                showNotification: true
+            ) { print("Dismissed") }
             
             LevelUnlockNotificationView(
                 unlockedLevel: 10,
-                showNotification: false,
-                onDismiss: { print("Dismissed") }
-            )
+                showNotification: false
+            ) { print("Dismissed") }
         }
     }
 }

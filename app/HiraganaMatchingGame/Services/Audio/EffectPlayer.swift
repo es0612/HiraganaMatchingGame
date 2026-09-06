@@ -135,14 +135,14 @@ class EffectPlayer: ObservableObject {
             (523.25, 0.2), // C
             (659.25, 0.2), // E
             (783.99, 0.2), // G
-            (1046.5, 0.4)  // C (octave)
+            (1046.5, 0.4) // C (octave)
         ]
         return generateMelody(notes: notes)
     }
     
     private func generateClickSound() -> Data {
         // Short click sound
-        return generateBeepSound(frequency: 600.0, duration: 0.1)
+        generateBeepSound(frequency: 600.0, duration: 0.1)
     }
     
     private func generateFanfareSound() -> Data {
@@ -151,7 +151,7 @@ class EffectPlayer: ObservableObject {
             (783.99, 0.2), // G
             (880.00, 0.2), // A
             (987.77, 0.2), // B
-            (1046.5, 0.2)  // C
+            (1046.5, 0.2) // C
         ]
         return generateMelody(notes: notes)
     }
@@ -161,10 +161,10 @@ class EffectPlayer: ObservableObject {
         let samples = Int(sampleRate * duration)
         var audioData = Data()
         
-        for i in 0..<samples {
+        for i in 0 ..< samples {
             let time = Double(i) / sampleRate
             let envelope = time < 0.1 ? time / 0.1 :
-                          time > (duration - 0.1) ? (duration - time) / 0.1 : 1.0
+                time > (duration - 0.1) ? (duration - time) / 0.1 : 1.0
             let sample = sin(2.0 * Double.pi * frequency * time) * envelope
             let scaledSample = Int16(sample * 16383.0) // Reduced amplitude
             
@@ -181,10 +181,10 @@ class EffectPlayer: ObservableObject {
         let samples = Int(sampleRate * duration)
         var audioData = Data()
         
-        for i in 0..<samples {
+        for i in 0 ..< samples {
             let time = Double(i) / sampleRate
             let envelope = time < 0.1 ? time / 0.1 :
-                          time > (duration - 0.1) ? (duration - time) / 0.1 : 1.0
+                time > (duration - 0.1) ? (duration - time) / 0.1 : 1.0
             
             var mixedSample = 0.0
             for frequency in frequencies {

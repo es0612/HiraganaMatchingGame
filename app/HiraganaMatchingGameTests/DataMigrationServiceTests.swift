@@ -17,7 +17,7 @@ struct DataMigrationServiceTests {
             Character.self,
             UnifiedGameProgress.self,
             AchievementRecord.self,
-            LevelStats.self,
+            LevelStats.self
         ])
         return try ModelContainer(
             for: schema,
@@ -353,9 +353,9 @@ struct DataMigrationServiceTests {
         cleanupTestUserDefaults()
         
         // 大量のテストデータを設定
-        let largeCharacterSet = Array(1...100).map { "char_\($0)" }
-        let largeLevelStars = Dictionary(uniqueKeysWithValues: (1...50).map { ("\($0)", Int.random(in: 0...3)) })
-        let largeAchievements = Array(1...20).map { "achievement_\($0)" }
+        let largeCharacterSet = Array(1 ... 100).map { "char_\($0)" }
+        let largeLevelStars = Dictionary(uniqueKeysWithValues: (1 ... 50).map { ("\($0)", Int.random(in: 0 ... 3)) })
+        let largeAchievements = Array(1 ... 20).map { "achievement_\($0)" }
         
         UserDefaults.standard.set(largeCharacterSet, forKey: "StarUnlock_UnlockedCharacters")
         UserDefaults.standard.set(largeLevelStars, forKey: "StarUnlock_LevelStars")

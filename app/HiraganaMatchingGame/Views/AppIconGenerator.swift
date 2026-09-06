@@ -6,8 +6,8 @@ struct AppIconGenerator: View {
             // 背景グラデーション
             LinearGradient(
                 gradient: Gradient(colors: [
-                    Color(red: 0.2, green: 0.6, blue: 1.0),  // 明るい青
-                    Color(red: 0.8, green: 0.4, blue: 0.9)   // 薄紫
+                    Color(red: 0.2, green: 0.6, blue: 1.0), // 明るい青
+                    Color(red: 0.8, green: 0.4, blue: 0.9) // 薄紫
                 ]),
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing

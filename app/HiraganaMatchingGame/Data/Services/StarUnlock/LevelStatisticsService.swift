@@ -64,37 +64,37 @@ final class LevelStatisticsService {
     /// - Parameter level: The level to get statistics for
     /// - Returns: Level statistics or nil if level hasn't been played
     func getLevelStatistics(level: Int) -> LevelStatistics? {
-        return levelStatistics[level]
+        levelStatistics[level]
     }
     
     /// Gets statistics for all played levels
     /// - Returns: Dictionary of level to statistics
     func getAllLevelStatistics() -> [Int: LevelStatistics] {
-        return levelStatistics
+        levelStatistics
     }
     
     /// Gets the number of completed levels (levels that have been played at least once)
     /// - Returns: Count of completed levels
     func getCompletedLevelsCount() -> Int {
-        return levelStatistics.keys.count
+        levelStatistics.keys.count
     }
     
     /// Gets the best time across all levels
     /// - Returns: Best time in seconds, or nil if no levels have been completed
     func getBestTimeAcrossAllLevels() -> Double? {
-        return levelStatistics.values.min { $0.bestTime < $1.bestTime }?.bestTime
+        levelStatistics.values.min { $0.bestTime < $1.bestTime }?.bestTime
     }
     
     /// Gets the highest accuracy across all levels
     /// - Returns: Highest accuracy (0.0 to 1.0), or nil if no levels have been completed
     func getHighestAccuracyAcrossAllLevels() -> Double? {
-        return levelStatistics.values.max { $0.bestAccuracy < $1.bestAccuracy }?.bestAccuracy
+        levelStatistics.values.max { $0.bestAccuracy < $1.bestAccuracy }?.bestAccuracy
     }
     
     /// Gets the most recently played level
     /// - Returns: Level number of most recently played level, or nil if no levels played
     func getMostRecentlyPlayedLevel() -> Int? {
-        return levelStatistics.values.max {
+        levelStatistics.values.max {
             guard let date1 = $0.lastPlayed, let date2 = $1.lastPlayed else { return false }
             return date1 < date2
         }?.level
@@ -104,7 +104,7 @@ final class LevelStatisticsService {
     /// - Parameter level: The level to check
     /// - Returns: True if the level has been played
     func isLevelCompleted(_ level: Int) -> Bool {
-        return levelStatistics[level] != nil
+        levelStatistics[level] != nil
     }
     
     // MARK: - Data Management
@@ -174,7 +174,7 @@ final class LevelStatisticsService {
                             level: level,
                             bestStars: stars,
                             bestAccuracy: 1.0, // Fallback value
-                            bestTime: 30.0,     // Fallback value
+                            bestTime: 30.0, // Fallback value
                             totalAttempts: 1,
                             averageStars: Double(stars),
                             lastPlayed: Date()

@@ -116,7 +116,7 @@ struct LevelSelectionView: View {
         let columns = Array(repeating: GridItem(.flexible(), spacing: 15), count: isLandscape ? 5 : 3)
         
         return LazyVGrid(columns: columns, spacing: 15) {
-            ForEach(1...levelProgressionService.getTotalLevels(), id: \.self) { level in
+            ForEach(1 ... levelProgressionService.getTotalLevels(), id: \.self) { level in
                 levelButton(for: level)
             }
         }
@@ -210,7 +210,7 @@ struct LevelSelectionView: View {
     
     private func starsView(stars: Int) -> some View {
         HStack(spacing: 2) {
-            ForEach(0..<3, id: \.self) { index in
+            ForEach(0 ..< 3, id: \.self) { index in
                 Image(systemName: index < stars ? "star.fill" : "star")
                     .font(.caption2)
                     .foregroundColor(index < stars ? .yellow : .gray.opacity(0.3))
@@ -218,7 +218,7 @@ struct LevelSelectionView: View {
                     .rotationEffect(.degrees(index < stars ? 360 : 0))
                     .animation(
                         .spring(response: 0.6, dampingFraction: 0.8)
-                        .delay(Double(index) * 0.1),
+                            .delay(Double(index) * 0.1),
                         value: stars
                     )
             }

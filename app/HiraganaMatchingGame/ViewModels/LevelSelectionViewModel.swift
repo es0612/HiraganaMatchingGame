@@ -12,7 +12,7 @@ class LevelSelectionViewModel {
     }
     
     func loadProgress(from context: ModelContext) {
-        self.modelContext = context
+        modelContext = context
         
         let descriptor = FetchDescriptor<GameProgress>()
         do {
@@ -59,31 +59,31 @@ class LevelSelectionViewModel {
     }
     
     func getLevelConfiguration(_ level: Int) -> LevelConfiguration {
-        return levelProgressionService.getLevelConfiguration(level)
+        levelProgressionService.getLevelConfiguration(level)
     }
     
     func isLevelUnlocked(_ level: Int) -> Bool {
-        return levelProgressionService.isLevelUnlocked(level)
+        levelProgressionService.isLevelUnlocked(level)
     }
     
     func getStarsForLevel(_ level: Int) -> Int {
-        return levelProgressionService.getStarsForLevel(level)
+        levelProgressionService.getStarsForLevel(level)
     }
     
     func getTotalStars() -> Int {
-        return levelProgressionService.getTotalStars()
+        levelProgressionService.getTotalStars()
     }
     
     func getProgressionStats() -> ProgressionStats {
-        return levelProgressionService.getProgressionStats()
+        levelProgressionService.getProgressionStats()
     }
     
     func getRecommendedLevel() -> Int {
-        return levelProgressionService.getRecommendedNextLevel()
+        levelProgressionService.getRecommendedNextLevel()
     }
     
     func getTotalLevels() -> Int {
-        return levelProgressionService.getTotalLevels()
+        levelProgressionService.getTotalLevels()
     }
     
     func resetAllProgress() {

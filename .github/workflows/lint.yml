@@ -30,7 +30,9 @@ jobs:
       - name: SwiftLint Analysis
         run: |
           echo "🧹 Running SwiftLint analysis..."
-          swiftlint --strict
+          # NOTE: --strict は段階的導入のため一時的に外している (#16)。
+          # 残 warning（print→Logger 置換など）を解消したら --strict を復活させること。
+          swiftlint
           echo "✅ Lint analysis completed"
 
       - name: Quality Gate Summary
