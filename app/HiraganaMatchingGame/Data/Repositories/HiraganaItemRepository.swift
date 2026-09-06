@@ -234,8 +234,6 @@ final class HiraganaItemRepository {
         
         // わ行
         HiraganaItem(character: "わ", imageName: "ring", category: "object"),
-        HiraganaItem(character: "ゐ", imageName: "wi", category: "character"), // ゐ
-        HiraganaItem(character: "ゑ", imageName: "we", category: "character"), // ゑ
         HiraganaItem(character: "わ", imageName: "cotton", category: "material"), // わた
         HiraganaItem(character: "わ", imageName: "young", category: "concept"), // わかい
         HiraganaItem(character: "わ", imageName: "japanese", category: "concept"), // わふう
@@ -280,7 +278,7 @@ final class HiraganaItemRepository {
         "ら": "らっぱ", "り": "りんご", "る": "るーぷ", "れ": "れいぞうこ", "ろ": "ろうそく",
         
         // わ行
-        "わ": "わ", "ゐ": "ゐ", "ゑ": "ゑ", "を": "をとこ", "ん": "あんてな"
+        "わ": "わ", "を": "をとこ", "ん": "あんてな"
     ]
     
     /// Gets all hiragana items

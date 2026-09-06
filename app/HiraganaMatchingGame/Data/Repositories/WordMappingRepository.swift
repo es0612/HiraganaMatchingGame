@@ -200,8 +200,6 @@ final class WordMappingRepository {
         
         // わ行の追加
         "ring": "わ",
-        "wi": "ゐ",
-        "we": "ゑ",
         "cotton": "わた",
         "young": "わかい",
         "japanese": "わふう",

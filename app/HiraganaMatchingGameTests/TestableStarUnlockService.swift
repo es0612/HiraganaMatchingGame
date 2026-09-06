@@ -26,7 +26,7 @@ class TestableStarUnlockService {
         "ま行": ["ま", "み", "む", "め", "も"],
         "や行": ["や", "ゆ", "よ"],
         "ら行": ["ら", "り", "る", "れ", "ろ"],
-        "わ行": ["わ", "ゐ", "ゑ", "を", "ん"]
+        "わ行": ["わ", "を", "ん"]
     ]
     
     private let groupUnlockRequirements: [String: Int] = [

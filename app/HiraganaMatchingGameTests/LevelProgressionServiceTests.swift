@@ -139,7 +139,7 @@ struct LevelProgressionServiceTests {
         
         let level10Config = service.getLevelConfiguration(10)
         #expect(level10Config.requiredStars == 18)
-        #expect(level10Config.characters.count == 48) // 全文字（「ゐ」「ゑ」含む）
+        #expect(level10Config.characters.count == 46) // 現代の全ひらがな（旧仮名ゐ・ゑは除外）
         #expect(level10Config.questionsCount == 22)
         #expect(level10Config.title == "すべてのひらがな")
     }
