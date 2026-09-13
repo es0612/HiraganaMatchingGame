@@ -24,15 +24,15 @@ class StarUnlockService {
         }
     }
     
-    /// Optional provider to read total stars from LevelProgressionService
-    var totalStarsProvider: (() -> Int)? {
-        didSet {
-            characterUnlockService.totalStarsProvider = totalStarsProvider
-            statisticsService.totalStarsProvider = totalStarsProvider
+    /// 合計スターの供給元は LevelProgressionService に一本化する (#19)。
+    /// 実績/コレクション画面がゲーム画面を経由せずに生成しても正しい値を返せるよう、生成時に必ず注入する。
+    /// 内部サービスはシングルトンのため、この provider はプロセス全体で「最後に生成したものが有効」になる（#36 で整理）。
+    init(levelProgressionService: LevelProgressionService) {
+        let provider: () -> Int = { [weak levelProgressionService] in
+            levelProgressionService?.getTotalStars() ?? 0
         }
-    }
-    
-    init() {
+        characterUnlockService.totalStarsProvider = provider
+        statisticsService.totalStarsProvider = provider
         setupServiceDependencies()
     }
     

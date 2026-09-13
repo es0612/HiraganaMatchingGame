@@ -35,18 +35,15 @@ class GameViewModel {
     
     init(gameLogicService: GameLogicService = GameLogicService(),
          audioService: AudioService = AudioService.createForTesting(),
-         starUnlockService: StarUnlockService = StarUnlockService(),
+         starUnlockService: StarUnlockService? = nil,
          levelProgressionService: LevelProgressionService = LevelProgressionService(),
          isTestMode: Bool = false) {
         self.gameLogicService = gameLogicService
         self.audioService = audioService
-        self.starUnlockService = starUnlockService
+        // 合計スターの供給元を LevelProgressionService に固定する (#19)
+        self.starUnlockService = starUnlockService ?? StarUnlockService(levelProgressionService: levelProgressionService)
         self.levelProgressionService = levelProgressionService
         self.isTestMode = isTestMode
-        // Provide total stars via LevelProgressionService to StarUnlockService
-        self.starUnlockService.totalStarsProvider = { [weak levelProgressionService] in
-            levelProgressionService?.getTotalStars() ?? 0
-        }
     }
     
     convenience init(userSettings: UserSettings) {
@@ -55,7 +52,6 @@ class GameViewModel {
         self.init(
             gameLogicService: gameLogicService,
             audioService: audioService,
-            starUnlockService: StarUnlockService(),
             levelProgressionService: LevelProgressionService()
         )
         self.userSettings = userSettings

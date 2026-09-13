@@ -90,12 +90,12 @@ struct ContentView: View {
                     .id(gameViewId)
                 
                 case .characterCollection:
-                    CharacterCollectionView {
+                    CharacterCollectionView(levelProgressionService: levelSelectionViewModel.levelProgressionService) {
                         currentScreen = .levelSelection
                     }
                 
                 case .achievements:
-                    AchievementsView {
+                    AchievementsView(levelProgressionService: levelSelectionViewModel.levelProgressionService) {
                         currentScreen = .levelSelection
                     }
                 

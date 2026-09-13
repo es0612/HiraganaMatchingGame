@@ -40,7 +40,6 @@ struct GameView: View {
             let viewModel = GameViewModel(
                 gameLogicService: gameLogicService,
                 audioService: audioService,
-                starUnlockService: StarUnlockService(),
                 levelProgressionService: levelProgressionService
             )
             viewModel.updateUserSettings(settings)
