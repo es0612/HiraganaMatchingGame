@@ -203,6 +203,9 @@ struct GameView: View {
             }
         }
         .onDisappear {
+            // 「戻る」等で画面を離れたら時間制限タイマーを止める。
+            // 止めないと画面がない状態で completeGame() が走り、途中結果が統計に書き込まれる (#31)
+            gameViewModel.cleanup()
             // ゲーム画面を離れる時にメニューBGMに切り替え
             gameViewModel.audioService.switchToMenuBGM()
         }

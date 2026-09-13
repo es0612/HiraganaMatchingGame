@@ -114,3 +114,48 @@ func nextQuestionProgression() {
     
     #expect(viewModel.currentQuestion == initialQuestion + 1)
 }
+
+// MARK: - プレイ時間制限タイマー (#31)
+
+@Test("時間制限タイマー起動中でも、参照を手放した GameViewModel は解放される (#31)")
+@MainActor
+func gameViewModelDeallocatesWhileTimerIsRunning() async throws {
+    let settings = UserSettings()
+    settings.playtimeLimit = 600 // テスト中に満了しない長さ
+
+    weak var weakViewModel: GameViewModel?
+    do {
+        let viewModel = GameViewModel(levelProgressionService: LevelProgressionService(forTesting: true))
+        viewModel.updateUserSettings(settings)
+        viewModel.startNewGame(level: 1)
+        #expect(viewModel.isTimeLimitEnabled())
+        weakViewModel = viewModel
+    }
+
+    // startNewGame 内の音声プリロード Task が self を短時間保持するため、解放を最大 2 秒待つ
+    for _ in 0 ..< 40 where weakViewModel != nil {
+        try await Task.sleep(nanoseconds: 50_000_000)
+    }
+    #expect(weakViewModel == nil, "Timer が GameViewModel を強参照しており、画面破棄後も生き残っている")
+}
+
+@Test("時間制限タイマーの tick は残り時間を減らし、0 になった次の tick でゲームを完了する")
+func timerTickCountsDownAndCompletesGame() {
+    let settings = UserSettings()
+    settings.playtimeLimit = 2
+    let viewModel = GameViewModel(
+        levelProgressionService: LevelProgressionService(forTesting: true),
+        isTestMode: true // 実 Timer は起動せず、tick を手で進める
+    )
+    viewModel.updateUserSettings(settings)
+    viewModel.startNewGame(level: 1)
+
+    #expect(viewModel.getTimeRemaining() == 2)
+    viewModel.handleTimerTick()
+    #expect(viewModel.getTimeRemaining() == 1)
+    viewModel.handleTimerTick()
+    #expect(viewModel.getTimeRemaining() == 0)
+    #expect(viewModel.isGameCompleted == false)
+    viewModel.handleTimerTick()
+    #expect(viewModel.isGameCompleted == true)
+}

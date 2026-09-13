@@ -79,10 +79,12 @@ class GameViewModel {
             totalQuestions = 5 // デフォルト値
         }
         
-        // 時間制限の設定（テストモードでは無効）
-        if !isTestMode, let settings = userSettings, settings.playtimeLimit > 0 {
+        // 時間制限の設定（テストモードでは残り時間だけ設定し、実 Timer は起動しない）
+        if let settings = userSettings, settings.playtimeLimit > 0 {
             timeRemaining = settings.playtimeLimit // 既に秒単位
-            startGameTimer()
+            if !isTestMode {
+                startGameTimer()
+            }
         }
         
         // GameLogicServiceを使って問題を生成
@@ -293,19 +295,19 @@ class GameViewModel {
     }
     
     private func startGameTimer() {
-        // テスト環境ではTimerを無効化
-        if TestUtils.isTestEnvironment {
-            TestUtils.debugPrint("Game timer disabled in test environment")
-            return
+        // Timer は RunLoop に保持されるため、self を強参照すると画面破棄後も ViewModel が生き残り、
+        // 画面がない状態で completeGame() が走って統計に書き込まれる (#31)
+        gameTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.handleTimerTick()
         }
-        
-        gameTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            if self.timeRemaining > 0 {
-                self.timeRemaining -= 1
-            } else {
-                // 時間切れでゲーム終了
-                self.completeGame()
-            }
+    }
+    
+    /// 1 秒ごとの tick。残り時間を減らし、0 のまま tick されたら時間切れでゲームを終了する
+    func handleTimerTick() {
+        if timeRemaining > 0 {
+            timeRemaining -= 1
+        } else {
+            completeGame()
         }
     }
     
@@ -317,10 +319,17 @@ class GameViewModel {
         userSettings?.playtimeLimit ?? 0 > 0
     }
     
-    // テスト用：リソースのクリーンアップ
+    /// 時間制限タイマーを止める。画面を離れるとき（GameView.onDisappear）と deinit から呼ばれる
     func cleanup() {
-        gameTimer?.invalidate()
+        guard let timer = gameTimer else { return }
         gameTimer = nil
+        // Timer の invalidate は登録した RunLoop のスレッド（メイン）で行う必要がある。
+        // deinit は音声プリロード Task の完了先など別スレッドで走ることがあるため、メインへ送る
+        if Thread.isMainThread {
+            timer.invalidate()
+        } else {
+            DispatchQueue.main.async { timer.invalidate() }
+        }
     }
     
     deinit {
