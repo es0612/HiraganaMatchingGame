@@ -1,12 +1,18 @@
 import SwiftUI
 
 struct CharacterCollectionView: View {
-    @State private var starUnlockService = StarUnlockService()
+    @State private var starUnlockService: StarUnlockService
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @Environment(\.colorScheme) var colorScheme
     
     let onBackPressed: () -> Void
+    
+    /// ゲーム画面を経由せず開いても合計スターが正しく出るよう、LevelProgressionService を必ず受け取る (#19)
+    init(levelProgressionService: LevelProgressionService, onBackPressed: @escaping () -> Void) {
+        _starUnlockService = State(initialValue: StarUnlockService(levelProgressionService: levelProgressionService))
+        self.onBackPressed = onBackPressed
+    }
     
     var body: some View {
         GeometryReader { _ in
@@ -375,7 +381,7 @@ struct CharacterCollectionView: View {
 }
 
 #Preview {
-    CharacterCollectionView {
+    CharacterCollectionView(levelProgressionService: LevelProgressionService()) {
         print("Back pressed")
     }
 }

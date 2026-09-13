@@ -155,11 +155,12 @@ final class StatisticsService {
     /// Gets total stars from external provider or fallback
     /// - Returns: Total star count
     func getTotalStars() -> Int {
-        if let provider = totalStarsProvider {
-            return provider()
+        guard let provider = totalStarsProvider else {
+            // 旧 UserDefaults キーへのフォールバックは廃止。配信済み v1.0.1 もこのキーを書いていないため常に 0 だった (#19)
+            assertionFailure("totalStarsProvider が未設定。StarUnlockService(levelProgressionService:) 経由で生成すること")
+            return 0
         }
-        // Fallback to UserDefaults for backward compatibility
-        return UserDefaults.standard.integer(forKey: "LevelProgression_TotalStars")
+        return provider()
     }
     
     /// Gets completed levels count from external provider

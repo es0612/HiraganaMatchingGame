@@ -141,7 +141,8 @@ class SettingsViewModel {
         levelProgressionService.resetProgress()
         
         // スターとキャラクター解放データをリセット
-        let starUnlockService = StarUnlockService()
+        // （リセット直後は合計スター 0 で正しいため、上のローカルな LevelProgressionService を供給元にする）
+        let starUnlockService = StarUnlockService(levelProgressionService: levelProgressionService)
         starUnlockService.resetProgress()
         
         // SwiftDataのGameProgressエンティティをすべて削除
