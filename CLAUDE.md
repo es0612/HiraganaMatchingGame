@@ -6,6 +6,7 @@
 - テストは UDID 指定: `xcrun simctl list devices available` で選び `-destination 'platform=iOS Simulator,id=<UDID>'`。
 - 結果判定はコンソールでなく `xcrun xcresulttool get test-results summary --path <latest.xcresult>`（詳細は `xcodebuild-swift-testing` スキル）。
 - zsh では `PIPESTATUS` は使えない。パイプせずログファイルへ出力して `$?` を読む。
+- zsh は `$VAR` を単語分割しない。複数パスは配列 `FILES=(a b)` にして `"${FILES[@]}"` で渡す。`--include=*.swift` のようなグロブは必ずクォートする（`no matches found` で止まり、検証結果が黙って無効になる）。
 - `GameViewModel` をテストで生成するときは `GameViewModel(isTestMode: true)`（実 Audio と asyncAfter を残さない）。
 - `DataMigrationService` は `init(userDefaults:)` で UserDefaults を注入できる。テストは `UserDefaults(suiteName: UUID)` を渡し、`UserDefaults.standard` を触らない。
 - アップグレード経路（旧 `StarUnlock_*` キーが起動後も残るか）は `scripts/verify-upgrade-path.sh <UDID>` で確認できる（#18）。
@@ -33,3 +34,6 @@
 
 ## トークンを扱うコマンド
 - `gh secret set` のようにトークンを標準入力から読むコマンドは、記録に残る Bash 経由で実行・案内せず「通常のターミナルで実行してください」と明示する。
+
+## 実装の注意
+- closure を `[weak self]` にすると deinit が実際に起きるようになり、deinit は最後の参照を手放したスレッド（`Task` の完了先など）で走る。メイン RunLoop に登録した `Timer` の `invalidate()` は別スレッドから呼ばない（#31 でヒープ破壊 → 全テスト巻き添えクラッシュになった）。
