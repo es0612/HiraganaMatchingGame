@@ -2,19 +2,20 @@
 # Install with: brew install pre-commit && pre-commit install
 
 repos:
-  # Swift formatting with SwiftFormat
-  - repo: https://github.com/nicklockwood/SwiftFormat
-    rev: 0.54.6
+  # SwiftFormat / SwiftLint はバージョンを固定せず、brew で入れた最新版を使う（CI と同じ。#17）
+  # 事前に: brew upgrade swiftformat swiftlint
+  - repo: local
     hooks:
       - id: swiftformat
-        args: [--config, .swiftformat]
-
-  # Swift linting with SwiftLint
-  - repo: https://github.com/realm/SwiftLint
-    rev: 0.57.0
-    hooks:
+        name: swiftformat
+        entry: swiftformat --config .swiftformat
+        language: system
+        types: [swift]
       - id: swiftlint
-        args: [--config, .swiftlint.yml]
+        name: swiftlint
+        entry: swiftlint lint --strict --config .swiftlint.yml
+        language: system
+        types: [swift]
 
   # General code quality
   - repo: https://github.com/pre-commit/pre-commit-hooks
