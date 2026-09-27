@@ -17,6 +17,7 @@ enum AppScreen: Equatable {
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
     @State private var currentScreen: AppScreen = .levelSelection
     @State private var levelSelectionViewModel = LevelSelectionViewModel()
     @State private var userSettings: UserSettings?
@@ -145,6 +146,10 @@ struct ContentView: View {
                     }
                 }
             }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            // audioService は設定読み込みまで nil なので、実体の shared に直接渡す（#20）
+            AudioService.shared.handleScenePhaseChange(newPhase)
         }
     }
     
