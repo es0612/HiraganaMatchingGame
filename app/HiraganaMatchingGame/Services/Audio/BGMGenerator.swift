@@ -7,7 +7,17 @@
 import AVFoundation
 import Foundation
 
-class BGMGenerator {
+/// BGM 再生の抽象。AudioManager のライフサイクル制御をテストで検証するために切り出している
+protocol BGMPlaying: AnyObject {
+    func startBackgroundMusic(filename: String, volume: Float)
+    func stopBackgroundMusic()
+    func pauseBackgroundMusic()
+    func resumeBackgroundMusic()
+    func setBGMVolume(_ volume: Float)
+    func isBGMPlaying() -> Bool
+}
+
+class BGMGenerator: BGMPlaying {
     private let isTestMode: Bool
     private var bgmPlayer: AVAudioPlayer?
     
@@ -66,6 +76,16 @@ class BGMGenerator {
         print("🎵 Background music stopped")
     }
     
+    func pauseBackgroundMusic() {
+        guard !isTestMode else { return }
+        bgmPlayer?.pause()
+    }
+
+    func resumeBackgroundMusic() {
+        guard !isTestMode else { return }
+        bgmPlayer?.play()
+    }
+
     func setBGMVolume(_ volume: Float) {
         bgmPlayer?.volume = max(0.0, min(1.0, volume))
     }

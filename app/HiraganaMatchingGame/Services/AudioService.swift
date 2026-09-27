@@ -1,5 +1,6 @@
 import AVFoundation
 import Foundation
+import SwiftUI
 
 enum AudioServiceError: Error {
     case fileNotFound
@@ -192,6 +193,19 @@ class AudioService: ObservableObject {
         audioManager.switchToMenuBGM()
     }
     
+    // MARK: - ライフサイクル (#20)
+
+    func handleScenePhaseChange(_ phase: ScenePhase) {
+        switch phase {
+        case .background:
+            audioManager.handleEnterBackground()
+        case .active:
+            audioManager.handleBecomeActive()
+        default:
+            break
+        }
+    }
+
     func preloadAudioForLevel(_ level: Int) async {
         await audioManager.preloadAudioForLevel(level)
     }

@@ -4,6 +4,7 @@
 //
 //
 
+import AVFoundation
 import Combine
 import Foundation
 
@@ -16,20 +17,27 @@ class AudioManager: ObservableObject {
     
     // Audio components
     private let audioPlayer: AudioPlayer
-    private let bgmGenerator: BGMGenerator
+    private let bgmGenerator: BGMPlaying
     private let speechSynthesizer: SpeechSynthesizer
     private let effectPlayer: EffectPlayer
     
     private var userSettings: UserSettings?
     private var cancellables = Set<AnyCancellable>()
+
+    /// 今鳴らすべき BGM（停止中は nil）。バックグラウンド・割り込みからの再開に使う
+    private var currentBGMTrack: String?
+    private var isBGMSuspended = false
     
-    init(isTestMode: Bool = false) {
+    init(isTestMode: Bool = false, bgmPlayer: BGMPlaying? = nil) {
         audioPlayer = AudioPlayer(isTestMode: isTestMode)
-        bgmGenerator = BGMGenerator(isTestMode: isTestMode)
+        bgmGenerator = bgmPlayer ?? BGMGenerator(isTestMode: isTestMode)
         speechSynthesizer = SpeechSynthesizer(isTestMode: isTestMode)
         effectPlayer = EffectPlayer(isTestMode: isTestMode)
         
         setupBindings()
+        if !isTestMode {
+            observeInterruptions()
+        }
     }
     
     convenience init(userSettings: UserSettings, isTestMode: Bool = false) {
@@ -139,11 +147,12 @@ class AudioManager: ObservableObject {
     
     // Background music
     func startBackgroundMusic() {
-        guard isMusicEnabled else { return }
-        bgmGenerator.startBackgroundMusic(filename: "bgm", volume: currentVolume * 0.3)
+        playBGM(filename: "bgm")
     }
     
     func stopBackgroundMusic() {
+        currentBGMTrack = nil
+        isBGMSuspended = false
         bgmGenerator.stopBackgroundMusic()
     }
     
@@ -153,21 +162,81 @@ class AudioManager: ObservableObject {
 
     // MARK: - BGM switching
     func switchToMenuBGM() {
-        guard isMusicEnabled else { return }
-        bgmGenerator.startBackgroundMusic(filename: "bgm", volume: currentVolume * 0.3)
+        playBGM(filename: "bgm")
     }
 
     func switchToGameplayBGM() {
+        playBGM(filename: "playingBgm")
+    }
+
+    private func playBGM(filename: String) {
         guard isMusicEnabled else { return }
-        bgmGenerator.startBackgroundMusic(filename: "playingBgm", volume: currentVolume * 0.3)
+        currentBGMTrack = filename
+        isBGMSuspended = false
+        bgmGenerator.startBackgroundMusic(filename: filename, volume: currentVolume * 0.3)
     }
     
+    // MARK: - Lifecycle (#20)
+
+    func handleEnterBackground() {
+        suspendBGM()
+    }
+
+    func handleBecomeActive() {
+        resumeSuspendedBGM()
+    }
+
+    func handleInterruptionBegan() {
+        suspendBGM()
+    }
+
+    func handleInterruptionEnded(shouldResume: Bool) {
+        // 再開不可のときは次のアクティブ化（handleBecomeActive）で再開する
+        guard shouldResume else { return }
+        resumeSuspendedBGM()
+    }
+
+    private func suspendBGM() {
+        // 割り込み時はシステムが先に止めていることがあるため isBGMPlaying ではなく曲の有無で判断する
+        guard currentBGMTrack != nil, !isBGMSuspended else { return }
+        isBGMSuspended = true
+        bgmGenerator.pauseBackgroundMusic()
+    }
+
+    private func resumeSuspendedBGM() {
+        guard isBGMSuspended, isMusicEnabled, currentBGMTrack != nil else { return }
+        isBGMSuspended = false
+        audioPlayer.activateSession()
+        bgmGenerator.resumeBackgroundMusic()
+    }
+
+    private func observeInterruptions() {
+        NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] notification in
+                guard let info = notification.userInfo,
+                      let rawType = info[AVAudioSessionInterruptionTypeKey] as? UInt,
+                      let type = AVAudioSession.InterruptionType(rawValue: rawType) else { return }
+                switch type {
+                case .began:
+                    self?.handleInterruptionBegan()
+                case .ended:
+                    let rawOptions = info[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0
+                    let options = AVAudioSession.InterruptionOptions(rawValue: rawOptions)
+                    self?.handleInterruptionEnded(shouldResume: options.contains(.shouldResume))
+                @unknown default:
+                    break
+                }
+            }
+            .store(in: &cancellables)
+    }
+
     // Control methods
     func stopAllAudio() {
         audioPlayer.stopAllAudio()
         speechSynthesizer.stopSpeaking()
         effectPlayer.stopEffect()
-        bgmGenerator.stopBackgroundMusic()
+        stopBackgroundMusic()
     }
     
     func pauseAllAudio() {

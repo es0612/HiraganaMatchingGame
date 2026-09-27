@@ -14,6 +14,9 @@ enum AudioPlayerError: Error {
 }
 
 class AudioPlayer: ObservableObject {
+    /// 消音スイッチに従い、他アプリの音楽とも混ざる（#20）
+    static let sessionCategory: AVAudioSession.Category = .ambient
+
     @Published var isEnabled: Bool = true
     @Published var volume: Float = 1.0
     @Published var playbackSpeed: Float = 1.0
@@ -33,11 +36,18 @@ class AudioPlayer: ObservableObject {
     
     private func setupAudioSession() {
         do {
-            try audioSession.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+            try audioSession.setCategory(Self.sessionCategory, mode: .default)
             try audioSession.setActive(true)
         } catch {
             print("Failed to setup audio session: \(error)")
         }
+    }
+
+    /// 割り込み・バックグラウンドから戻ったとき、再生前にセッションを有効化し直す。
+    /// 失敗しても BGM 再開を試みるだけなので結果は捨てる（print を増やさない: #25 baseline）
+    func activateSession() {
+        guard !isTestMode else { return }
+        try? audioSession.setActive(true)
     }
     
     func hasAudioFile(for identifier: String) -> Bool {
