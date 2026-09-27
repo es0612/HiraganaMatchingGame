@@ -26,6 +26,9 @@
 - 行・レベル定義は現在 5 ファイルに重複（#21）。文字集合を変えるときは全部揃える。
 
 ## 進め方
+- main は Ruleset で保護されている（#32）：**PR 必須・直接 push 不可**、必須チェックは `lint`・`test`。作業は必ずブランチ → PR で行う。
+- CI の `test` ジョブ（`.github/workflows/test.yml`）はユニットテストのみ。UI テストは main でも赤いため #43 が解決するまで対象外。
+- PR 本文で、close しない issue の番号の前に `Closes` / `Fixes` / `Resolves` を書かない（否定文でも自動 close される）。`Refs #N` のみにする。
 - セッション冒頭は `/daily-issue-triage`。仕様判断（実装が正 or テストが正）は AskUserQuestion でまとめて聞く。
 - #18（旧キー削除で実績が消える）は #35 で方針 1 対応済み。残る二重管理の判断は #36。DataMigrationService を触るときは先に #36 を読む。
 
