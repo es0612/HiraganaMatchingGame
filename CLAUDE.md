@@ -17,7 +17,8 @@
 - `.swiftformat` / `.swiftlint.yml` はリポジトリルート。**swiftlint はルートから実行**（`app/` から実行すると既定ルールになる）。
 - CI は brew 最新版を使う。整形前に `brew upgrade swiftformat swiftlint`。
 - `swiftlint --fix` の後は `swiftformat .` を再実行し、両方をもう一度走らせて差分ゼロを確認。
-- CI の `swiftlint --strict` は一時解除中（#25 で baseline 方式により復活予定）。
+- CI は `swiftlint --strict`。既存 warning は `.swiftlint-baseline.json` で凍結済みで、**新規違反だけ**が落ちる（#25）。既存 warning を減らしたら `swiftlint lint --quiet --write-baseline .swiftlint-baseline.json` で再生成してコミットする。
+- pre-commit も SwiftFormat/SwiftLint を固定せず `language: system`（brew 最新）で呼ぶ（#17）。
 
 ## コンテンツ仕様（PO 判断済み）
 - ひらがなは現代仮名 46 文字。旧仮名「ゐ」「ゑ」は扱わない（#22）。

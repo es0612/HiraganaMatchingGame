@@ -16,6 +16,9 @@ excluded:
 
 reporter: "xcode"
 
+# 既存 warning の凍結（#25）。新規違反だけが報告される
+baseline: .swiftlint-baseline.json
+
 # 無効化するルール（段階導入のため）
 disabled_rules:
   - identifier_name  # 段階的導入予定

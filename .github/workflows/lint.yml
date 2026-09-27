@@ -30,9 +30,10 @@ jobs:
       - name: SwiftLint Analysis
         run: |
           echo "🧹 Running SwiftLint analysis..."
-          # NOTE: --strict は段階的導入のため一時的に外している (#16)。
-          # 残 warning（print→Logger 置換など）を解消したら --strict を復活させること。
-          swiftlint
+          # 既存の warning は .swiftlint-baseline.json で凍結し、新規違反だけを --strict で落とす (#25)。
+          # 既存 warning を減らしたら baseline を再生成する:
+          #   swiftlint lint --quiet --write-baseline .swiftlint-baseline.json
+          swiftlint --strict
           echo "✅ Lint analysis completed"
 
       - name: Quality Gate Summary
