@@ -37,12 +37,32 @@ final class AchievementService {
     
     private var unlockedAchievements: Set<Achievement> = []
     
-    var onAchievementUnlocked: ((Achievement) -> Void)?
+    var onAchievementUnlocked: ((Achievement) -> Void)? {
+        get { onAchievementUnlockedStorage.value }
+        set { onAchievementUnlockedStorage.value = newValue }
+    }
+
+    private let onAchievementUnlockedStorage = LockedValue<((Achievement) -> Void)?>(nil)
     
     // Dependencies for achievement checking
-    var unlockedCharacterCountProvider: (() -> Int)?
-    var completedLevelsCountProvider: (() -> Int)?
-    var currentStreakProvider: (() -> Int)?
+    var unlockedCharacterCountProvider: (() -> Int)? {
+        get { unlockedCharacterCountProviderStorage.value }
+        set { unlockedCharacterCountProviderStorage.value = newValue }
+    }
+
+    private let unlockedCharacterCountProviderStorage = LockedValue<(() -> Int)?>(nil)
+    var completedLevelsCountProvider: (() -> Int)? {
+        get { completedLevelsCountProviderStorage.value }
+        set { completedLevelsCountProviderStorage.value = newValue }
+    }
+
+    private let completedLevelsCountProviderStorage = LockedValue<(() -> Int)?>(nil)
+    var currentStreakProvider: (() -> Int)? {
+        get { currentStreakProviderStorage.value }
+        set { currentStreakProviderStorage.value = newValue }
+    }
+
+    private let currentStreakProviderStorage = LockedValue<(() -> Int)?>(nil)
     
     private init() {
         loadAchievements()
