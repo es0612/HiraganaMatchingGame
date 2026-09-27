@@ -20,9 +20,19 @@ final class StatisticsService {
     private var highestStreak: Int = 0
     
     // Provider to read total stars from external service
-    var totalStarsProvider: (() -> Int)?
+    var totalStarsProvider: (() -> Int)? {
+        get { totalStarsProviderStorage.value }
+        set { totalStarsProviderStorage.value = newValue }
+    }
+
+    private let totalStarsProviderStorage = LockedValue<(() -> Int)?>(nil)
     // Provider to read completed levels count from external service
-    var completedLevelsCountProvider: (() -> Int)?
+    var completedLevelsCountProvider: (() -> Int)? {
+        get { completedLevelsCountProviderStorage.value }
+        set { completedLevelsCountProviderStorage.value = newValue }
+    }
+
+    private let completedLevelsCountProviderStorage = LockedValue<(() -> Int)?>(nil)
     
     private init() {
         loadStatistics()

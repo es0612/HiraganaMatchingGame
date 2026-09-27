@@ -27,9 +27,19 @@ final class CharacterUnlockService {
     
     private var unlockedCharacters: Set<String> = ["あ", "い", "う", "え", "お"]
     
-    var onCharacterUnlocked: (([String]) -> Void)?
+    var onCharacterUnlocked: (([String]) -> Void)? {
+        get { onCharacterUnlockedStorage.value }
+        set { onCharacterUnlockedStorage.value = newValue }
+    }
+
+    private let onCharacterUnlockedStorage = LockedValue<(([String]) -> Void)?>(nil)
     // Provider to read total stars from external service
-    var totalStarsProvider: (() -> Int)?
+    var totalStarsProvider: (() -> Int)? {
+        get { totalStarsProviderStorage.value }
+        set { totalStarsProviderStorage.value = newValue }
+    }
+
+    private let totalStarsProviderStorage = LockedValue<(() -> Int)?>(nil)
     
     /// Hiragana character groups with their unlock order
     private let characterGroups: [String: [String]] = [
