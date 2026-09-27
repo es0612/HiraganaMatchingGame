@@ -11,6 +11,7 @@
 - `DataMigrationService` は `init(userDefaults:)` で UserDefaults を注入できる。テストは `UserDefaults(suiteName: UUID)` を渡し、`UserDefaults.standard` を触らない。
 - アップグレード経路（旧 `StarUnlock_*` キーが起動後も残るか）は `scripts/verify-upgrade-path.sh <UDID>` で確認できる（#18）。
 - シミュレータに UserDefaults を仕込むときは **アプリコンテナ内の plist** に直接書く。`xcrun simctl spawn <UDID> defaults write <bundle id>` はシミュレータ全体の Preferences に書かれ、アプリからは見えない。
+- pbxproj の `INFOPLIST_KEY_*` は生成 Info.plist に**出力されないキーがある**（`UIBackgroundModes` / `CFBundleLocalizations` / `NSAppTransportSecurity` は出ない。#20）。Info.plist の設定を前提にするときは、ビルド済み `.app` の `Info.plist` を `plutil -p` で確認する。
 
 ## Lint
 - `.swiftformat` / `.swiftlint.yml` はリポジトリルート。**swiftlint はルートから実行**（`app/` から実行すると既定ルールになる）。
