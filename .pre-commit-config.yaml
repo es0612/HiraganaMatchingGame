@@ -11,11 +11,15 @@ repos:
         entry: swiftformat --config .swiftformat
         language: system
         types: [swift]
+        # pre-commit はファイルを明示して渡すため .swiftlint.yml の included が効かない。同じ範囲に絞る
+        files: ^app/(HiraganaMatchingGame|HiraganaMatchingGameTests|HiraganaMatchingGameUITests)/
       - id: swiftlint
         name: swiftlint
         entry: swiftlint lint --strict --config .swiftlint.yml
         language: system
         types: [swift]
+        # pre-commit はファイルを明示して渡すため .swiftlint.yml の included が効かない。同じ範囲に絞る
+        files: ^app/(HiraganaMatchingGame|HiraganaMatchingGameTests|HiraganaMatchingGameUITests)/
 
   # General code quality
   - repo: https://github.com/pre-commit/pre-commit-hooks
