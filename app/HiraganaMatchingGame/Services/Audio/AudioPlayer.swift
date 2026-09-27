@@ -43,14 +43,11 @@ class AudioPlayer: ObservableObject {
         }
     }
 
-    /// 割り込み・バックグラウンドから戻ったとき、再生前にセッションを有効化し直す
+    /// 割り込み・バックグラウンドから戻ったとき、再生前にセッションを有効化し直す。
+    /// 失敗しても BGM 再開を試みるだけなので結果は捨てる（print を増やさない: #25 baseline）
     func activateSession() {
         guard !isTestMode else { return }
-        do {
-            try audioSession.setActive(true)
-        } catch {
-            print("Failed to activate audio session: \(error)")
-        }
+        try? audioSession.setActive(true)
     }
     
     func hasAudioFile(for identifier: String) -> Bool {
