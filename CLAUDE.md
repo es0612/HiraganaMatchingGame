@@ -30,11 +30,13 @@
 - CI の `test` ジョブ（`.github/workflows/test.yml`）はユニットテストのみ。UI テストは main でも赤いため #43 が解決するまで対象外。
 - PR 本文で、close しない issue の番号の前に `Closes` / `Fixes` / `Resolves` を書かない（否定文でも自動 close される）。`Refs #N` のみにする。
 - セッション冒頭は `/daily-issue-triage`。仕様判断（実装が正 or テストが正）は AskUserQuestion でまとめて聞く。
+- リリース後は、配信を iTunes Lookup（`https://itunes.apple.com/lookup?bundleId=com.asapapalab.HiraganaMatchingGame&country=jp`）で確認してから、ASC で紐付けた build のコミットに `vX.Y.Z` の注釈付きタグを付けて push する。1.0 はタグがなく、どのコミットからビルドしたか追えなかった（v1.0.1 から運用）。
 - #18（旧キー削除で実績が消える）は #35 で方針 1 対応済み。残る二重管理の判断は #36。DataMigrationService を触るときは先に #36 を読む。
 
 ## テストクラッシュ調査の手がかり
 - xcresult が名指しするテストは「巻き添えの被害者」であることがある。複数テストが同じ `UserDefaults.standard` キーを共有すると、片方が完了フラグを立てた瞬間に他方が `.first!` で落ち、並走中の全テストを巻き込む。クラッシュのメッセージ本文は xcresult に入っておらず、`~/Library/Logs/DiagnosticReports/<App>-*.ips`（JSON、`faultingThread` の frames）を読む。
 - 共有状態が原因かは `@Suite("...", .serialized)` を一時的に付けて 2 回連続実行し「毎回同じ結果」になるかで切り分ける。確定したら `.serialized` は外し、根本対処（UserDefaults 注入など）だけ残す。
+- 並列実行時だけランダムに落ち、共有 UserDefaults キーの切り分けで説明できないときは `xcodebuild test -enableThreadSanitizer YES`（`-derivedDataPath` / `-resultBundlePath` は通常実行と分ける）でデータ競合を直接検出する。件数は `grep -c "WARNING: ThreadSanitizer" <log>`、競合箇所は `SUMMARY: ThreadSanitizer` 行で見る。直したら「TSan 0 件」と「CI 3 回連続緑」の両方で確認する（#48）。
 - 閾値アサーション（例: `> 400`）を書く/直すときは、実データ件数（例: 185 件）に対して一度も満たされたことのない無意味な閾値になっていないか確認する。
 
 ## トークンを扱うコマンド
