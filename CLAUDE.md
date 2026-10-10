@@ -22,7 +22,7 @@
 
 ## コンテンツ仕様（PO 判断済み）
 - ひらがなは現代仮名 46 文字。旧仮名「ゐ」「ゑ」は扱わない（#22）。
-- 星: 正答率 90% 以上 = 3、70% 以上 = 2、50% 以上 = 1。
+- 星: 実行時は `GameLogicService.calculateStars`。難易度別で、普通は正答率 100% = 3、80% 以上 = 2、60% 以上 = 1（簡単 100/90/80、難しい 100/75/50）。PO 判断で実行時の挙動を正とする（2026-10-10）。90/70/50% は未使用の `HiraganaGameService` の値で、計算の重複は #57。
 - 行・レベル定義は現在 5 ファイルに重複（#21）。文字集合を変えるときは全部揃える。
 
 ## 進め方
@@ -32,6 +32,8 @@
 - セッション冒頭は `/daily-issue-triage`。仕様判断（実装が正 or テストが正）は AskUserQuestion でまとめて聞く。
 - リリース後は、配信を iTunes Lookup（`https://itunes.apple.com/lookup?bundleId=com.asapapalab.HiraganaMatchingGame&country=jp`）で確認してから、ASC で紐付けた build のコミットに `vX.Y.Z` の注釈付きタグを付けて push する。1.0 はタグがなく、どのコミットからビルドしたか追えなかった（v1.0.1 から運用）。
 - タグを付けたら**同じタイミングで `MARKETING_VERSION` を次のパッチに上げる PR を出す**（グローバルスキル `~/.claude/skills/release-version-bump-check`。リポには入っていない）。Xcode Cloud の `Default` ワークフローは「main の `app/` 配下が変わったら Archive → ASC へアップロード」なので、上げ忘れると承認済みバージョンのビルドが ITMS-90186 / 90062 で弾かれる（#52：docs だけの PR でも build 50〜52 が作られていた。2026-09-29 に開始条件を `app/` に限定）。ビルド番号は Xcode Cloud が振るので pbxproj の `CURRENT_PROJECT_VERSION` は触らない。
+- ASC のメールや Xcode Cloud のビルド失敗は、原因を推定したまま対処案を出さない。ASC の Xcode Cloud 画面（ワークフローの開始条件・ビルド履歴）を claude-in-chrome で読んで事実を確定してから選択肢を出し、設定の変更は承認を取ってから行う。同じ開発者アカウントの他アプリもビルド履歴を読み取りで横断確認できるが、ITMS 番号まで確認できていないものは「可能性が高い」と書く。
+- ASC の警告メールは、Claude に接続された Gmail には届かない（2026-10-10 に過去 60 日分の Apple/ITMS メールが 0 件）。「警告メールが来ていない」は Gmail では判定できないので、ASC の画面で確認する。
 - #18（旧キー削除で実績が消える）は #35 で方針 1 対応済み。残る二重管理の判断は #36。DataMigrationService を触るときは先に #36 を読む。
 
 ## テストクラッシュ調査の手がかり
