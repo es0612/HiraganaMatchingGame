@@ -37,12 +37,12 @@
 - [ ] **Step 1: main を最新にしてブランチを切る**
 
 ```bash
-cd /Users/shinya/workspace/claude/HiraganaMatchingGame
+cd "$(git rev-parse --show-toplevel)"
 git checkout main && git pull --ff-only
 git checkout -b feature/issue-21-pr1-hiragana-catalog
 ```
 
-`.vscode/settings.json` にユーザーの未コミット変更がある。**`git add -A` / `git commit -a` は使わず、必ずパスを指定して stage する。**
+作業ツリーにこの計画と無関係な未コミット変更が残っていることがある。**`git add -A` / `git commit -a` は使わず、必ずパスを指定して stage する。**
 
 - [ ] **Step 2: テスト用シミュレータの UDID を控える**
 
@@ -114,7 +114,7 @@ struct HiraganaCatalogTests {
 - [ ] **Step 2: 失敗を確認する**
 
 ```bash
-cd /Users/shinya/workspace/claude/HiraganaMatchingGame/app
+cd "$(git rev-parse --show-toplevel)/app"
 xcodebuild test -project HiraganaMatchingGame.xcodeproj -scheme HiraganaMatchingGame \
   -destination 'platform=iOS Simulator,id=<UDID>' \
   -only-testing:HiraganaMatchingGameTests/HiraganaCatalogTests > /tmp/t1-red.log 2>&1; echo "exit=$?"
@@ -183,7 +183,7 @@ xcrun xcresulttool get test-results summary --path /tmp/t1-green.xcresult
 - [ ] **Step 5: コミットする**
 
 ```bash
-cd /Users/shinya/workspace/claude/HiraganaMatchingGame
+cd "$(git rev-parse --show-toplevel)"
 git add app/HiraganaMatchingGame/Models/HiraganaCatalog.swift app/HiraganaMatchingGameTests/HiraganaCatalogTests.swift
 git commit -m "feat: ひらがな行・レベルの単一定義 HiraganaCatalog を追加する (#21)"
 ```
@@ -234,7 +234,7 @@ struct AudioPreloadTests {
 - [ ] **Step 3: 失敗を確認する**
 
 ```bash
-cd /Users/shinya/workspace/claude/HiraganaMatchingGame/app
+cd "$(git rev-parse --show-toplevel)/app"
 xcodebuild test -project HiraganaMatchingGame.xcodeproj -scheme HiraganaMatchingGame \
   -destination 'platform=iOS Simulator,id=<UDID>' \
   -only-testing:HiraganaMatchingGameTests/AudioPreloadTests \
@@ -270,7 +270,7 @@ xcrun xcresulttool get test-results summary --path /tmp/t2-green.xcresult
 - [ ] **Step 6: コミットする**
 
 ```bash
-cd /Users/shinya/workspace/claude/HiraganaMatchingGame
+cd "$(git rev-parse --show-toplevel)"
 git add app/HiraganaMatchingGame/Services/Audio/AudioManager.swift app/HiraganaMatchingGameTests/AudioPreloadTests.swift
 git commit -m "fix: 音声プリロードがな行で止まり、レベル 6 以降の文字を読み込まない問題を直す (#21)"
 ```
@@ -282,7 +282,7 @@ git commit -m "fix: 音声プリロードがな行で止まり、レベル 6 以
 - [ ] **Step 1: ユニットテストを全部流す**（CI の `test` ジョブと同じ範囲。UI テストは #43 のため対象外）
 
 ```bash
-cd /Users/shinya/workspace/claude/HiraganaMatchingGame/app
+cd "$(git rev-parse --show-toplevel)/app"
 xcodebuild test -project HiraganaMatchingGame.xcodeproj -scheme HiraganaMatchingGame \
   -destination 'platform=iOS Simulator,id=<UDID>' \
   -only-testing:HiraganaMatchingGameTests \
@@ -295,7 +295,7 @@ xcrun xcresulttool get test-results summary --path /tmp/all.xcresult
 - [ ] **Step 2: Lint（ルートから）**
 
 ```bash
-cd /Users/shinya/workspace/claude/HiraganaMatchingGame
+cd "$(git rev-parse --show-toplevel)"
 brew upgrade swiftformat swiftlint 2>/dev/null
 swiftformat app/HiraganaMatchingGame/Models/HiraganaCatalog.swift app/HiraganaMatchingGame/Services/Audio/AudioManager.swift app/HiraganaMatchingGameTests/HiraganaCatalogTests.swift app/HiraganaMatchingGameTests/AudioPreloadTests.swift
 swiftlint lint --strict --quiet; echo "lint exit=$?"
