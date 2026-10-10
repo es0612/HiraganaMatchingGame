@@ -96,7 +96,7 @@ class AudioManager: ObservableObject {
     
     func preloadAudioForLevel(_ level: Int) async {
         // Get characters for level and preload their audio
-        let levelConfig = getLevelConfiguration(level)
+        let levelConfig = preloadCharacters(forLevel: level)
         
         for character in levelConfig {
             do {
@@ -278,18 +278,7 @@ class AudioManager: ObservableObject {
     
     // MARK: - Helper Methods
     
-    private func getLevelConfiguration(_ level: Int) -> [String] {
-        // This is a simplified version - in real implementation,
-        // this would use LevelProgressionService
-        let allCharacters = [
-            ["あ", "い", "う", "え", "お"],
-            ["か", "き", "く", "け", "こ"],
-            ["さ", "し", "す", "せ", "そ"],
-            ["た", "ち", "つ", "て", "と"],
-            ["な", "に", "ぬ", "ね", "の"]
-        ]
-        
-        let levelIndex = max(0, min(level - 1, allCharacters.count - 1))
-        return Array(allCharacters[0 ... levelIndex].flatMap { $0 })
+    func preloadCharacters(forLevel level: Int) -> [String] {
+        HiraganaCatalog.characters(upToLevel: level)
     }
 }
