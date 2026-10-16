@@ -6,7 +6,6 @@ struct LevelConfiguration {
     let title: String
     let characters: [String]
     let requiredStars: Int
-    let questionsCount: Int
     let description: String
 }
 
@@ -22,7 +21,7 @@ struct ProgressionStats {
 class LevelProgressionService {
     private var levelStars: [Int: Int] = [:]
     private var totalStars: Int = 0
-    private let totalLevels: Int = 10
+    private let totalLevels: Int = HiraganaCatalog.totalLevels
     private var boundProgress: GameProgress?
     
     init() {
@@ -154,133 +153,36 @@ class LevelProgressionService {
         totalLevels
     }
     
-    /// レベル定義テーブル（データのみ。#16 で関数本体から型スコープへ移動）
-    private static let levelConfigurations: [Int: LevelConfiguration] = [
-        1: LevelConfiguration(
-            level: 1,
-            title: "あ行をおぼえよう",
-            characters: ["あ", "い", "う", "え", "お"],
-            requiredStars: 0,
-            questionsCount: 18,
-            description: "ひらがなの基本、あ行をマスターしよう！"
-        ),
-        2: LevelConfiguration(
-            level: 2,
-            title: "か行をおぼえよう",
-            characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ"],
-            requiredStars: 2,
-            questionsCount: 22,
-            description: "か行を覚えて、ひらがなの世界を広げよう！"
-        ),
-        3: LevelConfiguration(
-            level: 3,
-            title: "さ行をおぼえよう",
-            characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ"],
-            requiredStars: 4,
-            questionsCount: 14,
-            description: "さ行をマスターして、更にレベルアップ！"
-        ),
-        4: LevelConfiguration(
-            level: 4,
-            title: "た行をおぼえよう",
-            characters: ["あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と"],
-            requiredStars: 6,
-            questionsCount: 14,
-            description: "た行も仲間に加えて、どんどん上達！"
-        ),
-        5: LevelConfiguration(
-            level: 5,
-            title: "な行をおぼえよう",
-            characters: [
-                "あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ",
-                "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と",
-                "な", "に", "ぬ", "ね", "の"
-            ],
-            requiredStars: 8,
-            questionsCount: 16,
-            description: "な行を覚えて、ひらがなマスターに近づこう！"
-        ),
-        6: LevelConfiguration(
-            level: 6,
-            title: "は行をおぼえよう",
-            characters: [
-                "あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ",
-                "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と",
-                "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ"
-            ],
-            requiredStars: 10,
-            questionsCount: 16,
-            description: "は行をマスターして、さらなる高みを目指そう！"
-        ),
-        7: LevelConfiguration(
-            level: 7,
-            title: "ま行をおぼえよう",
-            characters: [
-                "あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ",
-                "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と",
-                "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ",
-                "ま", "み", "む", "め", "も"
-            ],
-            requiredStars: 12,
-            questionsCount: 18,
-            description: "ま行も覚えて、ひらがなの達人に！"
-        ),
-        8: LevelConfiguration(
-            level: 8,
-            title: "や行をおぼえよう",
-            characters: [
-                "あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ",
-                "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と",
-                "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ",
-                "ま", "み", "む", "め", "も", "や", "ゆ", "よ"
-            ],
-            requiredStars: 14,
-            questionsCount: 18,
-            description: "や行をマスターして、ゴールが見えてきた！"
-        ),
-        9: LevelConfiguration(
-            level: 9,
-            title: "ら行をおぼえよう",
-            characters: [
-                "あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ",
-                "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と",
-                "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ",
-                "ま", "み", "む", "め", "も", "や", "ゆ", "よ", "ら", "り",
-                "る", "れ", "ろ"
-            ],
-            requiredStars: 16,
-            questionsCount: 20,
-            description: "ら行をクリアして、最終ステージへ！"
-        ),
-        10: LevelConfiguration(
-            level: 10,
-            title: "すべてのひらがな",
-            characters: [
-                "あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ",
-                "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と",
-                "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ",
-                "ま", "み", "む", "め", "も", "や", "ゆ", "よ", "ら", "り",
-                "る", "れ", "ろ", "わ", "を", "ん"
-            ],
-            requiredStars: 18,
-            questionsCount: 22,
-            description: "全てのひらがなをマスターして、真のひらがな博士になろう！"
-        )
+    /// レベルごとの見出しと説明文。文字と必要スターは HiraganaCatalog から導出する（#21）
+    private static let levelTexts: [(title: String, description: String)] = [
+        ("あ行をおぼえよう", "ひらがなの基本、あ行をマスターしよう！"),
+        ("か行をおぼえよう", "か行を覚えて、ひらがなの世界を広げよう！"),
+        ("さ行をおぼえよう", "さ行をマスターして、更にレベルアップ！"),
+        ("た行をおぼえよう", "た行も仲間に加えて、どんどん上達！"),
+        ("な行をおぼえよう", "な行を覚えて、ひらがなマスターに近づこう！"),
+        ("は行をおぼえよう", "は行をマスターして、さらなる高みを目指そう！"),
+        ("ま行をおぼえよう", "ま行も覚えて、ひらがなの達人に！"),
+        ("や行をおぼえよう", "や行をマスターして、ゴールが見えてきた！"),
+        ("ら行をおぼえよう", "ら行をクリアして、最終ステージへ！"),
+        ("すべてのひらがな", "全てのひらがなをマスターして、真のひらがな博士になろう！")
     ]
 
+    private static let levelConfigurations: [LevelConfiguration] = zip(HiraganaCatalog.rows.indices, levelTexts).map { index, text in
+        LevelConfiguration(
+            level: index + 1,
+            title: text.title,
+            characters: HiraganaCatalog.characters(upToLevel: index + 1),
+            requiredStars: HiraganaCatalog.rows[index].requiredStars,
+            description: text.description
+        )
+    }
+
+    /// 範囲外のレベルはレベル 1 の設定を返す
     func getLevelConfiguration(_ level: Int) -> LevelConfiguration {
         guard level >= 1 && level <= totalLevels else {
-            return LevelConfiguration(
-                level: 1,
-                title: "あ行をおぼえよう",
-                characters: ["あ", "い", "う", "え", "お"],
-                requiredStars: 0,
-                questionsCount: 12,
-                description: "ひらがなの基本、あ行をマスターしよう！"
-            )
+            return Self.levelConfigurations[0]
         }
-        
-        return Self.levelConfigurations[level]!
+        return Self.levelConfigurations[level - 1]
     }
     
     // MARK: - データ永続化

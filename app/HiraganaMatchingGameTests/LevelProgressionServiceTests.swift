@@ -128,20 +128,46 @@ struct LevelProgressionServiceTests {
         let level1Config = service.getLevelConfiguration(1)
         #expect(level1Config.requiredStars == 0)
         #expect(level1Config.characters.count == 5) // あ行
-        #expect(level1Config.questionsCount == 18)
         #expect(level1Config.title == "あ行をおぼえよう")
         
         let level2Config = service.getLevelConfiguration(2)
         #expect(level2Config.requiredStars == 2)
         #expect(level2Config.characters.count == 10) // あ行+か行
-        #expect(level2Config.questionsCount == 22)
         #expect(level2Config.title == "か行をおぼえよう")
         
         let level10Config = service.getLevelConfiguration(10)
         #expect(level10Config.requiredStars == 18)
         #expect(level10Config.characters.count == 46) // 現代の全ひらがな（旧仮名ゐ・ゑは除外）
-        #expect(level10Config.questionsCount == 22)
         #expect(level10Config.title == "すべてのひらがな")
+    }
+
+    @Test("全レベルの設定が HiraganaCatalog から導出される", arguments: 1 ... 10)
+    func everyLevelDerivesFromCatalog(level: Int) {
+        let config = LevelProgressionService(forTesting: true).getLevelConfiguration(level)
+        #expect(config.level == level)
+        #expect(config.characters == HiraganaCatalog.characters(upToLevel: level))
+        #expect(config.requiredStars == HiraganaCatalog.rows[level - 1].requiredStars)
+        #expect(!config.description.isEmpty)
+    }
+
+    @Test("レベルの見出しは変わらない")
+    func titlesUnchanged() {
+        let service = LevelProgressionService(forTesting: true)
+        let titles = (1 ... service.getTotalLevels()).map { service.getLevelConfiguration($0).title }
+        #expect(titles == [
+            "あ行をおぼえよう", "か行をおぼえよう", "さ行をおぼえよう", "た行をおぼえよう", "な行をおぼえよう",
+            "は行をおぼえよう", "ま行をおぼえよう", "や行をおぼえよう", "ら行をおぼえよう", "すべてのひらがな"
+        ])
+        #expect(service.getTotalLevels() == HiraganaCatalog.totalLevels)
+    }
+
+    @Test("範囲外のレベルはレベル 1 の設定になる", arguments: [0, -1, 11, 100])
+    func invalidLevelsFallBackToLevelOne(level: Int) {
+        let config = LevelProgressionService(forTesting: true).getLevelConfiguration(level)
+        #expect(config.level == 1)
+        #expect(config.title == "あ行をおぼえよう")
+        #expect(config.characters == ["あ", "い", "う", "え", "お"])
+        #expect(config.requiredStars == 0)
     }
     
     @Test("エラーハンドリング")
