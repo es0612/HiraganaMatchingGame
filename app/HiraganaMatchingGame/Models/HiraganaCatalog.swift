@@ -35,4 +35,9 @@ enum HiraganaCatalog {
         let clamped = min(max(level, 1), totalLevels)
         return rows.prefix(clamped).flatMap(\.characters)
     }
+
+    /// 文字が属する行。Catalog にない文字は nil。
+    static func row(containing character: String) -> Row? {
+        rows.first { $0.characters.contains(character) }
+    }
 }

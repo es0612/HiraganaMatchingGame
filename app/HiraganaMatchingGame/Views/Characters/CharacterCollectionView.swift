@@ -300,41 +300,11 @@ struct CharacterCollectionView: View {
     // MARK: - Helper Functions
     
     private func getAllHiraganaCharacters() -> [String] {
-        let groups = [
-            ["あ", "い", "う", "え", "お"],
-            ["か", "き", "く", "け", "こ"],
-            ["さ", "し", "す", "せ", "そ"],
-            ["た", "ち", "つ", "て", "と"],
-            ["な", "に", "ぬ", "ね", "の"],
-            ["は", "ひ", "ふ", "へ", "ほ"],
-            ["ま", "み", "む", "め", "も"],
-            ["や", "ゆ", "よ"],
-            ["ら", "り", "る", "れ", "ろ"],
-            ["わ", "を", "ん"]
-        ]
-        return groups.flatMap { $0 }
+        HiraganaCatalog.allCharacters
     }
     
     private func getCharacterGroup(_ character: String) -> String {
-        let groupMap: [String: [String]] = [
-            "あ行": ["あ", "い", "う", "え", "お"],
-            "か行": ["か", "き", "く", "け", "こ"],
-            "さ行": ["さ", "し", "す", "せ", "そ"],
-            "た行": ["た", "ち", "つ", "て", "と"],
-            "な行": ["な", "に", "ぬ", "ね", "の"],
-            "は行": ["は", "ひ", "ふ", "へ", "ほ"],
-            "ま行": ["ま", "み", "む", "め", "も"],
-            "や行": ["や", "ゆ", "よ"],
-            "ら行": ["ら", "り", "る", "れ", "ろ"],
-            "わ行": ["わ", "を", "ん"]
-        ]
-        
-        for (group, characters) in groupMap {
-            if characters.contains(character) {
-                return group
-            }
-        }
-        return "その他"
+        HiraganaCatalog.row(containing: character)?.name ?? "その他"
     }
     
     private func getGroupColor(_ group: String) -> Color {

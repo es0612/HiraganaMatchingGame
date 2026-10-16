@@ -31,4 +31,14 @@ struct HiraganaCatalogTests {
     func outOfRangeLevelsClamp(level: Int, expectedCount: Int) {
         #expect(HiraganaCatalog.characters(upToLevel: level).count == expectedCount)
     }
+
+    @Test("文字から行を引ける", arguments: [("あ", "あ行"), ("ぬ", "な行"), ("よ", "や行"), ("ん", "わ行")])
+    func rowContainingKnownCharacter(character: String, expectedRow: String) {
+        #expect(HiraganaCatalog.row(containing: character)?.name == expectedRow)
+    }
+
+    @Test("Catalog にない文字は nil", arguments: ["ゐ", "ア", ""])
+    func rowContainingUnknownIsNil(character: String) {
+        #expect(HiraganaCatalog.row(containing: character) == nil)
+    }
 }
