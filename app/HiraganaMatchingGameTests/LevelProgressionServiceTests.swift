@@ -141,7 +141,7 @@ struct LevelProgressionServiceTests {
         #expect(level10Config.title == "すべてのひらがな")
     }
 
-    @Test("全レベルの設定が HiraganaCatalog から導出される", arguments: 1 ... 10)
+    @Test("全レベルの設定が HiraganaCatalog から導出される", arguments: 1 ... HiraganaCatalog.totalLevels)
     func everyLevelDerivesFromCatalog(level: Int) {
         let config = LevelProgressionService(forTesting: true).getLevelConfiguration(level)
         #expect(config.level == level)

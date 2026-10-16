@@ -177,9 +177,10 @@ class LevelProgressionService {
         )
     }
 
-    /// 範囲外のレベルはレベル 1 の設定を返す
+    /// 範囲外のレベルはレベル 1 の設定を返す。
+    /// 見出しが Catalog の行より少ないときも落とさない（配列そのものの範囲で判定する）
     func getLevelConfiguration(_ level: Int) -> LevelConfiguration {
-        guard level >= 1 && level <= totalLevels else {
+        guard level >= 1 && level <= Self.levelConfigurations.count else {
             return Self.levelConfigurations[0]
         }
         return Self.levelConfigurations[level - 1]
