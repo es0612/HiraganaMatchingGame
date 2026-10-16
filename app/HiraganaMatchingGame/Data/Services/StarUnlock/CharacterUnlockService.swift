@@ -25,7 +25,7 @@ struct NextUnlockInfo {
 final class CharacterUnlockService {
     static let shared = CharacterUnlockService()
     
-    private var unlockedCharacters: Set<String> = ["あ", "い", "う", "え", "お"]
+    private var unlockedCharacters: Set<String> = Set(HiraganaCatalog.characters(upToLevel: 1))
     
     var onCharacterUnlocked: (([String]) -> Void)? {
         get { onCharacterUnlockedStorage.value }
@@ -41,33 +41,15 @@ final class CharacterUnlockService {
 
     private let totalStarsProviderStorage = LockedValue<(() -> Int)?>(nil)
     
-    /// Hiragana character groups with their unlock order
-    private let characterGroups: [String: [String]] = [
-        "あ行": ["あ", "い", "う", "え", "お"],
-        "か行": ["か", "き", "く", "け", "こ"],
-        "さ行": ["さ", "し", "す", "せ", "そ"],
-        "た行": ["た", "ち", "つ", "て", "と"],
-        "な行": ["な", "に", "ぬ", "ね", "の"],
-        "は行": ["は", "ひ", "ふ", "へ", "ほ"],
-        "ま行": ["ま", "み", "む", "め", "も"],
-        "や行": ["や", "ゆ", "よ"],
-        "ら行": ["ら", "り", "る", "れ", "ろ"],
-        "わ行": ["わ", "を", "ん"]
-    ]
+    /// Hiragana character groups with their unlock order (derived from HiraganaCatalog, #21)
+    private let characterGroups: [String: [String]] = Dictionary(
+        uniqueKeysWithValues: HiraganaCatalog.rows.map { ($0.name, $0.characters) }
+    )
     
-    /// Star requirements for unlocking each character group
-    private let groupUnlockRequirements: [String: Int] = [
-        "あ行": 0, // Always available
-        "か行": 2, // 2 stars required
-        "さ行": 4, // 4 stars required
-        "た行": 6, // 6 stars required
-        "な行": 8, // 8 stars required
-        "は行": 10, // 10 stars required
-        "ま行": 12, // 12 stars required
-        "や行": 14, // 14 stars required
-        "ら行": 16, // 16 stars required
-        "わ行": 18 // 18 stars required
-    ]
+    /// Star requirements for unlocking each character group (derived from HiraganaCatalog, #21)
+    private let groupUnlockRequirements: [String: Int] = Dictionary(
+        uniqueKeysWithValues: HiraganaCatalog.rows.map { ($0.name, $0.requiredStars) }
+    )
     
     private init() {
         loadUnlockedCharacters()
@@ -236,7 +218,7 @@ final class CharacterUnlockService {
     
     /// Resets all unlocked characters to the default state
     func resetProgress() {
-        unlockedCharacters = ["あ", "い", "う", "え", "お"]
+        unlockedCharacters = Set(HiraganaCatalog.characters(upToLevel: 1))
         saveUnlockedCharacters()
     }
     
@@ -268,7 +250,7 @@ final class CharacterUnlockService {
                 unlockedCharacters = Set(oldCharacters)
                 saveUnlockedCharacters() // Save to new key
             } else {
-                unlockedCharacters = ["あ", "い", "う", "え", "お"] // Default
+                unlockedCharacters = Set(HiraganaCatalog.characters(upToLevel: 1)) // Default
             }
         }
     }
