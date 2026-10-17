@@ -153,8 +153,8 @@ class LevelProgressionService {
         totalLevels
     }
     
-    /// レベルごとの見出しと説明文。文字と必要スターは HiraganaCatalog から導出する（#21）
-    private static let levelTexts: [(title: String, description: String)] = [
+    /// レベルごとの見出しと説明文。文字と必要スターは HiraganaCatalog から導出する（#21）。件数は HiraganaCatalogTests で行数と照合する（#62）
+    static let levelTexts: [(title: String, description: String)] = [
         ("あ行をおぼえよう", "ひらがなの基本、あ行をマスターしよう！"),
         ("か行をおぼえよう", "か行を覚えて、ひらがなの世界を広げよう！"),
         ("さ行をおぼえよう", "さ行をマスターして、更にレベルアップ！"),
