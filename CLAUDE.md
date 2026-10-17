@@ -23,7 +23,8 @@
 ## コンテンツ仕様（PO 判断済み）
 - ひらがなは現代仮名 46 文字。旧仮名「ゐ」「ゑ」は扱わない（#22）。
 - 星: 実行時は `GameLogicService.calculateStars`。難易度別で、普通は正答率 100% = 3、80% 以上 = 2、60% 以上 = 1（簡単 100/90/80、難しい 100/75/50）。PO 判断で実行時の挙動を正とする（2026-10-10）。90/70/50% は未使用の `HiraganaGameService` の値で、計算の重複は #57。
-- 行・レベル定義は現在 5 ファイルに重複（#21）。文字集合を変えるときは全部揃える。
+- 行・レベル・解放スターの定義は `Models/HiraganaCatalog.swift` だけ（#21 で一本化）。レベルの見出し・説明文は `LevelProgressionService.levelTexts`（行数と同じ件数にする。足りないとそのレベルはレベル 1 の設定になる。#62）。
+- 文字ごとの中身は Catalog とは別にある。文字集合を変えるときは次も揃える: 絵の単語（`HiraganaItemRepository` と `CharacterCollectionView` に同じ表が 2 つ）、ヒント文（`GameLogicService`）、読み（`SpeechSynthesizer`）。
 
 ## 進め方
 - main は Ruleset で保護されている（#32）：**PR 必須・直接 push 不可**、必須チェックは `lint`・`test`。作業は必ずブランチ → PR で行う。
