@@ -31,4 +31,35 @@ struct HiraganaCatalogTests {
     func outOfRangeLevelsClamp(level: Int, expectedCount: Int) {
         #expect(HiraganaCatalog.characters(upToLevel: level).count == expectedCount)
     }
+
+    @Test("文字から行を引ける", arguments: [("あ", "あ行"), ("ぬ", "な行"), ("よ", "や行"), ("ん", "わ行")])
+    func rowContainingKnownCharacter(character: String, expectedRow: String) {
+        #expect(HiraganaCatalog.row(containing: character)?.name == expectedRow)
+    }
+
+    @Test("Catalog にない文字は nil", arguments: ["ゐ", "ア", ""])
+    func rowContainingUnknownIsNil(character: String) {
+        #expect(HiraganaCatalog.row(containing: character) == nil)
+    }
+
+    @Test("HiraganaGameService のレベル別文字が Catalog と一致する", arguments: 1 ... 10)
+    func gameServiceMatchesCatalog(level: Int) {
+        #expect(HiraganaGameService.shared.getCharactersForLevel(level) == HiraganaCatalog.characters(upToLevel: level))
+    }
+
+    @Test("HiraganaGameService は範囲外のレベルで空を返す（クランプしない）", arguments: [0, -1, 11, 99])
+    func gameServiceOutOfRangeIsEmpty(level: Int) {
+        #expect(HiraganaGameService.shared.getCharactersForLevel(level).isEmpty)
+        #expect(HiraganaGameService.shared.isValidLevel(level) == false)
+    }
+
+    @Test("CharacterUnlockService の行と解放スターが Catalog と一致する")
+    func unlockServiceMatchesCatalog() {
+        let service = CharacterUnlockService.shared
+        let expectedGroups = Dictionary(uniqueKeysWithValues: HiraganaCatalog.rows.map { ($0.name, $0.characters) })
+        let expectedStars = Dictionary(uniqueKeysWithValues: HiraganaCatalog.rows.map { ($0.name, $0.requiredStars) })
+        #expect(service.getCharacterGroups() == expectedGroups)
+        #expect(service.getGroupUnlockRequirements() == expectedStars)
+        #expect(service.getGroupUnlockRequirements()["か行"] == 2)
+    }
 }
