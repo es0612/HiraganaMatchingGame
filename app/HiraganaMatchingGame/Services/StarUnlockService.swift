@@ -79,10 +79,6 @@ class StarUnlockService {
     
     // MARK: - Statistics (Delegated to StatisticsService)
     
-    func calculateStars(correctAnswers: Int, totalQuestions: Int, timeTaken: Double) -> Int {
-        statisticsService.calculateStars(correctAnswers: correctAnswers, totalQuestions: totalQuestions, timeTaken: timeTaken)
-    }
-    
     /// StarUnlockServiceはスター管理しない（LevelProgressionServiceが管理）
     func getTotalStarsFromService() -> Int {
         statisticsService.getTotalStars()

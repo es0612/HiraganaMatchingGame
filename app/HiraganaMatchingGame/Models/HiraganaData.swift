@@ -122,24 +122,6 @@ class HiraganaDataManager {
         gameService.shouldUnlockNextLevel(currentLevel: currentLevel, score: score, totalQuestions: totalQuestions)
     }
     
-    /// Calculates stars earned based on performance
-    /// - Parameters:
-    ///   - score: The score achieved
-    ///   - totalQuestions: Total questions in the level
-    /// - Returns: Number of stars earned (0-3)
-    func calculateStarsEarned(score: Int, totalQuestions: Int) -> Int {
-        gameService.calculateStarsEarned(score: score, totalQuestions: totalQuestions)
-    }
-    
-    /// Determines if performance is considered "excellent"
-    /// - Parameters:
-    ///   - score: The score achieved
-    ///   - totalQuestions: Total questions in the level
-    /// - Returns: True if performance is excellent (90%+ accuracy)
-    func isExcellentPerformance(score: Int, totalQuestions: Int) -> Bool {
-        gameService.isExcellentPerformance(score: score, totalQuestions: totalQuestions)
-    }
-    
     /// Gets a random hiragana character for a specific level
     /// - Parameter level: The level to get a character from
     /// - Returns: A random character available at that level, or nil if invalid level

@@ -73,17 +73,6 @@ func hiraganaGameServiceGameProgressionLogic() {
     #expect(service.shouldUnlockNextLevel(currentLevel: 1, score: 8, totalQuestions: 10) == true) // 80%
     #expect(service.shouldUnlockNextLevel(currentLevel: 1, score: 6, totalQuestions: 10) == false) // 60%
     #expect(service.shouldUnlockNextLevel(currentLevel: 10, score: 10, totalQuestions: 10) == false) // 最終レベル
-    
-    // 星の計算テスト
-    #expect(service.calculateStarsEarned(score: 9, totalQuestions: 10) == 3) // 90%
-    #expect(service.calculateStarsEarned(score: 8, totalQuestions: 10) == 2) // 80%
-    #expect(service.calculateStarsEarned(score: 6, totalQuestions: 10) == 1) // 60% (2つ星は70%以上)
-    #expect(service.calculateStarsEarned(score: 5, totalQuestions: 10) == 1) // 50%
-    #expect(service.calculateStarsEarned(score: 4, totalQuestions: 10) == 0) // 40%
-    
-    // 優秀なパフォーマンス判定テスト
-    #expect(service.isExcellentPerformance(score: 9, totalQuestions: 10) == true) // 90%
-    #expect(service.isExcellentPerformance(score: 8, totalQuestions: 10) == false) // 80%
 }
 
 @Test("HiraganaGameServiceデータアクセステスト")

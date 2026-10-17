@@ -118,37 +118,6 @@ final class StatisticsService {
         )
     }
     
-    /// Calculates stars based on accuracy and time performance
-    /// - Parameters:
-    ///   - correctAnswers: Number of correct answers
-    ///   - totalQuestions: Total number of questions
-    ///   - timeTaken: Time taken to complete
-    /// - Returns: Stars earned (0-3)
-    func calculateStars(correctAnswers: Int, totalQuestions: Int, timeTaken: Double) -> Int {
-        let accuracy = Double(correctAnswers) / Double(totalQuestions)
-        let baseStars: Int
-        
-        // Base star calculation
-        switch accuracy {
-        case 1.0:
-            baseStars = 3
-        case 0.8 ... 0.99:
-            baseStars = 2
-        case 0.6 ... 0.79:
-            baseStars = 1
-        default:
-            baseStars = 0
-        }
-        
-        // Time bonus (average 6 seconds or less per question gives bonus)
-        let averageTimePerQuestion = timeTaken / Double(totalQuestions)
-        if averageTimePerQuestion <= 6.0 && baseStars > 0 {
-            return min(3, baseStars + 1) // Maximum 3 stars
-        }
-        
-        return baseStars
-    }
-    
     // MARK: - Data Management
     
     /// Resets all statistics to default values

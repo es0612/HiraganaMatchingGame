@@ -98,26 +98,6 @@ class TestableStarUnlockService {
         }
     }
     
-    func calculateStars(correctAnswers: Int, totalQuestions: Int, timeTaken: Double) -> Int {
-        let accuracy = Double(correctAnswers) / Double(totalQuestions)
-        
-        var stars = 0
-        if accuracy >= 0.9 {
-            stars = 3
-        } else if accuracy >= 0.7 {
-            stars = 2
-        } else if accuracy >= 0.5 {
-            stars = 1
-        }
-        
-        // 時間ボーナス
-        if timeTaken <= 30.0 && stars > 0 {
-            stars = min(3, stars + 1)
-        }
-        
-        return stars
-    }
-    
     func recordLevelCompletion(level: Int, stars: Int, accuracy: Double, time: Double) {
         // 既存の統計を更新
         if let existingStats = levelStatistics[level] {

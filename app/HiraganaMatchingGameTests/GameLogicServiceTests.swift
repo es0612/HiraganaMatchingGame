@@ -56,6 +56,34 @@ func scoreCalculation(correctAnswers: Int, totalQuestions: Int, expectedStars: I
     #expect(stars == expectedStars)
 }
 
+@Test("難易度別のスター基準：閾値ちょうどと、閾値の間の正解率 (#57)", arguments: [
+    // 普通 100 / 80 / 60
+    (GameDifficulty.normal, 199, 200, 2), // 99.5%
+    (.normal, 160, 200, 2), // 80%
+    (.normal, 159, 200, 1), // 79.5%
+    (.normal, 120, 200, 1), // 60%
+    (.normal, 119, 200, 0), // 59.5%
+    // 簡単 100 / 90 / 80
+    (.easy, 199, 200, 2),
+    (.easy, 180, 200, 2), // 90%
+    (.easy, 179, 200, 1), // 89.5%
+    (.easy, 160, 200, 1), // 80%
+    (.easy, 159, 200, 0),
+    // 難しい 100 / 75 / 50
+    (.hard, 199, 200, 2),
+    (.hard, 150, 200, 2), // 75%
+    (.hard, 149, 200, 1), // 74.5%
+    (.hard, 100, 200, 1), // 50%
+    (.hard, 99, 200, 0)
+])
+func starThresholdsByDifficulty(difficulty: GameDifficulty, correctAnswers: Int, totalQuestions: Int, expectedStars: Int) {
+    let settings = UserSettings()
+    settings.difficulty = difficulty
+    let gameLogic = GameLogicService(userSettings: settings)
+
+    #expect(gameLogic.calculateStars(correctAnswers: correctAnswers, totalQuestions: totalQuestions) == expectedStars)
+}
+
 // レベル解放判定テストは削除：LevelProgressionServiceに統一されました
 
 @Test("ゲーム統計計算テスト")
