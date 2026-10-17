@@ -137,45 +137,25 @@ class GameLogicService {
         return calculateStarsForAccuracy(accuracy, difficulty: settings.difficulty)
     }
     
+    /// 3 つ星は全問正解。2 つ星・1 つ星は難易度ごとの閾値「以上」で判定する（問題数を増やしても閾値の間を取りこぼさない。#57）
     private func calculateStarsForAccuracy(_ accuracy: Double, difficulty: GameDifficulty) -> Int {
+        let thresholds: (twoStars: Double, oneStar: Double)
         switch difficulty {
         case .easy:
             // 簡単モード：より高い正解率が必要
-            switch accuracy {
-            case 1.0:
-                return 3
-            case 0.9 ... 0.99:
-                return 2
-            case 0.8 ... 0.89:
-                return 1
-            default:
-                return 0
-            }
+            thresholds = (0.9, 0.8)
         case .normal:
             // 普通モード：標準の基準
-            switch accuracy {
-            case 1.0:
-                return 3
-            case 0.8 ... 0.99:
-                return 2
-            case 0.6 ... 0.79:
-                return 1
-            default:
-                return 0
-            }
+            thresholds = (0.8, 0.6)
         case .hard:
             // 難しいモード：少し甘めの基準でボーナス
-            switch accuracy {
-            case 1.0:
-                return 3
-            case 0.75 ... 0.99:
-                return 2
-            case 0.5 ... 0.74:
-                return 1
-            default:
-                return 0
-            }
+            thresholds = (0.75, 0.5)
         }
+
+        if accuracy >= 1.0 { return 3 }
+        if accuracy >= thresholds.twoStars { return 2 }
+        if accuracy >= thresholds.oneStar { return 1 }
+        return 0
     }
     
     func calculateGameStats(correctAnswers: Int, totalQuestions: Int, timeTaken: TimeInterval) -> GameStats {

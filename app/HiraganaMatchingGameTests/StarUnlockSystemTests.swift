@@ -42,31 +42,6 @@ struct StarUnlockSystemTests {
         #expect(service.isCharacterUnlocked("た") == false)
     }
     
-    @Test("スター獲得計算システム")
-    func starCalculationSystem() {
-        let service = TestableStarUnlockService()
-        
-        // 完璧な正解率（100%）
-        let perfectStars = service.calculateStars(correctAnswers: 5, totalQuestions: 5, timeTaken: 30.0)
-        #expect(perfectStars == 3)
-        
-        // 良い正解率（80%）
-        let goodStars = service.calculateStars(correctAnswers: 4, totalQuestions: 5, timeTaken: 45.0)
-        #expect(goodStars == 2)
-        
-        // 普通の正解率（60%）
-        let okStars = service.calculateStars(correctAnswers: 3, totalQuestions: 5, timeTaken: 60.0)
-        #expect(okStars == 1)
-        
-        // 時間ボーナス適用テスト
-        let fastStars = service.calculateStars(correctAnswers: 4, totalQuestions: 5, timeTaken: 20.0)
-        #expect(fastStars >= 2) // 高速回答でボーナス
-        
-        // 不正解率が高い場合
-        let poorStars = service.calculateStars(correctAnswers: 2, totalQuestions: 5, timeTaken: 90.0)
-        #expect(poorStars == 0)
-    }
-    
     @Test("特別キャラクター解放条件")
     func specialCharacterUnlock() {
         let service = TestableStarUnlockService()

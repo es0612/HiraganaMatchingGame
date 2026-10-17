@@ -136,35 +136,6 @@ final class HiraganaGameService {
         return accuracy >= requiredAccuracy && currentLevel < getMaxLevel()
     }
     
-    /// Calculates stars earned based on performance
-    /// - Parameters:
-    ///   - score: The score achieved
-    ///   - totalQuestions: Total questions in the level
-    /// - Returns: Number of stars earned (0-3)
-    func calculateStarsEarned(score: Int, totalQuestions: Int) -> Int {
-        let accuracy = Double(score) / Double(totalQuestions)
-        
-        if accuracy >= 0.9 {
-            return 3 // 90%+ = 3 stars
-        } else if accuracy >= 0.7 {
-            return 2 // 70-89% = 2 stars
-        } else if accuracy >= 0.5 {
-            return 1 // 50-69% = 1 star
-        } else {
-            return 0 // <50% = 0 stars
-        }
-    }
-    
-    /// Determines if performance is considered "excellent"
-    /// - Parameters:
-    ///   - score: The score achieved
-    ///   - totalQuestions: Total questions in the level
-    /// - Returns: True if performance is excellent (90%+ accuracy)
-    func isExcellentPerformance(score: Int, totalQuestions: Int) -> Bool {
-        let accuracy = Double(score) / Double(totalQuestions)
-        return accuracy >= 0.9
-    }
-    
     /// Gets a random hiragana character for a specific level
     /// - Parameter level: The level to get a character from
     /// - Returns: A random character available at that level, or nil if invalid level
