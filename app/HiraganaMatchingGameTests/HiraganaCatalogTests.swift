@@ -10,6 +10,17 @@ struct HiraganaCatalogTests {
         #expect(HiraganaCatalog.totalLevels == 10)
     }
 
+    @Test("行名に重複がない（CharacterUnlockService の Dictionary(uniqueKeysWithValues:) がトラップしない） (#62)")
+    func rowNamesAreUnique() {
+        let names = HiraganaCatalog.rows.map(\.name)
+        #expect(Set(names).count == names.count)
+    }
+
+    @Test("レベルの見出しが行と同じ件数ある（足りないと zip がレベルを切り捨てる） (#62)")
+    func levelTextsMatchRowCount() {
+        #expect(LevelProgressionService.levelTexts.count == HiraganaCatalog.rows.count)
+    }
+
     @Test("現代仮名 46 文字・重複なし・ゐ/ゑ を含まない")
     func allCharactersAreModern46() {
         let all = HiraganaCatalog.allCharacters
@@ -21,7 +32,7 @@ struct HiraganaCatalogTests {
         #expect(all.last == "ん")
     }
 
-    @Test("レベル 1〜10 の文字が LevelProgressionService と順序まで一致する", arguments: 1 ... 10)
+    @Test("レベル 1〜10 の文字が LevelProgressionService と順序まで一致する", arguments: 1 ... HiraganaCatalog.totalLevels)
     func matchesLevelProgressionService(level: Int) {
         let expected = LevelProgressionService(forTesting: true).getLevelConfiguration(level).characters
         #expect(HiraganaCatalog.characters(upToLevel: level) == expected)
@@ -42,7 +53,7 @@ struct HiraganaCatalogTests {
         #expect(HiraganaCatalog.row(containing: character) == nil)
     }
 
-    @Test("HiraganaGameService のレベル別文字が Catalog と一致する", arguments: 1 ... 10)
+    @Test("HiraganaGameService のレベル別文字が Catalog と一致する", arguments: 1 ... HiraganaCatalog.totalLevels)
     func gameServiceMatchesCatalog(level: Int) {
         #expect(HiraganaGameService.shared.getCharactersForLevel(level) == HiraganaCatalog.characters(upToLevel: level))
     }
