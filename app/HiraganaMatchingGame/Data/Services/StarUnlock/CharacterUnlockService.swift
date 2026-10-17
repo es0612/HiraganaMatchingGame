@@ -196,7 +196,7 @@ final class CharacterUnlockService {
             }
         }
         
-        return "あ行"
+        return HiraganaCatalog.rows[0].name
     }
     
     /// Gets the next group that can be unlocked
