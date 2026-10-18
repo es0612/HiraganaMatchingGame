@@ -18,6 +18,7 @@ struct GameView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     
     init(selectedLevel: Int = 1,
          levelProgressionService: LevelProgressionService = LevelProgressionService(),
@@ -156,15 +157,15 @@ struct GameView: View {
                 .accessibilityIdentifier("ゲーム画面")
             }
             
-            // パーティクルエフェクト
-            if gameViewModel.showFeedback {
+            // パーティクルエフェクト（「視差効果を減らす」が ON なら出さない #34）
+            if gameViewModel.showFeedback && !reduceMotion {
                 ParticleEffectView(isCorrect: gameViewModel.score > 0)
                     .allowsHitTesting(false)
                     .zIndex(50)
             }
             
             // ゲーム完了時の紙吹雪
-            if gameViewModel.isGameCompleted && gameViewModel.earnedStars > 0 {
+            if gameViewModel.isGameCompleted && gameViewModel.earnedStars > 0 && !reduceMotion {
                 ConfettiView()
                     .allowsHitTesting(false)
                     .zIndex(60)

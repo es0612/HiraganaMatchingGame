@@ -5,6 +5,7 @@ struct LevelSelectionView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     
     let onLevelSelected: (Int) -> Void
     let onCharacterCollectionPressed: () -> Void
@@ -118,8 +119,24 @@ struct LevelSelectionView: View {
         return LazyVGrid(columns: columns, spacing: 15) {
             ForEach(1 ... levelProgressionService.getTotalLevels(), id: \.self) { level in
                 levelButton(for: level)
+                    .accessibilityLabel(levelAccessibilityLabel(for: level))
             }
         }
+    }
+
+    /// おすすめレベルの枠の点滅。「視差効果を減らす」が ON なら止める (#34)
+    private var recommendedPulse: Animation? {
+        reduceMotion ? nil : .easeInOut(duration: 1.5).repeatForever(autoreverses: true)
+    }
+
+    private func levelAccessibilityLabel(for level: Int) -> String {
+        AccessibilityText.levelButton(
+            level: level,
+            title: levelProgressionService.getLevelConfiguration(level).title,
+            stars: levelProgressionService.getStarsForLevel(level),
+            isUnlocked: levelProgressionService.isLevelUnlocked(level),
+            isRecommended: levelProgressionService.getRecommendedNextLevel() == level
+        )
     }
     
     private func levelButton(for level: Int) -> some View {
@@ -157,7 +174,7 @@ struct LevelSelectionView: View {
                             RoundedRectangle(cornerRadius: 15)
                                 .stroke(isRecommended ? Color.orange : Color.clear, lineWidth: 3)
                                 .scaleEffect(isRecommended ? 1.05 : 1.0)
-                                .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: isRecommended)
+                                .animation(recommendedPulse, value: isRecommended)
                         )
                     
                     VStack(spacing: 4) {

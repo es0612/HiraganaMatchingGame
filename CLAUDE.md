@@ -19,6 +19,7 @@
 - `swiftlint --fix` の後は `swiftformat .` を再実行し、両方をもう一度走らせて差分ゼロを確認。
 - CI は `swiftlint --strict`。既存 warning は `.swiftlint-baseline.json` で凍結済みで、**新規違反だけ**が落ちる（#25）。既存 warning を減らしたら `swiftlint lint --quiet --write-baseline .swiftlint-baseline.json` で再生成してコミットする。
 - pre-commit も SwiftFormat/SwiftLint を固定せず `language: system`（brew 最新）で呼ぶ（#17）。
+- baseline は違反の文面ごと照合する。`function_body_length` などの文面には「currently spans 57 lines」のような行数が入るため、凍結済みの関数に 1 行足すだけで新規違反になる。修飾子は呼び出し側に付けるか、プロパティ・関数に切り出して、関数本体の行数を変えない（#34）。
 
 ## コンテンツ仕様（PO 判断済み）
 - ひらがなは現代仮名 46 文字。旧仮名「ゐ」「ゑ」は扱わない（#22）。
@@ -50,4 +51,5 @@
 - `gh secret set` のようにトークンを標準入力から読むコマンドは、記録に残る Bash 経由で実行・案内せず「通常のターミナルで実行してください」と明示する。
 
 ## 実装の注意
+- VoiceOver の読み上げ文は `Utils/AccessibilityText.swift` に集め、文言はユニットテストで確かめる。ラベルが実際の読み上げ対象に乗っているかは、一時的な XCUITest で `app.buttons.allElementsBoundByIndex.map(\.label)` を書き出して確認する（#34）。ゲーム画面で実際に使われるのは `GameView` から辿れる部品で、`GameContentView` / `GameControlsView` / `GameOverlayView` / `GameFeedbackView` / `GameHeaderView` は未使用（#24）。
 - closure を `[weak self]` にすると deinit が実際に起きるようになり、deinit は最後の参照を手放したスレッド（`Task` の完了先など）で走る。メイン RunLoop に登録した `Timer` の `invalidate()` は別スレッドから呼ばない（#31 でヒープ破壊 → 全テスト巻き添えクラッシュになった）。
