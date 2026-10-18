@@ -26,12 +26,14 @@ struct AnswerChoicesView: View {
                 HStack(spacing: 20) {
                     ForEach(answerChoices, id: \.id) { choice in
                         answerChoiceButton(choice)
+                            .accessibilityLabel(AccessibilityText.answerChoice(reading: getReadingForImageName(choice.imageName)))
                     }
                 }
             } else {
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 20), count: 2), spacing: 20) {
                     ForEach(answerChoices, id: \.id) { choice in
                         answerChoiceButton(choice)
+                            .accessibilityLabel(AccessibilityText.answerChoice(reading: getReadingForImageName(choice.imageName)))
                     }
                 }
             }

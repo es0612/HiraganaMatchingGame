@@ -5,6 +5,7 @@ struct CharacterCollectionView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     
     let onBackPressed: () -> Void
     
@@ -50,6 +51,7 @@ struct CharacterCollectionView: View {
                     .font(.title2)
                     .foregroundColor(colorScheme == .dark ? .white : .primary)
             }
+            .accessibilityLabel(AccessibilityText.back)
             
             Spacer()
             
@@ -181,7 +183,7 @@ struct CharacterCollectionView: View {
                         .font(.system(size: characterCardSize * 0.3))
                         .foregroundColor(colorScheme == .dark ? .gray : .secondary)
                         .rotationEffect(.degrees(-10))
-                        .animation(.easeInOut(duration: 2.0).repeatForever(autoreverses: true), value: isUnlocked)
+                        .animation(reduceMotion ? nil : .easeInOut(duration: 2.0).repeatForever(autoreverses: true), value: isUnlocked)
                 }
                 
                 if isUnlocked {

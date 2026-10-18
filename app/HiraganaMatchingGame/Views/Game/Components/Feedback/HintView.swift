@@ -21,6 +21,7 @@ struct HintView: View {
                 }
                 .foregroundColor(.gray)
                 .font(.title2)
+                .accessibilityLabel(AccessibilityText.closeHint)
             }
             
             Text(hintText)

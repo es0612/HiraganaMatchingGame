@@ -49,6 +49,7 @@ struct AchievementsView: View {
                     .font(.title2)
                     .foregroundColor(colorScheme == .dark ? .white : .primary)
             }
+            .accessibilityLabel(AccessibilityText.back)
             
             Spacer()
             

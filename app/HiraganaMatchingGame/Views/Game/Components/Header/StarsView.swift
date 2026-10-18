@@ -11,6 +11,8 @@ struct StarsView: View {
                     .font(.title2)
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(AccessibilityText.stars(earnedStars))
     }
 }
 

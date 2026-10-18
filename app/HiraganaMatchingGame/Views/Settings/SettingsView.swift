@@ -179,6 +179,7 @@ struct SettingsView: View {
                             .font(.title2)
                             .foregroundStyle(.primary)
                     }
+                    .accessibilityLabel(AccessibilityText.back)
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
