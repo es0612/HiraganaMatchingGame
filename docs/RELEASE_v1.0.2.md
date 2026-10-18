@@ -1,6 +1,6 @@
 # RELEASE v1.0.2
 
-> ステータス: in-progress（2026-10-18 時点。ASC の提出準備はこれから）。`asc-submission-prep` の入力元。What's New は PO 承認済み（2026-10-18）。
+> ステータス: in-progress（2026-10-18 時点。ASC の提出準備は済み、「審査へ提出」は PO が押す）。`asc-submission-prep` の入力元。What's New は PO 承認済み（2026-10-18）。
 > 範囲: `v1.0.1`（9a9f981）→ main（2e6d471）。
 
 ## ビルド
@@ -33,8 +33,15 @@ What's New に書かない変更: Privacy Manifest の追加（#23 / #53）、�
 - [x] What's New に絵文字なし（ja も 2026-09 から「無効な文字」で拒否される）
 - [x] 広告 SDK なし（年齢制限の「広告」は対象外）
 - [x] SwiftData の `@Model` は v1.0.1 から変更なし（`git diff v1.0.1 -- app/HiraganaMatchingGame/Models/`）。移行のリスクなし
-- [ ] ASC の「Apple Developer Program の使用許諾契約の更新」に Account Holder が同意（2026-10-18 時点でバナーあり）
+- [x] Apple Developer Program License Agreement に同意（developer.apple.com のアカウント画面で「同意日：2026年10月18日」。ASC のバナーは同意後も残っていたが、バージョン作成・保存は通った）
 - [x] 紐付けるビルドのコミットが 2e6d471 であることを Xcode Cloud の画面で確認（2026-10-18 16:10 開始の build 59）
+
+## ASC に書き込んだもの（2026-10-18、`asc-submission-prep`）
+- バージョン 1.0.2 を作成（「1.0.2 提出準備中」）
+- ビルド: build 59 を紐付け（輸出コンプライアンスのダイアログは出なかった）
+- What's New（ja）: 上の文面を入力（再読み込み後に全文一致、231 文字）
+- プロモーション用テキスト: 新しいバージョンで空になっていたので、1.0.1 と同じ「楽しくひらがなを覚える子供向け学習ゲーム。」を入力（`docs/submission/AppStoreMetadata.md` と同じ。PO 承認済み）
+- 言語は日本語のみ（en のローカリゼーションはない）。年齢制限は全問回答済み、App Review の連絡先は引き継がれていた
 
 ## validating（PO が実機で確認）
 - VoiceOver で、レベル選択 → 1 問回答 → 結果画面まで操作できるか（#34 の受け入れ条件 1 つ目）
