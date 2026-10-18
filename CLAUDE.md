@@ -31,6 +31,7 @@
 - main は Ruleset で保護されている（#32）：**PR 必須・直接 push 不可**、必須チェックは `lint`・`test`。作業は必ずブランチ → PR で行う。
 - CI の `test` ジョブ（`.github/workflows/test.yml`）はユニットテストのみ。UI テストは main でも赤いため #43 が解決するまで対象外。
 - PR 本文で、close しない issue の番号の前に `Closes` / `Fixes` / `Resolves` を書かない（否定文でも自動 close される）。`Refs #N` のみにする。
+- リファクタや issue 解消の PR では、CLAUDE.md の中でその issue 番号や「重複」「未対応」の状態を書いている行を同じ PR で更新する。#21 PR2 では「行・レベル定義は 5 ファイルに重複」の記述が古いまま残り、後から別 PR (#63) で直した。マージ前に `grep -n "#<issue番号>" CLAUDE.md` で確認する。
 - セッション冒頭は `/daily-issue-triage`。仕様判断（実装が正 or テストが正）は AskUserQuestion でまとめて聞く。
 - リリース後は、配信を iTunes Lookup（`https://itunes.apple.com/lookup?bundleId=com.asapapalab.HiraganaMatchingGame&country=jp`）で確認してから、ASC で紐付けた build のコミットに `vX.Y.Z` の注釈付きタグを付けて push する。1.0 はタグがなく、どのコミットからビルドしたか追えなかった（v1.0.1 から運用）。
 - タグを付けたら**同じタイミングで `MARKETING_VERSION` を次のパッチに上げる PR を出す**（グローバルスキル `~/.claude/skills/release-version-bump-check`。リポには入っていない）。Xcode Cloud の `Default` ワークフローは「main の `app/` 配下が変わったら Archive → ASC へアップロード」なので、上げ忘れると承認済みバージョンのビルドが ITMS-90186 / 90062 で弾かれる（#52：docs だけの PR でも build 50〜52 が作られていた。2026-09-29 に開始条件を `app/` に限定）。ビルド番号は Xcode Cloud が振るので pbxproj の `CURRENT_PROJECT_VERSION` は触らない。
@@ -44,7 +45,7 @@
 - 並列実行時だけランダムに落ち、共有 UserDefaults キーの切り分けで説明できないときは `xcodebuild test -enableThreadSanitizer YES`（`-derivedDataPath` / `-resultBundlePath` は通常実行と分ける）でデータ競合を直接検出する。件数は `grep -c "WARNING: ThreadSanitizer" <log>`、競合箇所は `SUMMARY: ThreadSanitizer` 行で見る。直したら「TSan 0 件」と「CI 3 回連続緑」の両方で確認する（#48）。
 - 閾値アサーション（例: `> 400`）を書く/直すときは、実データ件数（例: 185 件）に対して一度も満たされたことのない無意味な閾値になっていないか確認する。
 - CI の `test` が途中で一斉クラッシュしても、アプリのコードが main と同じ PR（docs だけの変更など）なら、PR ではなく main に元からある不安定さを疑う。失敗したジョブだけを再実行し、再発は #36 に追記する（失敗 run から自動起票した issue は #36 の重複として close する。#59）。
-- CI の緑は「pass」の表示だけで判断しない。ログの `Test run with N tests` で実行件数（2026-10-17 の main で 159 件）を確かめてからマージする。途中でクラッシュした後の再実行は、全件走ったかどうかが表示からは分からない。
+- CI の緑は「pass」の表示だけで判断しない。ログの `Test run with N tests` で実行件数（2026-10-18 の main で 174 件）を確かめてからマージする。途中でクラッシュした後の再実行は、全件走ったかどうかが表示からは分からない。
 - CI にはクラッシュレポート（`.ips`）が残らないので、落ちた場所は特定できない。原因を推定のまま書かず「落ちた場所は未確認」と明記し、#36 には事実だけを残す。
 
 ## トークンを扱うコマンド
