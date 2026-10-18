@@ -5,7 +5,7 @@
 
 ## ビルド
 - MARKETING_VERSION: 1.0.2（ASC の承認済みは 1.0.1）
-- 紐付けるビルド: **build （未確定: 59 以降。Xcode Cloud の完了後にこの PR で記入）**（main 2e6d471 = PR #66 のマージ後。Xcode Cloud が作成）
+- 紐付けるビルド: **build 59**（main 2e6d471 = PR #66 のマージ後。Xcode Cloud が作成）
 - build 54〜58 は #34（PR #66）より前のコミットから作られているので使わない
 
 ## What's New
@@ -34,7 +34,7 @@ What's New に書かない変更: Privacy Manifest の追加（#23 / #53）、�
 - [x] 広告 SDK なし（年齢制限の「広告」は対象外）
 - [x] SwiftData の `@Model` は v1.0.1 から変更なし（`git diff v1.0.1 -- app/HiraganaMatchingGame/Models/`）。移行のリスクなし
 - [ ] ASC の「Apple Developer Program の使用許諾契約の更新」に Account Holder が同意（2026-10-18 時点でバナーあり）
-- [ ] 紐付けるビルドのコミットが 2e6d471 であることを Xcode Cloud の画面で確認
+- [x] 紐付けるビルドのコミットが 2e6d471 であることを Xcode Cloud の画面で確認（2026-10-18 16:10 開始の build 59）
 
 ## validating（PO が実機で確認）
 - VoiceOver で、レベル選択 → 1 問回答 → 結果画面まで操作できるか（#34 の受け入れ条件 1 つ目）
@@ -42,6 +42,6 @@ What's New に書かない変更: Privacy Manifest の追加（#23 / #53）、�
 - #20 の BGM 復帰（1.0.1 から持ち越し）
 
 ## 配信後にやること（次のセッション）
-- iTunes Lookup で 1.0.2 の配信を確認 → build （未確定: 59 以降。Xcode Cloud の完了後にこの PR で記入） のコミットに `v1.0.2` の注釈付きタグを付けて push
+- iTunes Lookup で 1.0.2 の配信を確認 → build 59 のコミットに `v1.0.2` の注釈付きタグを付けて push
 - 同じタイミングで `MARKETING_VERSION` を 1.0.3 に上げる PR（#55 の物差し：上げ忘れが起きたかを記録する）
 - PR #53 で未確認だった「Privacy Manifest を入れたビルドのアップロードで警告が出ない」を ASC の画面で確認する（#23 は close 済み。警告メールは Gmail には届かないので Gmail では判定しない）
