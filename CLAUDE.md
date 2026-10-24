@@ -10,7 +10,7 @@
 - `GameViewModel` をテストで生成するときは `GameViewModel(isTestMode: true)`（実 Audio と asyncAfter を残さない）。
 - `DataMigrationService` は `init(userDefaults:)` で UserDefaults を注入できる。テストは `UserDefaults(suiteName: UUID)` を渡し、`UserDefaults.standard` を触らない。
 - アップグレード経路（旧 `StarUnlock_*` キーが起動後も残るか）は `scripts/verify-upgrade-path.sh <UDID>` で確認できる（#18）。
-- シミュレータに UserDefaults を仕込むときは **アプリコンテナ内の plist** に直接書く。`xcrun simctl spawn <UDID> defaults write <bundle id>` はシミュレータ全体の Preferences に書かれ、アプリからは見えない。
+- シミュレータに UserDefaults を仕込むときは **アプリコンテナ内の plist** に直接書く。`xcrun simctl spawn <UDID> defaults write <bundle id>` はシミュレータ全体の Preferences に書かれ、アプリからは見えない。例外は OS 全体の設定で、「視差効果を減らす」は `xcrun simctl spawn <UDID> defaults write com.apple.Accessibility ReduceMotionEnabled -bool true` で効く（#34）。`xcodebuild test` はテスト後にシミュレータを shutdown するので、書き込む前に `simctl boot` と `simctl bootstatus <UDID> -b` で起動済みにする（起動していないと `device is not booted` で失敗する）。
 - pbxproj の `INFOPLIST_KEY_*` は生成 Info.plist に**出力されないキーがある**（`UIBackgroundModes` / `CFBundleLocalizations` / `NSAppTransportSecurity` は出ない。#20）。Info.plist の設定を前提にするときは、ビルド済み `.app` の `Info.plist` を `plutil -p` で確認する。
 
 ## Lint
@@ -35,6 +35,7 @@
 - セッション冒頭は `/daily-issue-triage`。仕様判断（実装が正 or テストが正）は AskUserQuestion でまとめて聞く。
 - リリース後は、配信を iTunes Lookup（`https://itunes.apple.com/lookup?bundleId=com.asapapalab.HiraganaMatchingGame&country=jp`）で確認してから、ASC で紐付けた build のコミットに `vX.Y.Z` の注釈付きタグを付けて push する。1.0 はタグがなく、どのコミットからビルドしたか追えなかった（v1.0.1 から運用）。
 - タグを付けたら**同じタイミングで `MARKETING_VERSION` を次のパッチに上げる PR を出す**（グローバルスキル `~/.claude/skills/release-version-bump-check`。リポには入っていない）。Xcode Cloud の `Default` ワークフローは「main の `app/` 配下が変わったら Archive → ASC へアップロード」なので、上げ忘れると承認済みバージョンのビルドが ITMS-90186 / 90062 で弾かれる（#52：docs だけの PR でも build 50〜52 が作られていた。2026-09-29 に開始条件を `app/` に限定）。ビルド番号は Xcode Cloud が振るので pbxproj の `CURRENT_PROJECT_VERSION` は触らない。
+- 上げ忘れは CI の `version-check`（`.github/workflows/version-check.yml` → `scripts/check-marketing-version.sh`、#55）が `app/` を変える PR で検出する。比べる相手は最新の `v*` タグと iTunes Lookup の公開中バージョンの大きいほう。ASC で「配信準備完了」のまま公開していない期間はどちらにも出ないので検出できない。必須チェックではない（paths で絞っているため）。リリース後、bump の PR がマージされるまでは `app/` を変える他の PR もすべて赤になるが、これは意図した動き（先に bump をマージして rebase する）。
 - ASC のメールや Xcode Cloud のビルド失敗は、原因を推定したまま対処案を出さない。ASC の Xcode Cloud 画面（ワークフローの開始条件・ビルド履歴）を claude-in-chrome で読んで事実を確定してから選択肢を出し、設定の変更は承認を取ってから行う。同じ開発者アカウントの他アプリもビルド履歴を読み取りで横断確認できるが、ITMS 番号まで確認できていないものは「可能性が高い」と書く。
 - ASC の警告メールは、Claude に接続された Gmail には届かない（2026-10-10 に過去 60 日分の Apple/ITMS メールが 0 件）。「警告メールが来ていない」は Gmail では判定できないので、ASC の画面で確認する。
 - #18（旧キー削除で実績が消える）は #35 で方針 1 対応済み。残る二重管理の判断は #36。DataMigrationService を触るときは先に #36 を読む。
@@ -52,5 +53,5 @@
 - `gh secret set` のようにトークンを標準入力から読むコマンドは、記録に残る Bash 経由で実行・案内せず「通常のターミナルで実行してください」と明示する。
 
 ## 実装の注意
-- VoiceOver の読み上げ文は `Utils/AccessibilityText.swift` に集め、文言はユニットテストで確かめる。ラベルが実際の読み上げ対象に乗っているかは、一時的な XCUITest で `app.buttons.allElementsBoundByIndex.map(\.label)` を書き出して確認する（#34）。ゲーム画面で実際に使われるのは `GameView` から辿れる部品で、`GameContentView` / `GameControlsView` / `GameOverlayView` / `GameFeedbackView` / `GameHeaderView` は未使用（#24）。
+- VoiceOver の読み上げ文は `Utils/AccessibilityText.swift` に集め、文言はユニットテストで確かめる。ラベルが実際の読み上げ対象に乗っているかは、一時的な XCUITest で `app.buttons.allElementsBoundByIndex.map(\.label)` を書き出して確認する（#34）。要素を数えるアサーションは添字アクセスを避け、`app.staticTexts.matching(NSPredicate(...)).count` を使う（添字アクセスは並行する画面更新で `No matches found for Element at index N` という不安定な失敗になる）。ゲーム画面で実際に使われるのは `GameView` から辿れる部品で、`GameContentView` / `GameControlsView` / `GameOverlayView` / `GameFeedbackView` / `GameHeaderView` は未使用（#24）。
 - closure を `[weak self]` にすると deinit が実際に起きるようになり、deinit は最後の参照を手放したスレッド（`Task` の完了先など）で走る。メイン RunLoop に登録した `Timer` の `invalidate()` は別スレッドから呼ばない（#31 でヒープ破壊 → 全テスト巻き添えクラッシュになった）。

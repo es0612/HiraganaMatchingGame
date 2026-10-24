@@ -1,0 +1,27 @@
+name: Version Check
+
+# app/ を変える PR で、MARKETING_VERSION が最新の v* タグと App Store の公開中バージョンより大きいかを確かめる（#55）。
+# 必須チェックではない（paths で絞っているため、必須にすると app/ を変えない PR がマージできなくなる）。
+on:
+  pull_request:
+    paths:
+      - "app/**"
+      - "scripts/check-marketing-version.sh"
+      - ".github/workflows/version-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  version-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # タグを全部取得する（既定の浅いチェックアウトではタグが取れない）
+          fetch-depth: 0
+
+      - name: Verify MARKETING_VERSION is higher than the last release
+        run: scripts/check-marketing-version.sh
