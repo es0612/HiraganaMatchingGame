@@ -240,29 +240,11 @@ struct GameView: View {
             
             Spacer()
             
-            StarsView(earnedStars: getCurrentPotentialStars())
+            StarsView(earnedStars: gameViewModel.currentPotentialStars)
         }
     }
     
     // MARK: - Helper Functions
-    
-    private func getCurrentPotentialStars() -> Int {
-        if gameViewModel.isGameCompleted {
-            return gameViewModel.earnedStars
-        } else {
-            // 現在の進行状況から予想される星数を計算
-            let currentAccuracy = Double(gameViewModel.score) / Double(gameViewModel.currentQuestion - 1)
-            if currentAccuracy >= 1.0 {
-                return 3
-            } else if currentAccuracy >= 0.8 {
-                return 2
-            } else if currentAccuracy >= 0.6 {
-                return 1
-            } else {
-                return 0
-            }
-        }
-    }
     
     private func showHintAlert() {
         // ヒント設定が無効な場合は表示しない
