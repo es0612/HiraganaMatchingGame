@@ -10,6 +10,9 @@ on:
       - ".github/workflows/version-check.yml"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   version-check:
     runs-on: ubuntu-latest

@@ -23,8 +23,13 @@ if [ "$(echo "$VERSIONS" | wc -l | tr -d ' ')" != "1" ]; then
     exit 1
 fi
 CURRENT="$VERSIONS"
+if ! echo "$CURRENT" | grep -qE '^[0-9]+(\.[0-9]+)*$'; then
+    echo "::error::MARKETING_VERSION を数字の形（例: 1.0.3）として解釈できません: $CURRENT"
+    exit 1
+fi
 
-LAST_TAG=$(git tag --list 'v*' --sort=-v:refname | head -1 | sed 's/^v//')
+# v1.0.3-rc1 のようなタグは sort -V の順序がずれるので、vX.Y.Z の形だけを見る
+LAST_TAG=$(git tag --list 'v*' --sort=-v:refname | grep -E '^v[0-9]+(\.[0-9]+)*$' | head -1 | sed 's/^v//' || true)
 STORE=$(curl -fsSL --max-time 20 "$LOOKUP_URL" 2>/dev/null \
     | python3 -c 'import json,sys; r=json.load(sys.stdin).get("results") or []; print(r[0]["version"] if r else "")' 2>/dev/null \
     || true)
@@ -40,6 +45,7 @@ fi
 for BASE in "$LAST_TAG" "$STORE"; do
     [ -z "$BASE" ] && continue
     HIGHEST=$(printf '%s\n%s\n' "$BASE" "$CURRENT" | sort -V | tail -1)
+    # 同じ値のとき sort -V は CURRENT を返すので、同値は別に判定する
     if [ "$CURRENT" = "$BASE" ] || [ "$HIGHEST" != "$CURRENT" ]; then
         echo "::error::MARKETING_VERSION ($CURRENT) が $BASE より大きくありません。次のパッチに上げてください（CLAUDE.md「進め方」、#52）"
         exit 1
