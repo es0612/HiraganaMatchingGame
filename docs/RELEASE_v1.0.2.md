@@ -1,6 +1,6 @@
 # RELEASE v1.0.2
 
-> ステータス: in-progress（2026-10-18 時点。ASC の提出準備は済み、「審査へ提出」は PO が押す）。`asc-submission-prep` の入力元。What's New は PO 承認済み（2026-10-18）。
+> ステータス: done（配信は iTunes Lookup で 2026-10-18T22:22Z = 日本時間 10/19 朝に確認。下の「validating」の実機確認は残る）。`asc-submission-prep` の入力元。What's New は PO 承認済み（2026-10-18）。
 > 範囲: `v1.0.1`（9a9f981）→ main（2e6d471）。
 
 ## ビルド
@@ -49,6 +49,6 @@ What's New に書かない変更: Privacy Manifest の追加（#23 / #53）、�
 - #20 の BGM 復帰（1.0.1 から持ち越し）
 
 ## 配信後にやること（次のセッション）
-- iTunes Lookup で 1.0.2 の配信を確認 → build 59 のコミットに `v1.0.2` の注釈付きタグを付けて push
-- 同じタイミングで `MARKETING_VERSION` を 1.0.3 に上げる PR（#55 の物差し：上げ忘れが起きたかを記録する）
+- [x] iTunes Lookup で 1.0.2 の配信を確認 → build 59 のコミット（2e6d471）に `v1.0.2` の注釈付きタグを付けて push（2026-10-24）
+- [x] `MARKETING_VERSION` を 1.0.3 に上げる PR（2026-10-24）。#55 の物差し：配信からタグ・bump まで 5 日空いた（その間 `app/` の変更はなく、却下は 0 件）。PO 判断で #55 の CI チェックを実装する
 - PR #53 で未確認だった「Privacy Manifest を入れたビルドのアップロードで警告が出ない」を ASC の画面で確認する（#23 は close 済み。警告メールは Gmail には届かないので Gmail では判定しない）
