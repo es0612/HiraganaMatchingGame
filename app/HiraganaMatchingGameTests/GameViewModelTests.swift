@@ -159,3 +159,43 @@ func timerTickCountsDownAndCompletesGame() {
     viewModel.handleTimerTick()
     #expect(viewModel.isGameCompleted == true)
 }
+
+/// プレイ中のヘッダーのスターも、ゲーム終了時と同じ難易度別の閾値で出す（#67）
+@Test("プレイ中のスターは回答済みの問題で難易度別に計算する", arguments: [
+    // 回答 0 問は 0 除算にせず 0
+    (GameDifficulty.normal, 0, 0, 0),
+    // 簡単 100 / 90 / 80：80% は 1 つ星（普通の基準だと 2 つ星になる）
+    (.easy, 4, 5, 1),
+    (.easy, 5, 5, 3),
+    // 普通 100 / 80 / 60
+    (.normal, 4, 5, 2),
+    (.normal, 2, 4, 0),
+    // 難しい 100 / 75 / 50：50% は 1 つ星（普通の基準だと 0 個になる）
+    (.hard, 1, 2, 1),
+    (.hard, 3, 4, 2)
+])
+func currentPotentialStarsUsesDifficulty(difficulty: GameDifficulty, correct: Int, answered: Int, expectedStars: Int) throws {
+    let settings = UserSettings()
+    settings.difficulty = difficulty
+    let viewModel = GameViewModel(
+        gameLogicService: GameLogicService(userSettings: settings),
+        levelProgressionService: LevelProgressionService(forTesting: true),
+        isTestMode: true // 実 Audio / asyncAfter をテスト後に残さない
+    )
+    // 完了させると進行サービスに記録が残るので、10 問のうち途中まで答える
+    viewModel.startNewGame(level: 1, customQuestionCount: 10)
+
+    for index in 0 ..< answered {
+        let correctAnswer = viewModel.getCorrectAnswer()
+        if index < correct {
+            viewModel.selectAnswer(correctAnswer.imageName)
+        } else {
+            let wrong = try #require(viewModel.answerChoices.first { $0.imageName != correctAnswer.imageName })
+            viewModel.selectAnswer(wrong.imageName)
+        }
+    }
+
+    try #require(viewModel.isGameCompleted == false)
+    try #require(viewModel.score == correct)
+    #expect(viewModel.currentPotentialStars == expectedStars)
+}

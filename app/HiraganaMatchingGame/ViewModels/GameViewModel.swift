@@ -254,6 +254,15 @@ class GameViewModel {
         audioService.switchToMenuBGM()
     }
     
+    /// プレイ中のヘッダーに出すスター。回答済みの問題を分母に、ゲーム終了時と同じ難易度別の閾値で計算する（#67）
+    var currentPotentialStars: Int {
+        if isGameCompleted {
+            return earnedStars
+        }
+        guard currentQuestionIndex > 0 else { return 0 }
+        return gameLogicService.calculateStars(correctAnswers: score, totalQuestions: currentQuestionIndex)
+    }
+
     func getCurrentProgress() -> Double {
         Double(currentQuestionIndex) / Double(totalQuestions)
     }
