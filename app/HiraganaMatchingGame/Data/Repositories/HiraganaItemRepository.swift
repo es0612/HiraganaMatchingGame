@@ -52,7 +52,6 @@ final class HiraganaItemRepository {
         
         HiraganaItem(character: "け", imageName: "cake", category: "food"),
         HiraganaItem(character: "け", imageName: "frog", category: "animal"), // けろ
-        HiraganaItem(character: "け", imageName: "game", category: "toy"), // げーむ
         HiraganaItem(character: "け", imageName: "smoke", category: "weather"), // けむり
         
         HiraganaItem(character: "こ", imageName: "top", category: "toy"),
@@ -238,9 +237,9 @@ final class HiraganaItemRepository {
         HiraganaItem(character: "わ", imageName: "young", category: "concept"), // わかい
         HiraganaItem(character: "わ", imageName: "japanese", category: "concept"), // わふう
         
-        HiraganaItem(character: "を", imageName: "man", category: "character"), // をとこ
-        HiraganaItem(character: "を", imageName: "dance", category: "activity"), // をどり
-        HiraganaItem(character: "を", imageName: "woman", category: "character"), // をんな
+        // 「を」で始まる今の言葉はないので、助詞の「を」を含む文で出す（#72）
+        HiraganaItem(character: "を", imageName: "read_book", category: "activity"), // ほんを よむ
+        HiraganaItem(character: "を", imageName: "draw_picture", category: "activity"), // えを かく
         
         HiraganaItem(character: "ん", imageName: "antenna", category: "object"), // あんてな
         HiraganaItem(character: "ん", imageName: "bread", category: "food"), // ぱん
@@ -278,7 +277,7 @@ final class HiraganaItemRepository {
         "ら": "らっぱ", "り": "りんご", "る": "るーぷ", "れ": "れいぞうこ", "ろ": "ろうそく",
         
         // わ行
-        "わ": "わ", "を": "をとこ", "ん": "あんてな"
+        "わ": "わ", "を": "ほんを よむ", "ん": "あんてな"
     ]
     
     /// Gets all hiragana items

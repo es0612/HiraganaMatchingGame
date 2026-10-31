@@ -115,7 +115,7 @@ func emojiRepositorySpecialCharacterEmojis() {
     
     // わ行
     #expect(repository.getEmojiForImageName("ring") == "💍") // わ
-    #expect(repository.getEmojiForImageName("man") == "👨") // をとこ
+    #expect(repository.getEmojiForImageName("read_book") == "📖") // ほんを よむ (#72)
     #expect(repository.getEmojiForImageName("antenna") == "📡") // あんてな (ん)
     
 }
