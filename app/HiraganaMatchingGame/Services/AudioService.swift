@@ -25,9 +25,9 @@ class AudioService: ObservableObject {
     // Unified audio system - now required, not optional
     private let audioManager: AudioManager
     
-    private init(isTestMode: Bool = false) {
+    private init(isTestMode: Bool = false, audioManager: AudioManager? = nil) {
         self.isTestMode = isTestMode
-        audioManager = AudioManager(isTestMode: isTestMode)
+        self.audioManager = audioManager ?? AudioManager(isTestMode: isTestMode)
         isSharedInstance = true
         setupAudioManagerBindings()
     }
@@ -45,8 +45,8 @@ class AudioService: ObservableObject {
     }
     
     // Factory method for testing
-    static func createForTesting() -> AudioService {
-        AudioService(isTestMode: true)
+    static func createForTesting(audioManager: AudioManager? = nil) -> AudioService {
+        AudioService(isTestMode: true, audioManager: audioManager)
     }
     
     private func setupAudioManagerBindings() {
@@ -146,6 +146,10 @@ class AudioService: ObservableObject {
     
     func speakText(_ text: String, slowly: Bool = false) async {
         await audioManager.speakText(text, slowly: slowly)
+    }
+    
+    func speakCharacter(_ character: String, slowly: Bool = false) async {
+        await audioManager.speakCharacter(character, slowly: slowly)
     }
     
     func isAudioReady(for character: String) -> Bool {

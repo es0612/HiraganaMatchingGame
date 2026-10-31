@@ -18,7 +18,7 @@ class AudioManager: ObservableObject {
     // Audio components
     private let audioPlayer: AudioPlayer
     private let bgmGenerator: BGMPlaying
-    private let speechSynthesizer: SpeechSynthesizer
+    private let speechSynthesizer: SpeechSpeaking
     private let effectPlayer: EffectPlayer
     
     private var userSettings: UserSettings?
@@ -28,10 +28,10 @@ class AudioManager: ObservableObject {
     private var currentBGMTrack: String?
     private var isBGMSuspended = false
     
-    init(isTestMode: Bool = false, bgmPlayer: BGMPlaying? = nil) {
+    init(isTestMode: Bool = false, bgmPlayer: BGMPlaying? = nil, speech: SpeechSpeaking? = nil) {
         audioPlayer = AudioPlayer(isTestMode: isTestMode)
         bgmGenerator = bgmPlayer ?? BGMGenerator(isTestMode: isTestMode)
-        speechSynthesizer = SpeechSynthesizer(isTestMode: isTestMode)
+        speechSynthesizer = speech ?? SpeechSynthesizer(isTestMode: isTestMode)
         effectPlayer = EffectPlayer(isTestMode: isTestMode)
         
         setupBindings()
