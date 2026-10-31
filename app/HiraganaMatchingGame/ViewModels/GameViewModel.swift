@@ -206,8 +206,13 @@ class GameViewModel {
         print("🔊 Playing sound for: \(currentHiragana)")
         
         Task {
-            await audioService.playAudio(for: currentHiragana)
+            await speakCurrentHiragana()
         }
+    }
+
+    /// 音のボタンで鳴らす中身。テストから完了を待てるように分けている（#73）
+    func speakCurrentHiragana() async {
+        await audioService.speakCharacter(currentHiragana)
     }
     
     func getHint() -> String {

@@ -7,7 +7,19 @@
 import AVFoundation
 import Foundation
 
-class SpeechSynthesizer: NSObject, ObservableObject {
+/// 読み上げの差し替え口。テストで呼び出しを記録するために使う（#73）
+protocol SpeechSpeaking: AnyObject {
+    func speakText(_ text: String, slowly: Bool) async
+    func speakCharacter(_ character: String, slowly: Bool) async
+    func stopSpeaking()
+    func pauseSpeaking()
+    func continueSpeaking()
+    func setEnabled(_ enabled: Bool)
+    func setSpeechRate(_ rate: Float)
+    func setVolume(_ newVolume: Float)
+}
+
+class SpeechSynthesizer: NSObject, ObservableObject, SpeechSpeaking {
     @Published var isEnabled: Bool = true
     @Published var speechRate: Float = 0.5
     @Published var volume: Float = 1.0
