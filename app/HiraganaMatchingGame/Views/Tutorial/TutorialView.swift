@@ -81,6 +81,7 @@ struct TutorialView: View {
             }
             .padding()
         }
+        .childScreenTextSizeLimit()
         .onAppear {
             withAnimation(.easeInOut(duration: 0.8)) {
                 showAnimation = true

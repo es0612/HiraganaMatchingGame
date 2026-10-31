@@ -8,6 +8,8 @@ struct LevelBadgeView: View {
             .font(.headline)
             .fontWeight(.bold)
             .foregroundColor(.white)
+            .lineLimit(1)
+            .minimumScaleFactor(0.7)
             .padding(.horizontal, 20)
             .padding(.vertical, 12)
             .background(

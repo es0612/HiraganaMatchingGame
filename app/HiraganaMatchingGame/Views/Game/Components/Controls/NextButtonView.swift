@@ -24,6 +24,7 @@ struct NextButtonView: View {
                 Text(getButtonText())
                     .font(.headline)
                     .foregroundColor(.white)
+                    .lineLimit(1)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 10)
                     .background(

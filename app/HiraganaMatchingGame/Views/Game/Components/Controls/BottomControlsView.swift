@@ -14,9 +14,17 @@ struct BottomControlsView: View {
     
     var body: some View {
         HStack {
-            Text("問題: \(currentQuestion)/\(totalQuestions)　正解: \(score)")
-                .font(.caption)
-                .foregroundColor(colorScheme == .dark ? Color.gray.opacity(0.8) : Color.gray)
+            // 1 行に収まらないときは「正解」の途中で折り返さず 2 行に分ける (#34)
+            ViewThatFits(in: .horizontal) {
+                Text("問題: \(currentQuestion)/\(totalQuestions)　正解: \(score)")
+                    .lineLimit(1)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("問題: \(currentQuestion)/\(totalQuestions)")
+                    Text("正解: \(score)")
+                }
+            }
+            .font(.caption)
+            .foregroundColor(colorScheme == .dark ? Color.gray.opacity(0.8) : Color.gray)
             
             Spacer()
             
@@ -33,6 +41,8 @@ struct BottomControlsView: View {
                         onShowHint: onShowHint
                     )
                 }
+                // ボタンの幅を削らず、左の進み具合の文字を折り返させる (#34)
+                .fixedSize(horizontal: true, vertical: false)
             }
         }
     }

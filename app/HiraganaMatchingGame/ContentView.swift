@@ -48,6 +48,7 @@ struct ContentView: View {
                             currentScreen = .settings
                         }
                     )
+                    .childScreenTextSizeLimit()
                     .onAppear {
                         levelSelectionViewModel.loadProgress(from: modelContext)
                         loadUserSettings()
@@ -89,16 +90,19 @@ struct ContentView: View {
                         }
                     )
                     .id(gameViewId)
+                    .childScreenTextSizeLimit()
                 
                 case .characterCollection:
                     CharacterCollectionView(levelProgressionService: levelSelectionViewModel.levelProgressionService) {
                         currentScreen = .levelSelection
                     }
+                    .childScreenTextSizeLimit()
                 
                 case .achievements:
                     AchievementsView(levelProgressionService: levelSelectionViewModel.levelProgressionService) {
                         currentScreen = .levelSelection
                     }
+                    .childScreenTextSizeLimit()
                 
                 case .settings:
                     SettingsView(modelContext: modelContext) {
