@@ -35,5 +35,6 @@ struct CardWordContentTests {
         let hint = GameLogicService().generateHint(for: "を")
         #expect(hint.contains("ほんを よむ"))
         #expect(!hint.contains("をとこ"))
+        #expect(!hint.contains("つなぐ"))
     }
 }
