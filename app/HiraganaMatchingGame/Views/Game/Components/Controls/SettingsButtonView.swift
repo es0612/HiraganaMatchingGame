@@ -10,6 +10,7 @@ struct SettingsButtonView: View {
             Text("戻る")
                 .font(.headline)
                 .foregroundColor(.white)
+                .lineLimit(1)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 10)
                 .background(

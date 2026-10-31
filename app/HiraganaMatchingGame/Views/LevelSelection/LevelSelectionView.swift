@@ -205,7 +205,7 @@ struct LevelSelectionView: View {
                             (colorScheme == .dark ? Color.white : Color.primary) :
                             (colorScheme == .dark ? Color.gray : Color.secondary)
                     )
-                    .frame(height: 30)
+                    .frame(minHeight: 30)
                 
                 if isRecommended && isUnlocked {
                     Text("おすすめ")

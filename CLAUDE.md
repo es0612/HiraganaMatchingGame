@@ -54,4 +54,5 @@
 
 ## 実装の注意
 - VoiceOver の読み上げ文は `Utils/AccessibilityText.swift` に集め、文言はユニットテストで確かめる。ラベルが実際の読み上げ対象に乗っているかは、一時的な XCUITest で `app.buttons.allElementsBoundByIndex.map(\.label)` を書き出して確認する（#34）。要素を数えるアサーションは添字アクセスを避け、`app.staticTexts.matching(NSPredicate(...)).count` を使う（添字アクセスは並行する画面更新で `No matches found for Element at index N` という不安定な失敗になる）。ゲーム画面で実際に使われるのは `GameView` から辿れる部品で、`GameContentView` / `GameControlsView` / `GameOverlayView` / `GameFeedbackView` / `GameHeaderView` は未使用（#24）。
+- 文字サイズ（Dynamic Type）は、アプリ全体を `appTextSizeLimit()`（`Utils/AppTextSize.swift`）で XXXL までに制限している。`ContentView` の `NavigationStack` に 1 か所付け、シート（`TutorialView`）は環境を引き継がないことがあるので中身にも付けている。シートを足したら同じ修飾子を付ける。見え方は、一時的な XCUITest で `app.launchArguments` に `-UIPreferredContentSizeCategoryName UICTContentSizeCategoryXXXL`（最大は `UICTContentSizeCategoryAccessibilityXXXL`）を渡し、`XCTAttachment(screenshot:)` を `xcresulttool export attachments` で取り出して確かめる。幅の狭い iPhone SE でも撮る（#34）。
 - closure を `[weak self]` にすると deinit が実際に起きるようになり、deinit は最後の参照を手放したスレッド（`Task` の完了先など）で走る。メイン RunLoop に登録した `Timer` の `invalidate()` は別スレッドから呼ばない（#31 でヒープ破壊 → 全テスト巻き添えクラッシュになった）。

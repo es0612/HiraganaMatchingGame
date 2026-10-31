@@ -107,6 +107,7 @@ struct ContentView: View {
                     }
                 }
             }
+            .appTextSizeLimit()
             .opacity(showLaunchScreen ? 0 : 1)
             .sheet(isPresented: $showTutorial) {
                 TutorialView(isPresented: $showTutorial)

@@ -152,7 +152,7 @@ struct AchievementsView: View {
                 .foregroundColor(colorScheme == .dark ? .gray : .secondary)
                 .multilineTextAlignment(.center)
         }
-        .frame(height: 80)
+        .frame(minHeight: 80)
         .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 12)
