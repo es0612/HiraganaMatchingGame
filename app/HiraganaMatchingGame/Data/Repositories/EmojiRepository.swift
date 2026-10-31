@@ -19,7 +19,7 @@ final class EmojiRepository {
         "crab": "🦀", "turtle": "🐢", "bag": "👜", "key": "🔑",
         "giraffe": "🦒", "tree": "🌳", "train": "🚂", "mushroom": "🍄",
         "bear": "🐻", "car": "🚗", "cloud": "☁️", "fruit": "🍇",
-        "cake": "🍰", "frog": "🐸", "game": "🎮", "smoke": "💨",
+        "cake": "🍰", "frog": "🐸", "smoke": "💨",
         "top": "🌀", "child": "👶", "heart": "❤️", "ice": "🧊",
         
         // さ行
@@ -71,7 +71,7 @@ final class EmojiRepository {
         
         // わ行
         "ring": "💍", "cotton": "☁️", "young": "👶", "japanese": "🇯🇵",
-        "man": "👨", "dance": "💃", "woman": "👩", "antenna": "📡",
+        "read_book": "📖", "draw_picture": "🎨", "antenna": "📡",
         "bread": "🍞", "engine": "⚙️", "pen": "🖊️"
     ]
     
