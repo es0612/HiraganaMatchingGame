@@ -26,7 +26,7 @@
 - 「を」で始まる今の言葉はないので、「を」は助詞の文（「ほんを よむ」「えを かく」）で出す。をとこ・をどり・をんなのような昔の書き方は使わない（PO 判断 2026-10-31、#72）。どのカードもラベルの単語に問題の文字が入っていること（濁点違いは不可。「け」に「げーむ」があった）は `CardWordContentTests` が検証する。
 - 星: 実行時は `GameLogicService.calculateStars`。難易度別で、普通は正答率 100% = 3、80% 以上 = 2、60% 以上 = 1（簡単 100/90/80、難しい 100/75/50）。PO 判断で実行時の挙動を正とする（2026-10-10）。閾値は「以上」で判定する。スター計算はこの 1 箇所だけ（#57 で 90/70/50% 版と時間ボーナス版の未使用コピーを削除。時間ボーナス案は PO 判断で不採用）。プレイ中のヘッダーも `GameViewModel.currentPotentialStars` 経由で同じ関数を使い、分母は回答済みの問題数（#67 で `GameView` 内の普通モード固定のコピーを削除）。
 - 行・レベル・解放スターの定義は `Models/HiraganaCatalog.swift` だけ（#21 で一本化）。レベルの見出し・説明文は `LevelProgressionService.levelTexts`（行数と同じ件数にする。足りないとそのレベルはレベル 1 の設定になる）。件数の一致と行名の重複なしは `HiraganaCatalogTests` が検証する（#62）。行名が重複すると `CharacterUnlockService` の `Dictionary(uniqueKeysWithValues:)` がトラップし、全テストが巻き添えでクラッシュする。そのときは `Fatal error: Duplicate values for key` をログで探す。
-- 文字ごとの中身は Catalog とは別にある。文字集合を変えるときは次も揃える: 絵の単語（`HiraganaItemRepository` と `CharacterCollectionView` に同じ表が 2 つ）、ヒント文（`GameLogicService`）、読み（`SpeechSynthesizer`）。
+- 文字ごとの中身は Catalog とは別にある。文字集合やカードを変えるときは次も揃える: カード（`HiraganaItemRepository` の items）、カードのラベルの単語（`WordMappingRepository`）、絵文字（`EmojiRepository`）、文字ごとの代表の単語（`HiraganaItemRepository` と `CharacterCollectionView` に同じ表が 2 つ）、ヒント文（`GameLogicService`）、文字単体の読み（`SpeechSynthesizer`）。#72 では「を」1 文字で 6 か所を変えた。
 - 文字サイズの上限 XXXL（`appTextSizeLimit()`）は暫定ではなく仕様（PO 判断 2026-10-31、#34）。ひらがなのカードや絵文字はもともと大きく、アクセシビリティサイズ（AX1〜AX5）まで追従させても子どもが得るものが小さいため。上限を外してアクセシビリティサイズで縦積みにするレイアウトは作らない。App Store の Accessibility Nutrition Labels の「大きな文字」は対応として申告しない（基準は約 200% と理解しているが未確認）。
 
 ## 進め方
