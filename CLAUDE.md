@@ -18,7 +18,8 @@
 - CI は brew 最新版を使う。整形前に `brew upgrade swiftformat swiftlint`。
 - `swiftlint --fix` の後は `swiftformat .` を再実行し、両方をもう一度走らせて差分ゼロを確認。
 - CI は `swiftlint --strict`。既存 warning は `.swiftlint-baseline.json` で凍結済みで、**新規違反だけ**が落ちる（#25）。既存 warning を減らしたら `swiftlint lint --quiet --write-baseline .swiftlint-baseline.json` で再生成してコミットする。
-- pre-commit も SwiftFormat/SwiftLint を固定せず `language: system`（brew 最新）で呼ぶ（#17）。
+- pre-commit も SwiftFormat/SwiftLint を固定せず `language: system`（brew 最新）で呼ぶ（#17）。ただし 2026-11-01 時点で pre-commit はこの Mac に入っておらず、動いていない。入れると `trailing-whitespace` が Swift の空行のインデント（86 ファイル・約 1,750 行）を消すので、そのままは入れない。
+- 空行のインデントが消えた Swift の差分は、git hook（`scripts/git-hooks/pre-commit` → `scripts/check-blank-line-indent.py`）が commit 前に止める。Edit ツールで書き換えると近くの空行のインデントが消えやすい。clone ごとに 1 回 `git config core.hooksPath scripts/git-hooks` で有効にする。意図した書き直しなら `git commit --no-verify`。
 - baseline は違反の文面ごと照合する。`function_body_length` などの文面には「currently spans 57 lines」のような行数が入るため、凍結済みの関数に 1 行足すだけで新規違反になる。修飾子は呼び出し側に付けるか、プロパティ・関数に切り出して、関数本体の行数を変えない（#34）。
 
 ## コンテンツ仕様（PO 判断済み）

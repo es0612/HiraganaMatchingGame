@@ -1,0 +1,4 @@
+#!/bin/sh
+# このリポの git hook。有効にするには 1 回だけ: git config core.hooksPath scripts/git-hooks
+# 触っていない空行のインデントが消えていたら commit を止める
+exec python3 -I "$(git rev-parse --show-toplevel)/scripts/check-blank-line-indent.py"
