@@ -112,8 +112,14 @@ struct AudioLifecycleTests {
         #expect(bgm.calls == ["start:bgm", "pause", "resume"])
     }
 
-    @Test("オーディオセッションは .ambient（消音スイッチに従う）")
+    @Test("アプリのオーディオセッションは .ambient（BGM は消音スイッチに従う）")
     func audioSessionCategoryIsAmbient() {
         #expect(AudioPlayer.sessionCategory == .ambient)
+    }
+
+    @Test("読み上げはアプリのセッションを使わず、システムが用意する別のセッションで鳴らす（#73 PO 判断 2026-11-01）")
+    func speechUsesItsOwnAudioSession() {
+        #expect(SpeechSynthesizer(isTestMode: true).usesApplicationAudioSession == false)
+        #expect(SpeechSynthesizer().usesApplicationAudioSession == false)
     }
 }

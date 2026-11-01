@@ -27,16 +27,30 @@ class SpeechSynthesizer: NSObject, ObservableObject, SpeechSpeaking {
     private let isTestMode: Bool
     private var speechSynthesizer: AVSpeechSynthesizer
     
+    /// 読み上げがアプリのオーディオセッション（.ambient、BGM 用）を使うか
+    var usesApplicationAudioSession: Bool {
+        speechSynthesizer.usesApplicationAudioSession
+    }
+    
+    /// 読み上げはアプリのセッション（.ambient）から切り離し、システムが用意する別のセッションで鳴らす。
+    /// PO 判断（2026-11-01、#73）: 音のボタンの読み上げは消音中でも鳴らし、BGM は消音に従う。
+    /// 別のセッションが消音スイッチを無視するかは Apple の資料に書かれておらず、実機で確かめる
+    private static func makeSynthesizer() -> AVSpeechSynthesizer {
+        let synthesizer = AVSpeechSynthesizer()
+        synthesizer.usesApplicationAudioSession = false
+        return synthesizer
+    }
+    
     override init() {
         isTestMode = false
-        speechSynthesizer = AVSpeechSynthesizer()
+        speechSynthesizer = Self.makeSynthesizer()
         super.init()
         speechSynthesizer.delegate = self
     }
     
     init(isTestMode: Bool) {
         self.isTestMode = isTestMode
-        speechSynthesizer = AVSpeechSynthesizer()
+        speechSynthesizer = Self.makeSynthesizer()
         super.init()
         if !isTestMode {
             speechSynthesizer.delegate = self
