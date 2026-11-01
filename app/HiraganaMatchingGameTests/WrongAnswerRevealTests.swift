@@ -82,37 +82,41 @@ struct WrongAnswerRevealTests {
     }
 
     // MARK: - 待ち方
+    //
+    // 時間で判定するテストは、判定のしきい値（30 秒）と、壊れたときにかかる時間（60 秒以上）の差を大きく取る。
+    // CI では全テストが並列で走り、Task が動き出すまで 1 秒以上かかることがある
+    // （2026-11-01: 「1.0 秒未満」の判定が CI で 1.47 秒になって落ちた）
 
     @Test("終わらない処理でも、最長の時間で待つのをやめる")
     func waitStopsAtLimit() async {
         let start = Date()
         await FeedbackTiming.wait(atMost: 0.3) {
-            try? await Task.sleep(nanoseconds: 10_000_000_000)
+            try? await Task.sleep(nanoseconds: 120_000_000_000)
         }
         let elapsed = Date().timeIntervalSince(start)
         #expect(elapsed >= 0.25)
-        #expect(elapsed < 2.0)
+        #expect(elapsed < 30)
     }
 
     @Test("すぐ終わる処理なら、最長の時間まで待たない")
     func waitReturnsWhenDone() async {
         let start = Date()
-        await FeedbackTiming.wait(atMost: 5.0) {}
-        #expect(Date().timeIntervalSince(start) < 1.0)
+        await FeedbackTiming.wait(atMost: 60) {}
+        #expect(Date().timeIntervalSince(start) < 30)
     }
 
     @Test("待っている途中でキャンセルされたら、最長の時間を待たずにすぐやめる（画面を離れたとき）")
     func waitStopsWhenCancelled() async {
         let start = Date()
         let task = Task {
-            await FeedbackTiming.wait(atMost: 5.0) {
-                try? await Task.sleep(nanoseconds: 10_000_000_000)
+            await FeedbackTiming.wait(atMost: 60) {
+                try? await Task.sleep(nanoseconds: 120_000_000_000)
             }
         }
         try? await Task.sleep(nanoseconds: 200_000_000)
         task.cancel()
         await task.value
-        #expect(Date().timeIntervalSince(start) < 1.5)
+        #expect(Date().timeIntervalSince(start) < 30)
     }
 
     @Test("ゲームが終わったあと（時間切れなど）に次へ進む処理が走っても、何もしない")
