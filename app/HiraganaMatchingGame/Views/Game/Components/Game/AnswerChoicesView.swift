@@ -6,22 +6,19 @@ struct AnswerChoicesView: View {
     let isProcessingAnswer: Bool
     let currentHiragana: String
     let isLandscape: Bool
+    var scale: GameLayoutScale = .regular
     let onAnswerSelected: (String) -> Void
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     
     private var choiceButtonSize: CGFloat {
-        isLandscape ? 90 : 110
+        isLandscape ? min(90, scale.choiceSize) : scale.choiceSize
     }
     
     var body: some View {
+        // 説明文は InstructionTextView の 1 つだけにした（PO 判断 2026-11-01、#80）
         VStack(spacing: 15) {
-            Text("正しい絵をタップしてください")
-                .font(.headline)
-                .fontWeight(.medium)
-                .foregroundColor(.primary.opacity(0.7))
-            
             if isLandscape {
                 HStack(spacing: 20) {
                     ForEach(answerChoices, id: \.id) { choice in
@@ -30,7 +27,7 @@ struct AnswerChoicesView: View {
                     }
                 }
             } else {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 20), count: 2), spacing: 20) {
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 20), count: 2), spacing: scale.spacing) {
                     ForEach(answerChoices, id: \.id) { choice in
                         answerChoiceButton(choice)
                             .accessibilityLabel(AccessibilityText.answerChoice(reading: getReadingForImageName(choice.imageName)))

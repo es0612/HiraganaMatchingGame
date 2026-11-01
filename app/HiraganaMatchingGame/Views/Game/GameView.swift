@@ -71,60 +71,17 @@ struct GameView: View {
                 .ignoresSafeArea()
                 
                 VStack(spacing: 0) {
-                    ScrollView {
-                        VStack(spacing: 20) {
-                            headerView
-                                .accessibilityIdentifier("ゲームヘッダー")
-                            
-                            if gameViewModel.showFeedback {
-                                FeedbackView(
-                                    lastAnswerCorrect: gameViewModel.lastAnswerCorrect,
-                                    isGameCompleted: gameViewModel.isGameCompleted,
-                                    gameResultView: AnyView(
-                                        GameResultView(
-                                            score: gameViewModel.score,
-                                            totalQuestions: gameViewModel.totalQuestions,
-                                            earnedStars: gameViewModel.earnedStars,
-                                            accuracy: gameViewModel.getGameStats().accuracy
-                                        )
-                                    )
-                                )
-                            } else {
-                                VStack(spacing: 20) {
-                                    InstructionTextView()
-                                    
-                                    HiraganaCardView(
-                                        currentHiragana: gameViewModel.currentHiragana,
-                                        showFeedback: gameViewModel.showFeedback,
-                                        score: gameViewModel.score
-                                    ) { gameViewModel.playHiraganaSound() }
-                                    
-                                    // ヒント表示
-                                    if showHint {
-                                        HintView(
-                                            hintText: hintText
-                                        ) {
-                                            withAnimation(.easeInOut(duration: 0.3)) {
-                                                showHint = false
-                                            }
-                                        }
-                                    }
-                                    
-                                    AnswerChoicesView(
-                                        answerChoices: gameViewModel.answerChoices,
-                                        showFeedback: gameViewModel.showFeedback,
-                                        isProcessingAnswer: gameViewModel.isProcessingAnswer,
-                                        currentHiragana: gameViewModel.currentHiragana,
-                                        isLandscape: isLandscape
-                                    ) { selectedAnswer in
-                                        gameViewModel.selectAnswer(selectedAnswer)
-                                    }
-                                }
-                                .accessibilityIdentifier("ゲームエリア")
-                            }
+                    // 選択肢がスクロールせずに全部見える、いちばん大きい段階を使う（#80）。
+                    // どの段階にも収まらないときだけ、今までどおりスクロールで見せる
+                    ViewThatFits(in: .vertical) {
+                        gameContent(scale: .regular)
+                        gameContent(scale: .compact)
+                        gameContent(scale: .minimum)
+                        ScrollView {
+                            gameContent(scale: .minimum)
                         }
-                        .padding()
                     }
+                    .frame(maxHeight: .infinity, alignment: .top)
                     
                     BottomControlsView(
                         currentQuestion: gameViewModel.currentQuestion,
@@ -222,6 +179,67 @@ struct GameView: View {
     }
     
     // MARK: - Private Views
+    
+    private func gameContent(scale: GameLayoutScale) -> some View {
+        VStack(spacing: scale.spacing) {
+            headerView
+                .accessibilityIdentifier("ゲームヘッダー")
+            
+            if gameViewModel.showFeedback {
+                FeedbackView(
+                    lastAnswerCorrect: gameViewModel.lastAnswerCorrect,
+                    isGameCompleted: gameViewModel.isGameCompleted,
+                    gameResultView: AnyView(
+                        GameResultView(
+                            score: gameViewModel.score,
+                            totalQuestions: gameViewModel.totalQuestions,
+                            earnedStars: gameViewModel.earnedStars,
+                            accuracy: gameViewModel.getGameStats().accuracy
+                        )
+                    )
+                )
+            } else {
+                questionArea(scale: scale)
+            }
+        }
+        .padding()
+    }
+    
+    private func questionArea(scale: GameLayoutScale) -> some View {
+        VStack(spacing: scale.spacing) {
+            InstructionTextView()
+            
+            HiraganaCardView(
+                currentHiragana: gameViewModel.currentHiragana,
+                showFeedback: gameViewModel.showFeedback,
+                score: gameViewModel.score,
+                scale: scale
+            ) { gameViewModel.playHiraganaSound() }
+            
+            // ヒント表示
+            if showHint {
+                HintView(
+                    hintText: hintText
+                ) {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        showHint = false
+                    }
+                }
+            }
+            
+            AnswerChoicesView(
+                answerChoices: gameViewModel.answerChoices,
+                showFeedback: gameViewModel.showFeedback,
+                isProcessingAnswer: gameViewModel.isProcessingAnswer,
+                currentHiragana: gameViewModel.currentHiragana,
+                isLandscape: isLandscape,
+                scale: scale
+            ) { selectedAnswer in
+                gameViewModel.selectAnswer(selectedAnswer)
+            }
+        }
+        .accessibilityIdentifier("ゲームエリア")
+    }
     
     private var headerView: some View {
         HStack {

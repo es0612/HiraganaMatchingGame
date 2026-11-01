@@ -4,6 +4,7 @@ struct HiraganaCardView: View {
     let currentHiragana: String
     let showFeedback: Bool
     let score: Int
+    var scale: GameLayoutScale = .regular
     let onSoundButtonTapped: () -> Void
     
     var body: some View {
@@ -25,14 +26,14 @@ struct HiraganaCardView: View {
                     ),
                     lineWidth: 4
                 )
-                .frame(width: 220, height: 220)
+                .frame(width: scale.hiraganaCardSize, height: scale.hiraganaCardSize)
                 .shadow(color: .black.opacity(0.15), radius: 8, x: 0, y: 4)
             
             // ひらがな文字を完全に中央配置
             Text(currentHiragana)
-                .font(.system(size: 90, weight: .bold, design: .rounded))
+                .font(.system(size: scale.hiraganaFontSize, weight: .bold, design: .rounded))
                 .foregroundColor(.black)
-                .frame(width: 220, height: 220)
+                .frame(width: scale.hiraganaCardSize, height: scale.hiraganaCardSize)
                 .scaleEffect(showFeedback ? 1.2 : 1.0)
                 .rotationEffect(.degrees(showFeedback && score > 0 ? 10 : 0))
                 .animation(.spring(response: 0.6, dampingFraction: 0.7), value: showFeedback)
