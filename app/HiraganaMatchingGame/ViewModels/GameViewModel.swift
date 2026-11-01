@@ -21,6 +21,10 @@ class GameViewModel {
     var lastAnswerCorrect: Bool = false
     var earnedStars: Int = 0
     var isProcessingAnswer: Bool = false
+    /// 間違えたときに見せる正解の絵（imageName）。次の回答で消える（#82）
+    var revealedAnswer: String?
+    /// 間違えたときに選んだ絵（imageName）
+    var selectedAnswer: String?
     
     private let gameLogicService: GameLogicService
     let audioService: AudioService
@@ -32,6 +36,8 @@ class GameViewModel {
     private var timeRemaining: Int = 0
     private var userSettings: UserSettings?
     private let isTestMode: Bool
+    /// 間違えたときの「正解を読み上げてから次へ」。画面を離れたら止める
+    private var feedbackTask: Task<Void, Never>?
     
     init(gameLogicService: GameLogicService = GameLogicService(),
          audioService: AudioService = AudioService.createForTesting(),
@@ -65,6 +71,9 @@ class GameViewModel {
         showFeedback = false
         gameStartTime = Date()
         currentQuestionIndex = 0
+        cancelFeedbackTask()
+        revealedAnswer = nil
+        selectedAnswer = nil
         
         // 設定から問題数を取得（カスタム値がある場合はそちらを優先）
         if let customCount = customQuestionCount {
@@ -104,6 +113,8 @@ class GameViewModel {
         guard !isProcessingAnswer else { return } // Prevent rapid clicking
         
         isProcessingAnswer = true
+        revealedAnswer = nil
+        selectedAnswer = nil
         
         let currentGameQuestion = currentQuestions[currentQuestionIndex]
         let isCorrect = gameLogicService.isCorrectAnswer(hiragana: currentGameQuestion.hiragana, imageName: imageName)
@@ -133,6 +144,9 @@ class GameViewModel {
             }
         } else {
             lastAnswerCorrect = false
+            // 正解の絵と選んだ絵を覚えて、選択肢に印を付ける（#82）
+            revealedAnswer = currentGameQuestion.correctAnswer.imageName
+            selectedAnswer = imageName
             
             // 不正解音を再生
             audioService.playIncorrectSound()
@@ -143,29 +157,12 @@ class GameViewModel {
         
         // 次の問題インデックスを増加
         currentQuestionIndex += 1
-        
-        // ゲーム完了判定
-        if currentQuestionIndex >= currentQuestions.count {
-            isProcessingAnswer = false
-            completeGame()
-        } else {
-            // 次の問題に進む
+        let isLastQuestion = currentQuestionIndex >= currentQuestions.count
+        if !isLastQuestion {
             currentQuestion += 1
-            
-            // 自動進行設定に基づいて次の問題を表示（テストモードでは即座に実行）
-            if isTestMode {
-                showFeedback = false
-                loadCurrentQuestion()
-                isProcessingAnswer = false
-            } else {
-                let delay = userSettings?.autoAdvance == true ? AppConstants.Timing.autoAdvanceDelayEnabled : AppConstants.Timing.autoAdvanceDelayDisabled
-                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                    self.showFeedback = false
-                    self.loadCurrentQuestion()
-                    self.isProcessingAnswer = false
-                }
-            }
         }
+        
+        scheduleNextStep(afterCorrectAnswer: isCorrect, isLastQuestion: isLastQuestion)
     }
     
     func getCorrectAnswer() -> HiraganaItem {
@@ -195,6 +192,9 @@ class GameViewModel {
         currentQuestions = []
         currentQuestionIndex = 0
         isProcessingAnswer = false
+        cancelFeedbackTask()
+        revealedAnswer = nil
+        selectedAnswer = nil
     }
     
     func playHiraganaSound() {
@@ -331,6 +331,8 @@ class GameViewModel {
     
     /// 時間制限タイマーを止める。画面を離れるとき（GameView.onDisappear）と deinit から呼ばれる
     func cleanup() {
+        // 間違えたときの「正解を読み上げてから次へ」も止める（#82）
+        cancelFeedbackTask()
         guard let timer = gameTimer else { return }
         gameTimer = nil
         // Timer の invalidate は登録した RunLoop のスレッド（メイン）で行う必要がある。
@@ -344,5 +346,92 @@ class GameViewModel {
     
     deinit {
         cleanup()
+    }
+}
+
+// MARK: - 回答のあとの流れ（#82）
+
+extension GameViewModel {
+    /// 回答のあと、次の問題（最後なら結果画面）へ進む。間違えたときは正解を読み上げてから進む（#82）
+    private func scheduleNextStep(afterCorrectAnswer isCorrect: Bool, isLastQuestion: Bool) {
+        // テストモードでは即座に進む
+        if isTestMode {
+            finishFeedback(isLastQuestion: isLastQuestion)
+            return
+        }
+        if !isCorrect {
+            // 設定と正解の単語は、ここ（メインスレッド）で読んでから渡す。Task の中はメイン以外で動く
+            let minimum = feedbackDelay
+            let word = revealedWord()
+            // self は強く握る（最長 5 秒ほど ViewModel が生き延びる）。[weak self] にすると deinit が別スレッドで走る（#31）
+            feedbackTask = Task {
+                await self.revealCorrectAnswerThenContinue(word: word, minimum: minimum, isLastQuestion: isLastQuestion)
+            }
+            return
+        }
+        if isLastQuestion {
+            finishFeedback(isLastQuestion: true)
+            return
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + feedbackDelay) {
+            self.finishFeedback(isLastQuestion: false)
+        }
+    }
+    
+    /// 自動進行設定に基づく、次の問題へ進むまでの最低の待ち時間
+    private var feedbackDelay: TimeInterval {
+        userSettings?.autoAdvance == true ? AppConstants.Timing.autoAdvanceDelayEnabled : AppConstants.Timing.autoAdvanceDelayDisabled
+    }
+    
+    /// 回答の表示を終えて、次の問題（最後なら結果画面）へ進む。テストから呼べるよう internal
+    func finishFeedback(isLastQuestion: Bool) {
+        // 正解を見せている間に時間切れでゲームが終わっていたら、何もしない（二重に完了させない）
+        guard !isGameCompleted else { return }
+        if isLastQuestion {
+            isProcessingAnswer = false
+            completeGame()
+        } else {
+            showFeedback = false
+            loadCurrentQuestion()
+            isProcessingAnswer = false
+        }
+    }
+    
+    /// 不正解音のあとに正解の単語を読み上げ、読み終わったら次へ進む。
+    /// 声が出ない・終わらないときも最長 FeedbackTiming.maxRevealDuration で進み、今より早くは進まない
+    private func revealCorrectAnswerThenContinue(word: String?, minimum: TimeInterval, isLastQuestion: Bool) async {
+        let start = Date()
+        try? await Task.sleep(nanoseconds: AppConstants.Timing.correctSoundDelay)
+        let limit = FeedbackTiming.maxRevealDuration - Date().timeIntervalSince(start)
+        if let word {
+            await FeedbackTiming.wait(atMost: limit) {
+                await self.audioService.speakText(word, slowly: true)
+            }
+        }
+        let remaining = FeedbackTiming.remainingWait(elapsed: Date().timeIntervalSince(start), minimum: minimum)
+        if remaining > 0 {
+            try? await Task.sleep(nanoseconds: UInt64(remaining * 1_000_000_000))
+        }
+        // 「戻る」で画面を離れたあとは進めない（離れたあとに completeGame が走ると途中結果が記録される。#31）
+        guard !Task.isCancelled else { return }
+        await MainActor.run {
+            self.finishFeedback(isLastQuestion: isLastQuestion)
+        }
+    }
+    
+    /// 間違えたときに、正解の単語をゆっくり読み上げる（#82）
+    func speakRevealedAnswer() async {
+        guard let word = revealedWord() else { return }
+        await audioService.speakText(word, slowly: true)
+    }
+    
+    /// 間違えたときに読み上げる、正解の単語
+    private func revealedWord() -> String? {
+        revealedAnswer.flatMap { HiraganaDataManager.shared.getJapaneseWord(for: $0) }
+    }
+    
+    private func cancelFeedbackTask() {
+        feedbackTask?.cancel()
+        feedbackTask = nil
     }
 }

@@ -25,4 +25,16 @@ enum AccessibilityText {
     static func answerChoice(reading: String) -> String {
         "\(reading)の絵"
     }
+
+    /// 間違えたときに印を付けた選択肢の読み方（#82）
+    static func answerChoice(reading: String, mark: AnswerChoiceMark) -> String {
+        switch mark {
+        case .correct:
+            "\(reading)の絵、こたえ"
+        case .wrongSelection:
+            "\(reading)の絵、えらんだ絵"
+        case .none, .dimmed:
+            answerChoice(reading: reading)
+        }
+    }
 }

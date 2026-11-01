@@ -26,6 +26,9 @@ class SpeechSynthesizer: NSObject, ObservableObject, SpeechSpeaking {
     
     private let isTestMode: Bool
     private var speechSynthesizer: AVSpeechSynthesizer
+    /// 読み終わり（または止められた）を待っている発話。delegate の知らせで再開する（#82）
+    private var pendingCompletions: [ObjectIdentifier: CheckedContinuation<Void, Never>] = [:]
+    private let completionLock = NSLock()
     
     /// 読み上げがアプリのオーディオセッション（.ambient、BGM 用）を使うか
     var usesApplicationAudioSession: Bool {
@@ -83,11 +86,18 @@ class SpeechSynthesizer: NSObject, ObservableObject, SpeechSpeaking {
         utterance.pitchMultiplier = 1.2 // Slightly higher pitch for children
         
         print("🗣️ Speaking: \(text) (slowly: \(slowly))")
-        speechSynthesizer.speak(utterance)
-        
-        // Wait for completion in non-test mode
-        if !isTestMode {
-            await waitForSpeechCompletion()
+        // テスト環境では読み上げの完了を待たない（delegate の知らせが来ないことがあるため。
+        // isTestMode の上の guard とは別に、isTestMode: false で作ったものをテストで使う場合のため）
+        if TestUtils.isTestEnvironment {
+            speechSynthesizer.speak(utterance)
+            return
+        }
+        // 読み終わり（または止められた）を delegate の知らせで待つ。
+        // speak() の直後は isSpeaking が false のことがあり、isSpeaking を見て待つと始まる前に終わったと判断してしまう（#82）。
+        // delegate が来ない場合（声が使えないなど）は待ちが終わらない。ゲームの流れは FeedbackTiming で最長 5 秒に打ち切る
+        await withCheckedContinuation { continuation in
+            completionLock.withLock { pendingCompletions[ObjectIdentifier(utterance)] = continuation }
+            speechSynthesizer.speak(utterance)
         }
     }
     
@@ -158,21 +168,10 @@ class SpeechSynthesizer: NSObject, ObservableObject, SpeechSpeaking {
         return pronunciations[character] ?? character
     }
     
-    private func waitForSpeechCompletion() async {
-        // テスト環境では即座に完了
-        if TestUtils.isTestEnvironment {
-            return
-        }
-        
-        await withCheckedContinuation { continuation in
-            // Use a simple timer-based approach for completion detection
-            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
-                if !self.speechSynthesizer.isSpeaking {
-                    timer.invalidate()
-                    continuation.resume()
-                }
-            }
-        }
+    /// 待っている発話を再開する。読み終わったときと止められたときに delegate から呼ぶ
+    private func resumeCompletion(for utterance: AVSpeechUtterance) {
+        let continuation = completionLock.withLock { pendingCompletions.removeValue(forKey: ObjectIdentifier(utterance)) }
+        continuation?.resume()
     }
 }
 
@@ -185,9 +184,11 @@ extension SpeechSynthesizer: AVSpeechSynthesizerDelegate {
     
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         print("🗣️ Speech finished: \(utterance.speechString)")
+        resumeCompletion(for: utterance)
     }
     
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
         print("🗣️ Speech cancelled: \(utterance.speechString)")
+        resumeCompletion(for: utterance)
     }
 }

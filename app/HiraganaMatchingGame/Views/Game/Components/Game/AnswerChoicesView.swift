@@ -7,6 +7,10 @@ struct AnswerChoicesView: View {
     let currentHiragana: String
     let isLandscape: Bool
     var scale: GameLayoutScale = .regular
+    /// 間違えたときに正解を見せている間は true（#82）
+    var isRevealingAnswer: Bool = false
+    var revealedAnswer: String?
+    var selectedAnswer: String?
     let onAnswerSelected: (String) -> Void
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
@@ -22,15 +26,13 @@ struct AnswerChoicesView: View {
             if isLandscape {
                 HStack(spacing: 20) {
                     ForEach(answerChoices, id: \.id) { choice in
-                        answerChoiceButton(choice)
-                            .accessibilityLabel(AccessibilityText.answerChoice(reading: getReadingForImageName(choice.imageName)))
+                        markedChoiceButton(choice)
                     }
                 }
             } else {
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 20), count: 2), spacing: scale.spacing) {
                     ForEach(answerChoices, id: \.id) { choice in
-                        answerChoiceButton(choice)
-                            .accessibilityLabel(AccessibilityText.answerChoice(reading: getReadingForImageName(choice.imageName)))
+                        markedChoiceButton(choice)
                     }
                 }
             }
@@ -92,7 +94,7 @@ struct AnswerChoicesView: View {
         }
         .buttonStyle(PlainButtonStyle())
         .disabled(showFeedback || isProcessingAnswer)
-        .opacity((showFeedback || isProcessingAnswer) ? 0.5 : 1.0)
+        .opacity(choiceOpacity(for: choice))
         .scaleEffect(1.0)
         .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(Double.random(in: 0 ... 0.3)), value: currentHiragana)
         .onAppear {
@@ -101,6 +103,60 @@ struct AnswerChoicesView: View {
                 // 小さな跳ねるアニメーション
             }
         }
+    }
+    
+    // MARK: - 間違えたときの印（#82）
+    
+    private func markedChoiceButton(_ choice: HiraganaItem) -> some View {
+        answerChoiceButton(choice)
+            .overlay { markOverlay(for: choice) }
+            .accessibilityLabel(AccessibilityText.answerChoice(reading: getReadingForImageName(choice.imageName), mark: mark(for: choice)))
+    }
+    
+    private func mark(for choice: HiraganaItem) -> AnswerChoiceMark {
+        AnswerChoiceMark.mark(
+            for: choice.imageName,
+            isRevealing: isRevealingAnswer,
+            revealedAnswer: revealedAnswer,
+            selectedAnswer: selectedAnswer
+        )
+    }
+    
+    private func choiceOpacity(for choice: HiraganaItem) -> Double {
+        switch mark(for: choice) {
+        case .correct, .wrongSelection:
+            1.0
+        case .dimmed:
+            0.3
+        case .none:
+            (showFeedback || isProcessingAnswer) ? 0.5 : 1.0
+        }
+    }
+    
+    @ViewBuilder
+    private func markOverlay(for choice: HiraganaItem) -> some View {
+        switch mark(for: choice) {
+        case .correct:
+            RoundedRectangle(cornerRadius: 22)
+                .stroke(Color.green, lineWidth: 5)
+                .padding(-6)
+                .overlay(alignment: .topTrailing) { markBadge(systemName: "circle", color: .green) }
+        case .wrongSelection:
+            markBadge(systemName: "xmark", color: .red)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+        case .none, .dimmed:
+            EmptyView()
+        }
+    }
+    
+    private func markBadge(systemName: String, color: Color) -> some View {
+        Image(systemName: systemName)
+            .font(.system(size: 22, weight: .heavy))
+            .foregroundColor(color)
+            .padding(6)
+            .background(Circle().fill(Color.white))
+            .offset(x: 10, y: -10)
+            .accessibilityHidden(true)
     }
     
     // MARK: - Helper Functions

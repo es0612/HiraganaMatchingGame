@@ -185,7 +185,7 @@ struct GameView: View {
             headerView
                 .accessibilityIdentifier("ゲームヘッダー")
             
-            if gameViewModel.showFeedback {
+            if gameViewModel.showFeedback && !isRevealingAnswer {
                 FeedbackView(
                     lastAnswerCorrect: gameViewModel.lastAnswerCorrect,
                     isGameCompleted: gameViewModel.isGameCompleted,
@@ -207,11 +207,11 @@ struct GameView: View {
     
     private func questionArea(scale: GameLayoutScale) -> some View {
         VStack(spacing: scale.spacing) {
-            InstructionTextView()
+            InstructionTextView(isRevealingAnswer: isRevealingAnswer)
             
             HiraganaCardView(
                 currentHiragana: gameViewModel.currentHiragana,
-                showFeedback: gameViewModel.showFeedback,
+                showFeedback: gameViewModel.showFeedback && !isRevealingAnswer,
                 score: gameViewModel.score,
                 scale: scale
             ) { gameViewModel.playHiraganaSound() }
@@ -233,7 +233,10 @@ struct GameView: View {
                 isProcessingAnswer: gameViewModel.isProcessingAnswer,
                 currentHiragana: gameViewModel.currentHiragana,
                 isLandscape: isLandscape,
-                scale: scale
+                scale: scale,
+                isRevealingAnswer: isRevealingAnswer,
+                revealedAnswer: gameViewModel.revealedAnswer,
+                selectedAnswer: gameViewModel.selectedAnswer
             ) { selectedAnswer in
                 gameViewModel.selectAnswer(selectedAnswer)
             }
@@ -285,6 +288,11 @@ struct GameView: View {
     }
     
     // MARK: - Computed Properties
+    
+    /// 間違えたあと、問題と選択肢を残して正解を見せている間（#82）
+    private var isRevealingAnswer: Bool {
+        gameViewModel.showFeedback && !gameViewModel.lastAnswerCorrect && !gameViewModel.isGameCompleted
+    }
     
     private var isLandscape: Bool {
         horizontalSizeClass == .regular && verticalSizeClass == .compact
