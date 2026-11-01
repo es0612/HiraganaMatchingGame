@@ -1,12 +1,12 @@
 # RELEASE v1.0.3
 
-> ステータス: in-progress（What's New は PO 承認済み 2026-11-01。ビルドは #90 の PR #92 のマージ後に Xcode Cloud が作るものを使う。TestFlight での実機確認待ち）。`asc-submission-prep` の入力元。
+> ステータス: in-progress（What's New は PO 承認済み 2026-11-01。ビルドは build 70。TestFlight での実機確認待ち）。`asc-submission-prep` の入力元。
 > 範囲: `v1.0.2`（2e6d471）→ main（f4ca0ff = PR #92 のマージ後）。
 
 ## ビルド
 - MARKETING_VERSION: 1.0.3（ストアの公開中は 1.0.2。2026-11-01 に iTunes Lookup で確認）
-- 紐付けるビルド: main f4ca0ff（PR #92 のマージ後）から Xcode Cloud が作るビルド（番号は ASC で確認してから書く）
-- それより前のコミットから作られたビルドは、パーティクルの色の修正（#90）が入っていないので使わない
+- 紐付けるビルド: **build 70**（main f4ca0ff = PR #92 のマージ後。Xcode Cloud の `Default` ワークフロー、2026-11-01 16:47 開始、成功。ASC の Xcode Cloud 画面で最終コミットを確認）
+- build 68（#89）・69（#91）は #90 の修正が入っていないので使わない
 
 ## What's New
 
@@ -43,7 +43,7 @@ What's New に書かない変更: 開発用の仕組み（MARKETING_VERSION の 
 - [x] What's New に絵文字なし（ja も 2026-09 から「無効な文字」で拒否される）
 - [x] 広告 SDK なし（年齢制限の「広告」は対象外）
 - [x] SwiftData の `@Model` は v1.0.2 から変更なし（`git diff v1.0.2 -- app/HiraganaMatchingGame/Models/` が空）。移行のリスクなし
-- [ ] 紐付けるビルドのコミットが f4ca0ff であることを Xcode Cloud の画面で確認
+- [x] 紐付けるビルドのコミットが f4ca0ff であることを Xcode Cloud の画面で確認（build 70、2026-11-01）
 
 ## validating（PO が TestFlight で実機確認してから申請）
 - [ ] 音のボタン：消音 OFF で声が出る
