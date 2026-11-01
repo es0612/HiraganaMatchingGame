@@ -46,6 +46,13 @@ struct LevelSelectionView: View {
                     }
                     .padding()
                 }
+                // ステータスバーの裏に帯を敷き、スクロールした見出しが時刻などと重ならないようにする（#81）。
+                // 高さ 0 の部品の背景 .bar は上の safe area まで広がる
+                .safeAreaInset(edge: .top, spacing: 0) {
+                    Color.clear
+                        .frame(height: 0)
+                        .background(.bar)
+                }
                 .accessibilityIdentifier("レベル選択画面")
             }
         }
