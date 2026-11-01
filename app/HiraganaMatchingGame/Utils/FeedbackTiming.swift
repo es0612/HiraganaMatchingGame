@@ -15,6 +15,10 @@ enum FeedbackTiming {
         }
         let deadline = Date().addingTimeInterval(limit)
         while Date() < deadline {
+            // キャンセルされると Task.sleep がすぐ throw し、sleep なしで空回りするので抜ける（画面を離れたとき）
+            if Task.isCancelled {
+                return
+            }
             if await finished.isFinished {
                 return
             }

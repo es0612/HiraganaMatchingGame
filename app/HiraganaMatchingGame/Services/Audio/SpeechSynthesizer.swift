@@ -86,13 +86,15 @@ class SpeechSynthesizer: NSObject, ObservableObject, SpeechSpeaking {
         utterance.pitchMultiplier = 1.2 // Slightly higher pitch for children
         
         print("🗣️ Speaking: \(text) (slowly: \(slowly))")
-        // テスト環境では読み上げの完了を待たない
+        // テスト環境では読み上げの完了を待たない（delegate の知らせが来ないことがあるため。
+        // isTestMode の上の guard とは別に、isTestMode: false で作ったものをテストで使う場合のため）
         if TestUtils.isTestEnvironment {
             speechSynthesizer.speak(utterance)
             return
         }
         // 読み終わり（または止められた）を delegate の知らせで待つ。
-        // speak() の直後は isSpeaking が false のことがあり、isSpeaking を見て待つと始まる前に終わったと判断してしまう（#82）
+        // speak() の直後は isSpeaking が false のことがあり、isSpeaking を見て待つと始まる前に終わったと判断してしまう（#82）。
+        // delegate が来ない場合（声が使えないなど）は待ちが終わらない。ゲームの流れは FeedbackTiming で最長 5 秒に打ち切る
         await withCheckedContinuation { continuation in
             completionLock.withLock { pendingCompletions[ObjectIdentifier(utterance)] = continuation }
             speechSynthesizer.speak(utterance)

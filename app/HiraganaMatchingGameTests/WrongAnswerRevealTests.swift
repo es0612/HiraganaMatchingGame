@@ -101,6 +101,35 @@ struct WrongAnswerRevealTests {
         #expect(Date().timeIntervalSince(start) < 1.0)
     }
 
+    @Test("待っている途中でキャンセルされたら、最長の時間を待たずにすぐやめる（画面を離れたとき）")
+    func waitStopsWhenCancelled() async {
+        let start = Date()
+        let task = Task {
+            await FeedbackTiming.wait(atMost: 5.0) {
+                try? await Task.sleep(nanoseconds: 10_000_000_000)
+            }
+        }
+        try? await Task.sleep(nanoseconds: 200_000_000)
+        task.cancel()
+        await task.value
+        #expect(Date().timeIntervalSince(start) < 1.5)
+    }
+
+    @Test("ゲームが終わったあと（時間切れなど）に次へ進む処理が走っても、何もしない")
+    func finishFeedbackAfterGameCompletedDoesNothing() {
+        let viewModel = GameViewModel(isTestMode: true)
+        viewModel.startNewGame(level: 1)
+        viewModel.handleTimerTick() // 残り時間 0 のまま tick → 時間切れで終了
+        #expect(viewModel.isGameCompleted)
+        viewModel.showFeedback = true
+        let hiragana = viewModel.currentHiragana
+
+        viewModel.finishFeedback(isLastQuestion: false)
+
+        #expect(viewModel.showFeedback == true)
+        #expect(viewModel.currentHiragana == hiragana)
+    }
+
     @Test("今より早く次の問題へ進まないよう、最低の待ち時間の残りを返す")
     func remainingWaitKeepsMinimum() {
         #expect(FeedbackTiming.remainingWait(elapsed: 0.5, minimum: 1.5) == 1.0)

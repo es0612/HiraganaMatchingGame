@@ -360,8 +360,12 @@ extension GameViewModel {
             return
         }
         if !isCorrect {
+            // 設定と正解の単語は、ここ（メインスレッド）で読んでから渡す。Task の中はメイン以外で動く
+            let minimum = feedbackDelay
+            let word = revealedWord()
+            // self は強く握る（最長 5 秒ほど ViewModel が生き延びる）。[weak self] にすると deinit が別スレッドで走る（#31）
             feedbackTask = Task {
-                await self.revealCorrectAnswerThenContinue(isLastQuestion: isLastQuestion)
+                await self.revealCorrectAnswerThenContinue(word: word, minimum: minimum, isLastQuestion: isLastQuestion)
             }
             return
         }
@@ -379,7 +383,10 @@ extension GameViewModel {
         userSettings?.autoAdvance == true ? AppConstants.Timing.autoAdvanceDelayEnabled : AppConstants.Timing.autoAdvanceDelayDisabled
     }
     
-    private func finishFeedback(isLastQuestion: Bool) {
+    /// 回答の表示を終えて、次の問題（最後なら結果画面）へ進む。テストから呼べるよう internal
+    func finishFeedback(isLastQuestion: Bool) {
+        // 正解を見せている間に時間切れでゲームが終わっていたら、何もしない（二重に完了させない）
+        guard !isGameCompleted else { return }
         if isLastQuestion {
             isProcessingAnswer = false
             completeGame()
@@ -392,14 +399,16 @@ extension GameViewModel {
     
     /// 不正解音のあとに正解の単語を読み上げ、読み終わったら次へ進む。
     /// 声が出ない・終わらないときも最長 FeedbackTiming.maxRevealDuration で進み、今より早くは進まない
-    private func revealCorrectAnswerThenContinue(isLastQuestion: Bool) async {
+    private func revealCorrectAnswerThenContinue(word: String?, minimum: TimeInterval, isLastQuestion: Bool) async {
         let start = Date()
         try? await Task.sleep(nanoseconds: AppConstants.Timing.correctSoundDelay)
         let limit = FeedbackTiming.maxRevealDuration - Date().timeIntervalSince(start)
-        await FeedbackTiming.wait(atMost: limit) {
-            await self.speakRevealedAnswer()
+        if let word {
+            await FeedbackTiming.wait(atMost: limit) {
+                await self.audioService.speakText(word, slowly: true)
+            }
         }
-        let remaining = FeedbackTiming.remainingWait(elapsed: Date().timeIntervalSince(start), minimum: feedbackDelay)
+        let remaining = FeedbackTiming.remainingWait(elapsed: Date().timeIntervalSince(start), minimum: minimum)
         if remaining > 0 {
             try? await Task.sleep(nanoseconds: UInt64(remaining * 1_000_000_000))
         }
@@ -412,9 +421,13 @@ extension GameViewModel {
     
     /// 間違えたときに、正解の単語をゆっくり読み上げる（#82）
     func speakRevealedAnswer() async {
-        guard let answer = revealedAnswer,
-              let word = HiraganaDataManager.shared.getJapaneseWord(for: answer) else { return }
+        guard let word = revealedWord() else { return }
         await audioService.speakText(word, slowly: true)
+    }
+    
+    /// 間違えたときに読み上げる、正解の単語
+    private func revealedWord() -> String? {
+        revealedAnswer.flatMap { HiraganaDataManager.shared.getJapaneseWord(for: $0) }
     }
     
     private func cancelFeedbackTask() {
