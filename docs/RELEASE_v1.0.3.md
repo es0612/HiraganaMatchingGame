@@ -1,6 +1,6 @@
 # RELEASE v1.0.3
 
-> ステータス: in-progress（ASC で 1.0.3 の提出準備まで済み 2026-11-01。「審査へ提出」はまだ押していない）。`asc-submission-prep` の入力元。
+> ステータス: done（配信は iTunes Lookup で 2026-11-01T22:30Z = 日本時間 11/2 朝に確認。下の「validating」の実機確認は残る）。`asc-submission-prep` の入力元。
 > 範囲: `v1.0.2`（2e6d471）→ main（f4ca0ff = PR #92 のマージ後）。
 
 ## ビルド
@@ -68,5 +68,5 @@ What's New に書かない変更: 開発用の仕組み（MARKETING_VERSION の 
 - 画面全体の見直し（#74）
 
 ## 配信後にやること（次のセッション）
-- [ ] iTunes Lookup で 1.0.3 の配信を確認 → 紐付けたビルドのコミットに `v1.0.3` の注釈付きタグを付けて push
-- [ ] 同じタイミングで `MARKETING_VERSION` を 1.0.4 に上げる PR（`release-version-bump-check`）
+- [x] iTunes Lookup で 1.0.3 の配信を確認 → build 70 のコミット（f4ca0ff）に `v1.0.3` の注釈付きタグを付けて push（2026-11-09）
+- [x] `MARKETING_VERSION` を 1.0.4 に上げる PR（2026-11-09）。#55 の物差し：配信からタグ・bump まで 8 日空いた（その間 `app/` の変更はなく、却下は 0 件）
