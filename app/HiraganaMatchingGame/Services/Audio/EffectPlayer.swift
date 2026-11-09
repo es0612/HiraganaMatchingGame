@@ -102,19 +102,52 @@ class EffectPlayer: ObservableObject {
     
     // MARK: - Sound Generation
     
-    private func generateEffectSound(_ effect: SoundEffect) -> Data {
+    /// AVAudioPlayer で再生できる WAV 形式のデータを返す（#83）
+    func generateEffectSound(_ effect: SoundEffect) -> Data {
+        let samples: Data
         switch effect {
         case .correct:
-            return generateHappySound()
+            samples = generateHappySound()
         case .incorrect:
-            return generateSadSound()
+            samples = generateSadSound()
         case .levelUp:
-            return generateTriumphSound()
+            samples = generateTriumphSound()
         case .button:
-            return generateClickSound()
+            samples = generateClickSound()
         case .achievement:
-            return generateFanfareSound()
+            samples = generateFanfareSound()
         }
+        return wavData(fromSamples: samples)
+    }
+    
+    /// 16 bit・モノラル・44.1 kHz の波形に WAV ヘッダーを付ける。
+    /// ヘッダーのない波形は AVAudioPlayer(data:) が読めない（kAudioFileUnsupportedFileTypeError）
+    private func wavData(fromSamples samples: Data) -> Data {
+        let sampleRate: UInt32 = 44100
+        let channels: UInt16 = 1
+        let bitsPerSample: UInt16 = 16
+        let blockAlign = channels * bitsPerSample / 8
+        let byteRate = sampleRate * UInt32(blockAlign)
+        
+        var data = Data()
+        func append<T: FixedWidthInteger>(_ value: T) {
+            withUnsafeBytes(of: value.littleEndian) { data.append(contentsOf: $0) }
+        }
+        data.append(contentsOf: Array("RIFF".utf8))
+        append(UInt32(36 + samples.count))
+        data.append(contentsOf: Array("WAVE".utf8))
+        data.append(contentsOf: Array("fmt ".utf8))
+        append(UInt32(16)) // fmt チャンクの長さ
+        append(UInt16(1)) // リニア PCM
+        append(channels)
+        append(sampleRate)
+        append(byteRate)
+        append(blockAlign)
+        append(bitsPerSample)
+        data.append(contentsOf: Array("data".utf8))
+        append(UInt32(samples.count))
+        data.append(samples)
+        return data
     }
     
     private func generateHappySound() -> Data {
