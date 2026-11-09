@@ -98,16 +98,6 @@ class LevelProgressionService {
             
             print("⭐ Total stars recalculated: \(totalStars)")
             
-            // 次のレベルが解放されたかチェック
-            let nextLevel = level + 1
-            if nextLevel <= totalLevels {
-                let wasUnlocked = isLevelUnlocked(nextLevel)
-                let nowUnlocked = isLevelUnlocked(nextLevel)
-                if !wasUnlocked && nowUnlocked {
-                    print("🎉 Level \(nextLevel) unlocked! Total stars: \(totalStars)")
-                }
-            }
-
             // SwiftDataへ自動保存（バインドされている場合）
             if let progress = boundProgress {
                 saveProgress(to: progress)
