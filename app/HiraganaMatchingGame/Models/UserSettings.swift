@@ -184,70 +184,6 @@ final class UserSettings {
         onSettingChanged?("reset")
     }
     
-    // 設定の保存（UserDefaultsを使用）
-    func save() {
-        UserDefaults.standard.set(soundEnabled, forKey: "soundEnabled")
-        UserDefaults.standard.set(musicEnabled, forKey: "musicEnabled")
-        UserDefaults.standard.set(playtimeLimit, forKey: "playtimeLimit")
-        UserDefaults.standard.set(voiceSpeed, forKey: "voiceSpeed")
-        UserDefaults.standard.set(soundVolume, forKey: "soundVolume")
-        UserDefaults.standard.set(gameSpeedRaw, forKey: "gameSpeed")
-        UserDefaults.standard.set(difficultyRaw, forKey: "difficulty")
-        UserDefaults.standard.set(autoAdvance, forKey: "autoAdvance")
-        UserDefaults.standard.set(showHints, forKey: "showHints")
-        UserDefaults.standard.set(largeText, forKey: "largeText")
-        UserDefaults.standard.set(reduceAnimations, forKey: "reduceAnimations")
-        UserDefaults.standard.set(hasSeenTutorial, forKey: "hasSeenTutorial")
-        UserDefaults.standard.set(questionsPerSession, forKey: "questionsPerSession")
-    }
-    
-    // 設定の読み込み（UserDefaultsから）
-    func load() {
-        // 初回起動時にはデフォルト値を保持するため、キーの存在をチェック
-        if UserDefaults.standard.object(forKey: "soundEnabled") != nil {
-            soundEnabled = UserDefaults.standard.bool(forKey: "soundEnabled")
-        }
-        if UserDefaults.standard.object(forKey: "musicEnabled") != nil {
-            musicEnabled = UserDefaults.standard.bool(forKey: "musicEnabled")
-        }
-        if UserDefaults.standard.object(forKey: "playtimeLimit") != nil {
-            playtimeLimit = UserDefaults.standard.integer(forKey: "playtimeLimit")
-        }
-        if UserDefaults.standard.object(forKey: "voiceSpeed") != nil {
-            voiceSpeed = UserDefaults.standard.double(forKey: "voiceSpeed")
-        }
-        if UserDefaults.standard.object(forKey: "soundVolume") != nil {
-            soundVolume = UserDefaults.standard.double(forKey: "soundVolume")
-        }
-        
-        if let speedString = UserDefaults.standard.string(forKey: "gameSpeed") {
-            gameSpeedRaw = speedString
-        }
-        
-        if let difficultyString = UserDefaults.standard.string(forKey: "difficulty") {
-            difficultyRaw = difficultyString
-        }
-        
-        if UserDefaults.standard.object(forKey: "autoAdvance") != nil {
-            autoAdvance = UserDefaults.standard.bool(forKey: "autoAdvance")
-        }
-        if UserDefaults.standard.object(forKey: "showHints") != nil {
-            showHints = UserDefaults.standard.bool(forKey: "showHints")
-        }
-        if UserDefaults.standard.object(forKey: "largeText") != nil {
-            largeText = UserDefaults.standard.bool(forKey: "largeText")
-        }
-        if UserDefaults.standard.object(forKey: "reduceAnimations") != nil {
-            reduceAnimations = UserDefaults.standard.bool(forKey: "reduceAnimations")
-        }
-        if UserDefaults.standard.object(forKey: "hasSeenTutorial") != nil {
-            hasSeenTutorial = UserDefaults.standard.bool(forKey: "hasSeenTutorial")
-        }
-        if UserDefaults.standard.object(forKey: "questionsPerSession") != nil {
-            questionsPerSession = UserDefaults.standard.integer(forKey: "questionsPerSession")
-        }
-    }
-    
     // 設定の検証
     func validateSettings() -> Bool {
         soundVolume >= 0.0 && soundVolume <= 1.0 &&
@@ -266,11 +202,6 @@ final class UserSettings {
     func setQuestionsPerSession(_ count: Int) {
         questionsPerSession = max(5, min(20, count))
         onSettingChanged?("questionsPerSession")
-    }
-    
-    // 設定変更の通知を設定
-    private func setupNotifications() {
-        // 設定変更時の通知設定をここで行う
     }
     
     // 問題数のフォーマット済み表示
