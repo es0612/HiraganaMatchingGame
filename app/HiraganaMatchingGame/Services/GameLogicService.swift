@@ -39,8 +39,8 @@ class GameLogicService {
         // 難易度に応じて選択肢の数を調整
         let choiceCount = getChoiceCountForDifficulty()
         
-        // 各文字を最低1回は出題するようにする
-        let allCharacters = charactersForLevel.shuffled()
+        // 各文字を最低1回は出題するようにする（新しく増えた行の文字を先頭に並べる。#112）
+        let allCharacters = Self.questionCharacterOrder(forLevel: level, characters: charactersForLevel)
         var remainingQuestions = questionCount
         
         // 各文字を最低1回ずつ出題
@@ -83,6 +83,20 @@ class GameLogicService {
         
         // 最終的にシャッフルして出題順をランダムにし、連続する同じ答えを回避
         return shuffleWithConsecutiveAvoidance(questions)
+    }
+    
+    /// 出題する文字の並び。先頭から問題数ぶん出題される。
+    /// レベル 2 から最終レベルの 1 つ前までは、そのレベルで新しく増えた行の文字を先に、既習の行の文字を後ろに並べる
+    /// （それぞれの中はシャッフル）。問題数が累積の文字数より少なくても、新しい行の文字が必ず出る（#112）。
+    /// レベル 1 と最終レベル（すべてのひらがな）は、全体をシャッフルするだけ
+    static func questionCharacterOrder(forLevel level: Int, characters: [String]) -> [String] {
+        guard level >= 2, level < HiraganaCatalog.totalLevels else {
+            return characters.shuffled()
+        }
+        let newRowCharacters = HiraganaCatalog.rows[level - 1].characters
+        let newCharacters = characters.filter { newRowCharacters.contains($0) }
+        let reviewCharacters = characters.filter { !newRowCharacters.contains($0) }
+        return newCharacters.shuffled() + reviewCharacters.shuffled()
     }
     
     private func shuffleWithConsecutiveAvoidance(_ questions: [GameQuestion]) -> [GameQuestion] {
