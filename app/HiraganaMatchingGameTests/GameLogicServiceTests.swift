@@ -42,6 +42,42 @@ func levelQuestionGeneration() {
     }
 }
 
+@Test("新しく増えた行の文字が必ず出題される：既定の 5 問 (#112)", arguments: Array(2 ... 9))
+func newRowCharactersAreAlwaysAsked(level: Int) {
+    let gameLogic = GameLogicService()
+    let newRowCharacters = HiraganaCatalog.rows[level - 1].characters
+    let levelCharacters = HiraganaCatalog.characters(upToLevel: level)
+    
+    // 出題はランダムなので、何回生成しても新しい行の文字が全部入っていることを確かめる
+    for _ in 0 ..< 20 {
+        let questions = gameLogic.generateQuestionsForLevel(level, questionCount: 5)
+        let askedCharacters = Set(questions.map(\.hiragana))
+        
+        #expect(questions.count == 5)
+        #expect(askedCharacters.isSuperset(of: newRowCharacters))
+        #expect(askedCharacters.isSubset(of: levelCharacters))
+    }
+}
+
+@Test("出題する文字の並び：新しい行が先、既習の行が後ろ (#112)")
+func questionCharacterOrderPutsNewRowFirst() {
+    let characters = HiraganaCatalog.characters(upToLevel: 8)
+    let order = GameLogicService.questionCharacterOrder(forLevel: 8, characters: characters)
+    
+    #expect(order.count == characters.count)
+    #expect(Set(order) == Set(characters))
+    #expect(Set(order.prefix(3)) == ["や", "ゆ", "よ"])
+}
+
+@Test("出題する文字の並び：レベル 1 と最終レベルは全体から均等のまま (#112)", arguments: [1, HiraganaCatalog.totalLevels])
+func questionCharacterOrderKeepsWholeSetForFirstAndLastLevel(level: Int) {
+    let characters = HiraganaCatalog.characters(upToLevel: level)
+    let order = GameLogicService.questionCharacterOrder(forLevel: level, characters: characters)
+    
+    #expect(order.count == characters.count)
+    #expect(Set(order) == Set(characters))
+}
+
 @Test("スコア計算テスト", arguments: [
     (5, 5, 3),
     (4, 5, 2),
