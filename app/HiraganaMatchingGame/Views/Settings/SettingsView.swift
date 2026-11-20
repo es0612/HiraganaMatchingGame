@@ -325,9 +325,11 @@ struct AboutView: View {
                         .font(.title)
                         .fontWeight(.bold)
                     
-                    Text("バージョン 1.0.0")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                    if let versionText = AboutText.version(infoDictionary: Bundle.main.infoDictionary) {
+                        Text(versionText)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
                 }
                 
                 VStack(alignment: .leading, spacing: 16) {
@@ -341,11 +343,10 @@ struct AboutView: View {
                         .fontWeight(.semibold)
                     
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("• 50文字のひらがな全てに対応")
+                        Text(AboutText.characterFeature)
                         Text("• 段階的なレベル進行システム")
                         Text("• スター獲得によるキャラクター解放")
                         Text("• 実績・バッジシステム")
-                        Text("• アクセシビリティ対応")
                     }
                     .font(.body)
                 }
