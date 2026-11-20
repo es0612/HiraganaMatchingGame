@@ -347,7 +347,6 @@ struct AboutView: View {
                         Text("• 段階的なレベル進行システム")
                         Text("• スター獲得によるキャラクター解放")
                         Text("• 実績・バッジシステム")
-                        Text("• アクセシビリティ対応")
                     }
                     .font(.body)
                 }
