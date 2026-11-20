@@ -32,7 +32,7 @@ What's New に書かない変更: 未使用コードの削除（#24：#99・#106
 - [x] 広告 SDK なし（年齢制限の「広告」は対象外）
 - [x] SwiftData の `@Model`：`git diff v1.0.3 -- app/HiraganaMatchingGame/Models/` は `UserSettings.swift` の関数 3 つ（`save` / `load` / `setupNotifications`、#107）の削除だけ。保存されるプロパティは変わっていないので、移行のリスクはない
 - [x] 紐付けるビルドのコミットが 3ea5b2f であることを Xcode Cloud の画面で確認（build 78、2026-11-20）
-- [ ] 年齢制限「出会い系と恋愛系」= いいえ を保存し、ウィザードを開き直して読み戻す（PO 判断 2026-11-20。下の「ASC に書き込んだもの」を参照）
+- [ ] 年齢制限「出会い系と恋愛系」= いいえ を保存し、ウィザードを開き直して読み戻す（PO 判断 2026-11-20。下の「ASC に書き込んだもの」を参照）。**次のセッションで Claude が 1 回だけ試す**（PO 判断 2026-11-20）：「保存」の前に `read_network_requests` で通信の記録を始め、失敗したら応答の status と本文を残す。それでも失敗したら止めて PO に渡す
 - [ ] 最新 OS での起動：build 78 そのものを iPhone と iPad で起動できる（iPhone の Simulator で同じコードは確認済み。iPad は未確認）
 
 ## ASC の状態（2026-11-20、書き込み前の dry-run の時点。書き込み 0 件）
