@@ -340,7 +340,7 @@ final class HiraganaItemRepository {
         let correctItems = allHiraganaData.filter { $0.character == hiragana }
         guard let correct = correctItems.first else { return [] }
         
-        let wrongChoices = allHiraganaData.filter { $0.character != hiragana }
+        let wrongChoices = distractorCandidates(for: correct)
             .shuffled()
             .prefix(count - 1)
         
@@ -356,7 +356,7 @@ final class HiraganaItemRepository {
     ///   - count: Number of choices to generate (default 3)
     /// - Returns: Array of shuffled hiragana items including the specified correct answer
     func getRandomChoicesWithCorrectAnswer(_ correctAnswer: HiraganaItem, count: Int = 3) -> [HiraganaItem] {
-        let wrongChoices = allHiraganaData.filter { $0.character != correctAnswer.character }
+        let wrongChoices = distractorCandidates(for: correctAnswer)
             .shuffled()
             .prefix(count - 1)
         
@@ -364,5 +364,29 @@ final class HiraganaItemRepository {
         choices.append(correctAnswer)
         
         return choices.shuffled()
+    }
+    
+    /// まちがいの選択肢に使ってよいカード。正解と見分けられないカードは除く (#119)
+    /// - Parameter correct: その問題の正解のカード
+    /// - Returns: 正解と文字が違い、紛らわしくないカード
+    private func distractorCandidates(for correct: HiraganaItem) -> [HiraganaItem] {
+        allHiraganaData.filter { $0.character != correct.character && !isConfusable($0, with: correct) }
+    }
+    
+    /// ルールどおりに選んでも「まちがい」になってしまうカードか (#119、方式 (a) PO 判断 2026-11-22)
+    /// - 単語が問題の文字で始まる（「あ」の問題の あんてな）
+    /// - 「ん」「を」で始まる言葉はないので、この 2 文字は単語に含むだけで合ってしまう（「ん」の問題の きりん）
+    /// - 正解と同じ絵文字（よる と つき の 🌙）。ひらがなを読めない子は絵で選ぶ
+    private func isConfusable(_ candidate: HiraganaItem, with correct: HiraganaItem) -> Bool {
+        let character = correct.character
+        let word = WordMappingRepository.shared.getJapaneseWord(for: candidate.imageName) ?? ""
+        if word.hasPrefix(character) {
+            return true
+        }
+        if ["ん", "を"].contains(character), word.contains(character) {
+            return true
+        }
+        let emojis = EmojiRepository.shared
+        return emojis.getEmojiForImageName(candidate.imageName) == emojis.getEmojiForImageName(correct.imageName)
     }
 }
