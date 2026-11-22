@@ -47,6 +47,14 @@ struct ConfusableDistractorTests {
         Set(items.map(\.imageName))
     }
 
+    @Test("どのカードにも絵文字がある（未登録どうしは ❓ で一致し、ダミーから黙って外れるため）")
+    func everyCardHasEmoji() {
+        let missing = repository.getAllHiraganaData()
+            .filter { !EmojiRepository.shared.hasEmojiMapping(for: $0.imageName) }
+            .map(\.imageName)
+        #expect(missing.isEmpty, "\(missing)")
+    }
+
     @Test("「ん」の問題に、「ん」を含む単語（きりん・りんご）を出さない")
     func nQuestionExcludesWordsContainingN() throws {
         let names = try imageNames(allDistractors(withCorrect: correctItem("ん")))
