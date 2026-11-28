@@ -190,6 +190,7 @@ struct GameView: View {
                 FeedbackView(
                     lastAnswerCorrect: gameViewModel.lastAnswerCorrect,
                     isGameCompleted: gameViewModel.isGameCompleted,
+                    earnedStars: gameViewModel.earnedStars,
                     gameResultView: AnyView(
                         GameResultView(
                             score: gameViewModel.score,
