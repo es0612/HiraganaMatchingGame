@@ -27,6 +27,15 @@ struct SpeechSettingsTests {
         #expect(speech.speechRate == min(AVSpeechUtteranceDefaultSpeechRate * 2.0, AVSpeechUtteranceMaximumSpeechRate))
     }
 
+    @Test("読み上げに渡す速さは、ふつう 0.5・ゆっくり 0.35（既定の倍率のとき）")
+    func utteranceRateForNormalAndSlow() {
+        let speech = SpeechSynthesizer(isTestMode: true)
+        _ = AudioManager(isTestMode: true, speech: speech)
+
+        #expect(abs(speech.utteranceRate(slowly: false) - 0.5) < 0.0001)
+        #expect(abs(speech.utteranceRate(slowly: true) - 0.35) < 0.0001)
+    }
+
     @Test("効果音を OFF にしても、読み上げは止まらない")
     func soundOffKeepsSpeechEnabled() {
         let speech = SpeechSynthesizer(isTestMode: true)

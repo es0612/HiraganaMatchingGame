@@ -14,6 +14,7 @@ protocol SpeechSpeaking: AnyObject {
     func stopSpeaking()
     func pauseSpeaking()
     func continueSpeaking()
+    /// AudioManager からは呼ばない。読み上げは「効果音」の設定に従わない（#127）
     func setEnabled(_ enabled: Bool)
     /// 速さの倍率（1.0 = Apple の既定の速さ）。AVSpeechUtterance.rate の値そのものではない（#127）
     func setSpeedMultiplier(_ multiplier: Float)
@@ -77,12 +78,7 @@ class SpeechSynthesizer: NSObject, ObservableObject, SpeechSpeaking {
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
         
-        // Adjust speech parameters
-        if slowly {
-            utterance.rate = speechRate * 0.7 // Even slower for learning
-        } else {
-            utterance.rate = speechRate
-        }
+        utterance.rate = utteranceRate(slowly: slowly)
         
         utterance.volume = volume
         utterance.pitchMultiplier = 1.2 // Slightly higher pitch for children
@@ -141,6 +137,11 @@ class SpeechSynthesizer: NSObject, ObservableObject, SpeechSpeaking {
         if !enabled {
             stopSpeaking()
         }
+    }
+    
+    /// AVSpeechUtterance.rate に入れる値。ゆっくりのときは 0.7 倍（回答後の単語など）
+    func utteranceRate(slowly: Bool) -> Float {
+        slowly ? speechRate * 0.7 : speechRate
     }
     
     func setSpeedMultiplier(_ multiplier: Float) {
