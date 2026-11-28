@@ -18,7 +18,7 @@ final class RecordingSpeech: SpeechSpeaking {
     func pauseSpeaking() {}
     func continueSpeaking() {}
     func setEnabled(_ enabled: Bool) {}
-    func setSpeechRate(_ rate: Float) {}
+    func setSpeedMultiplier(_ multiplier: Float) {}
     func setVolume(_ newVolume: Float) {}
 }
 
