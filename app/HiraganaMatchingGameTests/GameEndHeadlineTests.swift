@@ -35,3 +35,24 @@ struct GameEndHeadlineTests {
             == FeedbackTexts(title: "正解！", subtitle: "よくできました！", isPositive: true))
     }
 }
+
+/// まちがえたときの ❌💔😢 と、ゲームが終わったあとの回答ごとの粒は出さない (#129)
+@Suite("回答ごとの粒 (#129)")
+struct AnswerParticlesTests {
+    @Test("粒は、途中で正解したときだけ出す")
+    func onlyCorrectMidGame() {
+        #expect(ParticleEffectView.shouldShow(showFeedback: true, lastAnswerCorrect: true, isGameCompleted: false, reduceMotion: false))
+        #expect(!ParticleEffectView.shouldShow(showFeedback: true, lastAnswerCorrect: false, isGameCompleted: false, reduceMotion: false))
+    }
+
+    @Test("ゲームが終わったら、最後に正解していても回答ごとの粒は出さない（お祝いは紙吹雪）")
+    func noParticlesAfterCompletion() {
+        #expect(!ParticleEffectView.shouldShow(showFeedback: true, lastAnswerCorrect: true, isGameCompleted: true, reduceMotion: false))
+    }
+
+    @Test("「視差効果を減らす」が ON のときと、答えを見せていないときは出さない")
+    func respectsReduceMotionAndFeedback() {
+        #expect(!ParticleEffectView.shouldShow(showFeedback: true, lastAnswerCorrect: true, isGameCompleted: false, reduceMotion: true))
+        #expect(!ParticleEffectView.shouldShow(showFeedback: false, lastAnswerCorrect: true, isGameCompleted: false, reduceMotion: false))
+    }
+}

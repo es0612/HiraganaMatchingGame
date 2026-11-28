@@ -11,6 +11,12 @@ struct ParticleEffectView: View {
     @State private var particles: [Particle] = []
     @State private var animationTrigger = false
     
+    /// 回答ごとの粒を出すか。途中で正解したときだけ出す。
+    /// まちがえたときの ❌💔😢 と、ゲームが終わったあとは出さない（お祝いは紙吹雪。PO 判断 2026-11-28、#129）
+    static func shouldShow(showFeedback: Bool, lastAnswerCorrect: Bool, isGameCompleted: Bool, reduceMotion: Bool) -> Bool {
+        showFeedback && lastAnswerCorrect && !isGameCompleted && !reduceMotion
+    }
+    
     private struct Particle: Identifiable {
         let id = UUID()
         var x: Double
