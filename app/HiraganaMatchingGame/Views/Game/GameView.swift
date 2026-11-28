@@ -115,8 +115,8 @@ struct GameView: View {
             }
             
             // パーティクルエフェクト（「視差効果を減らす」が ON なら出さない #34）
-            // 色はその回の正誤で決める。合計点（score > 0）だと、2 問目以降に間違えても正解の色になっていた（#90）
-            // まちがえたときと、ゲームが終わったあとは出さない（#129）
+            // その回の正誤で決める（合計点で決めると、2 問目以降に間違えても正解の粒が出ていた。#90）。
+            // 出すのは途中で正解したときだけで、まちがえたときと、ゲームが終わったあとは出さない（#129）
             if ParticleEffectView.shouldShow(
                 showFeedback: gameViewModel.showFeedback,
                 lastAnswerCorrect: gameViewModel.lastAnswerCorrect,

@@ -55,4 +55,25 @@ struct AnswerParticlesTests {
         #expect(!ParticleEffectView.shouldShow(showFeedback: true, lastAnswerCorrect: true, isGameCompleted: false, reduceMotion: true))
         #expect(!ParticleEffectView.shouldShow(showFeedback: false, lastAnswerCorrect: true, isGameCompleted: false, reduceMotion: false))
     }
+
+    @Test("16 通りのうち、粒を出すのは「答えを見せている・正解・終わっていない・視差効果 OFF」の 1 通りだけ")
+    func allCombinations() {
+        var shown: [[Bool]] = []
+        for showFeedback in [false, true] {
+            for correct in [false, true] {
+                for completed in [false, true] {
+                    for reduceMotion in [false, true]
+                        where ParticleEffectView.shouldShow(
+                            showFeedback: showFeedback,
+                            lastAnswerCorrect: correct,
+                            isGameCompleted: completed,
+                            reduceMotion: reduceMotion
+                        ) {
+                        shown.append([showFeedback, correct, completed, reduceMotion])
+                    }
+                }
+            }
+        }
+        #expect(shown == [[true, true, false, false]])
+    }
 }
