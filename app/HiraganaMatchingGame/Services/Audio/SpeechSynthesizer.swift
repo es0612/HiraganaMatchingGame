@@ -15,13 +15,15 @@ protocol SpeechSpeaking: AnyObject {
     func pauseSpeaking()
     func continueSpeaking()
     func setEnabled(_ enabled: Bool)
-    func setSpeechRate(_ rate: Float)
+    /// 速さの倍率（1.0 = Apple の既定の速さ）。AVSpeechUtterance.rate の値そのものではない（#127）
+    func setSpeedMultiplier(_ multiplier: Float)
     func setVolume(_ newVolume: Float)
 }
 
 class SpeechSynthesizer: NSObject, ObservableObject, SpeechSpeaking {
     @Published var isEnabled: Bool = true
-    @Published var speechRate: Float = 0.5
+    /// AVSpeechUtterance.rate に渡す値（0.0〜1.0。1.0 は最大の速さ）
+    @Published var speechRate: Float = AVSpeechUtteranceDefaultSpeechRate
     @Published var volume: Float = 1.0
     
     private let isTestMode: Bool
@@ -141,8 +143,9 @@ class SpeechSynthesizer: NSObject, ObservableObject, SpeechSpeaking {
         }
     }
     
-    func setSpeechRate(_ rate: Float) {
-        speechRate = max(0.1, min(1.0, rate))
+    func setSpeedMultiplier(_ multiplier: Float) {
+        let rate = AVSpeechUtteranceDefaultSpeechRate * multiplier
+        speechRate = max(AVSpeechUtteranceMinimumSpeechRate, min(AVSpeechUtteranceMaximumSpeechRate, rate))
     }
     
     func setVolume(_ newVolume: Float) {

@@ -50,8 +50,8 @@ class AudioManager: ObservableObject {
         // Sync settings across all audio components
         $isSoundEnabled
             .sink { [weak self] enabled in
+                // 読み上げは「効果音」の設定に従わない（PO 判断 2026-11-28、#127。#73 の「読み上げは消音中でも鳴らす」と揃える）
                 self?.audioPlayer.setEnabled(enabled)
-                self?.speechSynthesizer.setEnabled(enabled)
                 self?.effectPlayer.setEnabled(enabled)
             }
             .store(in: &cancellables)
@@ -68,7 +68,7 @@ class AudioManager: ObservableObject {
         $playbackSpeed
             .sink { [weak self] speed in
                 self?.audioPlayer.setPlaybackSpeed(speed)
-                self?.speechSynthesizer.setSpeechRate(speed)
+                self?.speechSynthesizer.setSpeedMultiplier(speed)
             }
             .store(in: &cancellables)
     }
